@@ -2,12 +2,20 @@ import styled from "styled-components";
 import {FaUser} from "react-icons/fa";
 import {BsCalendarEvent} from "react-icons/bs";
 import {IoSearch} from "react-icons/io5";
+import {useNavigate} from "react-router-dom";
+import React from "react";
 
-const Header = () => {
+interface ActivePageProps {
+  $isActive?: string;
+}
+
+const Header:React.FC<ActivePageProps> = ({$isActive}) => {
+  const navigate = useNavigate()
+
   return (
     <StyledHeader>
-      <HeaderContainer>
-        <div className={'title'}>LEMONADE</div>
+      <HeaderContainer $isActive={$isActive}>
+        <div className={'title'} onClick={() => navigate('/')}>LEMON AID</div>
         <nav>
           <div className={'span-container'}>
             <span>Recruitment</span>
@@ -17,13 +25,13 @@ const Header = () => {
           </div>
 
           <div className={'icon-container'}>
-            <IoSearch/>
-            <BsCalendarEvent/>
-            <FaUser/>
+            <IoSearch className={'search'}/>
+            <BsCalendarEvent className={'calendar'}/>
+            <FaUser className={'profile'} onClick={() => navigate('/my-page')}/>
           </div>
 
           <div className={'button-container'}>
-            <button>
+            <button onClick={() => navigate('/sign-in')}>
               Click to Chat
             </button>
           </div>
@@ -39,10 +47,10 @@ const StyledHeader = styled.header`
   box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
   position: fixed;
   top: 0;
-  z-index: 1;
+  z-index: 10;
 `
 
-const HeaderContainer = styled.div`
+const HeaderContainer = styled.div<ActivePageProps>`
   width: 80%;
   margin: auto;
   height: 100%;
@@ -51,6 +59,11 @@ const HeaderContainer = styled.div`
   align-items: center;
 
   & > .title {
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-use-select: none;
+    user-select: none;
     margin-right: auto;
     font-family: 'Inter', sans-serif;
     color: #FAE13E;
@@ -60,7 +73,7 @@ const HeaderContainer = styled.div`
 
   & > nav {
     margin-left: auto;
-    width: 50rem;
+    width: auto;
     height: 100%;
     display: flex;
 
@@ -70,7 +83,7 @@ const HeaderContainer = styled.div`
 
     & > .span-container {
       height: 100%;
-      width: 38rem;
+      width: 31rem;
 
       * {
         font-size: 16px;
@@ -82,17 +95,26 @@ const HeaderContainer = styled.div`
       margin-left: 3rem;
 
       & > svg {
+        cursor: pointer;
         &:first-child {
           font-size: 1.5rem;
         }
 
         margin-bottom: -0.2rem;
         font-size: 1.3rem;
-        color: #dadada;
+        color: #0000008A;
 
         &:last-child {
           font-size: 1.2rem;
         }
+      }
+      
+      & > .profile {
+        color: ${({$isActive}) => $isActive === 'profile' ? '#FAE13E' : '' };
+      }
+
+      & > .calendar {
+        color: ${({$isActive}) => $isActive === 'calendar' ? '#FAE13E' : '' };
       }
     }
     
