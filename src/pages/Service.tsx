@@ -98,7 +98,6 @@ export default Service
 const MainTag = styled.main`
   width: 100%;
   height: calc(100vh - 80px);
-  margin-top: 80px;
   background: linear-gradient(to bottom, #F8FAFB 0%, #F8FAFB 45%, #fff 45%, #fff 100%);
   
   * {

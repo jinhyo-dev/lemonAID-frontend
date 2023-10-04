@@ -60,7 +60,6 @@ const Container = styled.div`
 const MainTag = styled.main`
   width: 100%;
   height: calc(100vh - 80px);
-  margin-top: 80px;
   display: flex;
   align-items: center;
   justify-content: center;

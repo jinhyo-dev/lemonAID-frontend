@@ -4,6 +4,7 @@ import {GlobalStyle} from "./style/global.ts";
 import SignIn from "./pages/SignIn.tsx";
 import MyPage from "./pages/MyPage.tsx";
 import Service from "./pages/Service.tsx";
+import List from "./pages/List.tsx";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: '/service',
         element: <Service/>,
+      },
+      {
+        path: '/list',
+        element: <List/>,
       },
     ]
   }

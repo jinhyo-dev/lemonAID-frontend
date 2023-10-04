@@ -44,8 +44,8 @@ const Header:React.FC<ActivePageProps> = ({$isActive}) => {
 const StyledHeader = styled.header`
   width: 100%;
   height: 80px;
+  position: relative;
   box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
-  position: fixed;
   top: 0;
   z-index: 10;
 `
