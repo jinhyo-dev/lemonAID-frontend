@@ -1,13 +1,15 @@
-import {Container} from "../style/global.ts";
-import Header from "../components/Header.tsx";
-import styled from "styled-components";
-import {LazyLoadImage} from 'react-lazy-load-image-component';
-import {MdLocationPin, MdOutlineFlightTakeoff, MdOutlineWork} from "react-icons/md";
+import { Container, HeaderWrapper } from '../style/global.ts';
+import Header from '../components/Header.tsx';
+import styled from 'styled-components';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { MdLocationPin, MdOutlineFlightTakeoff, MdOutlineWork } from 'react-icons/md';
 
 const MyPage = () => {
   return (
     <Container>
-      <Header $isActive={'profile'}/>
+      <HeaderWrapper>
+        <Header />
+      </HeaderWrapper>
       <MainTag>
         <TopContainer>
           <LazyLoadImage
@@ -16,16 +18,16 @@ const MyPage = () => {
             src={'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80'}
             width={'226px'}
             className={'lazy-load-image'}
-            style={{marginLeft: '361px'}}
+            style={{ marginLeft: '361px' }}
           />
 
           <div className={'user-info'}>
             <div className={'title'}>First Middle Last</div>
 
             <div className={'info-container'}>
-              <div><MdLocationPin/> California, USA</div>
-              <div><MdOutlineFlightTakeoff/> Republic of Korea</div>
-              <div><MdOutlineWork/> Graphic Designer</div>
+              <div><MdLocationPin /> California, USA</div>
+              <div><MdOutlineFlightTakeoff /> Republic of Korea</div>
+              <div><MdOutlineWork /> Graphic Designer</div>
             </div>
           </div>
 
@@ -71,15 +73,16 @@ const MyPage = () => {
 
       </MainTag>
     </Container>
-  )
-}
+  );
+};
 
-export default MyPage
+export default MyPage;
 
 const MainTag = styled.main`
   width: 100%;
   height: calc(100vh - 80px);
-`
+  overflow-y: hidden;
+`;
 
 const TopContainer = styled.div`
   width: 100%;
@@ -133,7 +136,7 @@ const TopContainer = styled.div`
       border-radius: 8px;
     }
   }
-`
+`;
 
 const BottomContainer = styled.div`
   width: 100%;
@@ -192,4 +195,4 @@ const BottomContainer = styled.div`
       }
     }
   }
-`
+`;

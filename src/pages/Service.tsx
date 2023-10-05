@@ -1,11 +1,11 @@
-import {Container} from "../style/global.ts";
-import Header from "../components/Header.tsx";
-import styled from "styled-components";
+import { Container } from '../style/global.ts';
+import Header from '../components/Header.tsx';
+import styled from 'styled-components';
 
 const Service = () => {
   return (
     <Container>
-      <Header $isActive={'profile'}/>
+      <Header />
       <MainTag>
         <div className={'title'}>
           <div>Lemon Aid Packages</div>
@@ -90,37 +90,37 @@ const Service = () => {
 
       </MainTag>
     </Container>
-  )
-}
+  );
+};
 
-export default Service
+export default Service;
 
 const MainTag = styled.main`
   width: 100%;
   height: calc(100vh - 80px);
   background: linear-gradient(to bottom, #F8FAFB 0%, #F8FAFB 45%, #fff 45%, #fff 100%);
-  
+
   * {
     font-family: 'Commissioner', 'sans-serif';
   }
-  
+
   & > .title > div {
     text-align: center;
-    
+
     &:first-child {
       padding-top: 5rem;
       font-family: 'Black Ops One', cursive;
       font-weight: 400;
       font-size: 40px;
     }
-    
+
     &:last-child {
       margin-top: 1rem;
       font-weight: 400;
       font-size: 18px;
     }
   }
-`
+`;
 
 const LemonAidPackages = styled.div`
   width: 1399px;
@@ -131,7 +131,7 @@ const LemonAidPackages = styled.div`
 
   & > .premium {
     border: 3px solid #FAE13E;
-    
+
     & > button {
       background: #FAE13E;
     }
@@ -198,7 +198,7 @@ const LemonAidPackages = styled.div`
         color: #5BCFCF;
       }
     }
-    
+
     & > button {
       width: 287px;
       height: 45px;
@@ -211,4 +211,4 @@ const LemonAidPackages = styled.div`
       font-weight: 500;
     }
   }
-`
+`;

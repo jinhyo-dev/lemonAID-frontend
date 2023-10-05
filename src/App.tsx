@@ -4,7 +4,7 @@ import {GlobalStyle} from "./style/global.ts";
 import SignIn from "./pages/SignIn.tsx";
 import MyPage from "./pages/MyPage.tsx";
 import Service from "./pages/Service.tsx";
-import List from "./pages/List.tsx";
+import Recruitment from "./pages/Recruitment.tsx";
 
 const router = createBrowserRouter([
   {
@@ -27,8 +27,8 @@ const router = createBrowserRouter([
         element: <Service/>,
       },
       {
-        path: '/list',
-        element: <List/>,
+        path: '/recruitment',
+        element: <Recruitment/>,
       },
     ]
   }

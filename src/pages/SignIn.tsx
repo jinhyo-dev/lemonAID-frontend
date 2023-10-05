@@ -1,19 +1,22 @@
-import Header from "../components/Header.tsx";
-import styled from "styled-components";
-import SignInImage from '../assets/images/sign-in.png'
-import {SiNaver} from "react-icons/si";
-import {RiKakaoTalkFill} from "react-icons/ri";
-import {BiLogoFacebook} from "react-icons/bi";
-import {FcGoogle} from "react-icons/fc";
-import {Container} from "../style/global.ts";
+import Header from '../components/Header.tsx';
+import styled from 'styled-components';
+import SignInImage from '../assets/images/sign-in.png';
+import { SiNaver } from 'react-icons/si';
+import { RiKakaoTalkFill } from 'react-icons/ri';
+import { BiLogoFacebook } from 'react-icons/bi';
+import { FcGoogle } from 'react-icons/fc';
+import { Container, HeaderWrapper } from '../style/global.ts';
 
 const SignIn = () => {
   return (
     <Container>
-      <Header/>
+      <HeaderWrapper>
+        <Header />
+      </HeaderWrapper>
+
       <MainTag>
         <ImageContainer>
-          <img src={SignInImage} alt={'loading...'}/>
+          <img src={SignInImage} alt={'loading...'} />
         </ImageContainer>
 
         <FormContainer>
@@ -23,12 +26,12 @@ const SignIn = () => {
 
             <div className={'input-container'}>
               <div>Username or Email</div>
-              <input placeholder={'e.g. lemonade123@gmail.com'} type={'text'} required={true}/>
+              <input placeholder={'e.g. lemonade123@gmail.com'} type={'text'} required={true} />
             </div>
 
-            <div className={'input-container'} style={{marginTop: '1rem'}}>
+            <div className={'input-container'} style={{ marginTop: '1rem' }}>
               <div>Password</div>
-              <input placeholder={'e.g. lemonade1234!'} type={'password'} required={true}/>
+              <input placeholder={'e.g. lemonade1234!'} type={'password'} required={true} />
             </div>
 
             <div className={'input-container'}>
@@ -36,29 +39,29 @@ const SignIn = () => {
             </div>
 
             <div className={'remember-id'}>
-              <input type="checkbox" id="check1"/>
-              <label htmlFor="check1"></label>
+              <input type='checkbox' id='check1' />
+              <label htmlFor='check1'></label>
               <span>Remember me</span>
             </div>
 
             <div className={'divider'}>
-              <div/>
+              <div />
               or Social Media Log In
-              <div/>
+              <div />
             </div>
 
             <div className={'social-media-container'}>
               <div className={'naver'}>
-                <SiNaver/>
+                <SiNaver />
               </div>
               <div className={'kakao'}>
-                <RiKakaoTalkFill/>
+                <RiKakaoTalkFill />
               </div>
               <div className={'facebook'}>
-                <BiLogoFacebook/>
+                <BiLogoFacebook />
               </div>
               <div className={'google'}>
-                <FcGoogle/>
+                <FcGoogle />
               </div>
             </div>
           </form>
@@ -66,8 +69,8 @@ const SignIn = () => {
         </FormContainer>
       </MainTag>
     </Container>
-  )
-}
+  );
+};
 
 const ImageContainer = styled.div`
   background: #FFFBD4;
@@ -80,13 +83,13 @@ const ImageContainer = styled.div`
   & > img {
     width: 729px;
   }
-`
+`;
 
 const MainTag = styled.main`
   width: 100%;
   height: calc(100vh - 80px);
   display: flex;
-`
+`;
 
 const FormContainer = styled.div`
   background: #fff;
@@ -275,6 +278,6 @@ const FormContainer = styled.div`
       }
     }
   }
-`
+`;
 
-export default SignIn
+export default SignIn;

@@ -3,24 +3,24 @@ import {FaUser} from "react-icons/fa";
 import {BsCalendarEvent} from "react-icons/bs";
 import {IoSearch} from "react-icons/io5";
 import {useNavigate} from "react-router-dom";
-import React from "react";
 
 interface ActivePageProps {
-  $isActive?: string;
+  $currentPath?: string;
 }
 
-const Header:React.FC<ActivePageProps> = ({$isActive}) => {
+const Header:React.FC = () => {
   const navigate = useNavigate()
+  const currentPath = window.location.pathname;
 
   return (
     <StyledHeader>
-      <HeaderContainer $isActive={$isActive}>
+      <HeaderContainer $currentPath={currentPath}>
         <div className={'title'} onClick={() => navigate('/')}>LEMON AID</div>
         <nav>
           <div className={'span-container'}>
-            <span>Recruitment</span>
-            <span>Tours</span>
-            <span>Parties & Events</span>
+            <span onClick={() => navigate('/recruitment')} className={'recruitment'}>Recruitment</span>
+            <span onClick={() => navigate('/tours')} className={'tours'}>Tours</span>
+            <span onClick={() => navigate('/parties-and-events')} className={'parties-and-events'}>Parties & Events</span>
             <span>Community</span>
           </div>
 
@@ -44,9 +44,12 @@ const Header:React.FC<ActivePageProps> = ({$isActive}) => {
 const StyledHeader = styled.header`
   width: 100%;
   height: 80px;
-  position: relative;
+  position: fixed;
+  background: #fff;
   box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
-  top: 0;
+  left:0;
+  right:0;
+  top:0;
   z-index: 10;
 `
 
@@ -87,6 +90,19 @@ const HeaderContainer = styled.div<ActivePageProps>`
 
       * {
         font-size: 16px;
+        cursor: pointer;
+      }
+      
+      & > .recruitment {
+        color: ${({$currentPath}) => $currentPath === '/recruitment' ? '#FAE13E' : '' };
+      }
+
+      & > .recruitment {
+        color: ${({$currentPath}) => $currentPath === '/recruitment' ? '#FAE13E' : '' };
+      }
+
+      & > .parties-and-events {
+        color: ${({$currentPath}) => $currentPath === '/parties-and-events' ? '#FAE13E' : '' };
       }
     }
 
@@ -110,11 +126,11 @@ const HeaderContainer = styled.div<ActivePageProps>`
       }
       
       & > .profile {
-        color: ${({$isActive}) => $isActive === 'profile' ? '#FAE13E' : '' };
+        color: ${({$currentPath}) => $currentPath === '/my-page' ? '#FAE13E' : '' };
       }
 
       & > .calendar {
-        color: ${({$isActive}) => $isActive === 'calendar' ? '#FAE13E' : '' };
+        color: ${({$currentPath}) => $currentPath === 'calendar' ? '#FAE13E' : '' };
       }
     }
     
