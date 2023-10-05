@@ -5,6 +5,8 @@ import SignIn from "./pages/SignIn.tsx";
 import MyPage from "./pages/MyPage.tsx";
 import Service from "./pages/Service.tsx";
 import Recruitment from "./pages/Recruitment.tsx";
+import Tours from "./pages/Tours.tsx";
+import Parties from "./pages/Parties.tsx";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +31,14 @@ const router = createBrowserRouter([
       {
         path: '/recruitment',
         element: <Recruitment/>,
+      },
+      {
+        path: '/tours',
+        element: <Tours/>,
+      },
+      {
+        path: '/parties-and-events',
+        element: <Parties/>,
       },
     ]
   }

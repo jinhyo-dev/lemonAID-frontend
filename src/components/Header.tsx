@@ -97,8 +97,8 @@ const HeaderContainer = styled.div<ActivePageProps>`
         color: ${({$currentPath}) => $currentPath === '/recruitment' ? '#FAE13E' : '' };
       }
 
-      & > .recruitment {
-        color: ${({$currentPath}) => $currentPath === '/recruitment' ? '#FAE13E' : '' };
+      & > .tours {
+        color: ${({$currentPath}) => $currentPath === '/tours' ? '#FAE13E' : '' };
       }
 
       & > .parties-and-events {
