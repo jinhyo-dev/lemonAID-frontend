@@ -7,6 +7,7 @@ import Service from "./pages/Service.tsx";
 import Recruitment from "./pages/Recruitment.tsx";
 import Tours from "./pages/Tours.tsx";
 import Parties from "./pages/Parties.tsx";
+import SignUp from './pages/SignUp.tsx';
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         path: '/sign-in',
         element: <SignIn/>,
+      },
+      {
+        path: '/sign-up',
+        element: <SignUp/>,
       },
       {
         path: '/my-page',

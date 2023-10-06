@@ -1,13 +1,15 @@
 import Header from '../components/Header.tsx';
 import styled from 'styled-components';
-import SignInImage from '../assets/images/sign-in.png';
 import { SiNaver } from 'react-icons/si';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import { BiLogoFacebook } from 'react-icons/bi';
 import { FcGoogle } from 'react-icons/fc';
 import { Container, HeaderWrapper } from '../style/global.ts';
+import { useNavigate } from 'react-router-dom';
 
 const SignIn = () => {
+  const navigate = useNavigate()
+
   return (
     <Container>
       <HeaderWrapper>
@@ -15,14 +17,15 @@ const SignIn = () => {
       </HeaderWrapper>
 
       <MainTag>
-        <ImageContainer>
-          <img src={SignInImage} alt={'loading...'} />
-        </ImageContainer>
+        <ImageContainer />
 
         <FormContainer>
           <form>
             <div className={'title'}>Sign in</div>
-            <div className={'sub-title'}>New to Lemonade? <span>Create an Account</span></div>
+            <div className={'sub-title'}>
+              New to Lemonade?
+              <span onClick={() => navigate('/sign-up')}>Create an Account</span>
+            </div>
 
             <div className={'input-container'}>
               <div>Username or Email</div>
@@ -76,13 +79,6 @@ const ImageContainer = styled.div`
   background: #FFFBD4;
   width: 42.5%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  & > img {
-    width: 729px;
-  }
 `;
 
 const MainTag = styled.main`
@@ -114,10 +110,10 @@ const FormContainer = styled.div`
 
     & > .sub-title {
       margin-top: 1rem;
-      font-weight: 700;
       font-size: 14px;
 
       & > span {
+        cursor: pointer;
         margin-left: .2rem;
         color: #5BCFCF;
       }

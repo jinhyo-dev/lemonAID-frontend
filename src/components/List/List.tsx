@@ -3,21 +3,21 @@ import styled from 'styled-components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import {NextArrow} from '../NextArrow.tsx';
-import {PrevArrow} from '../PrevArrow.tsx';
+import { NextArrow } from '../NextArrow.tsx';
+import { PrevArrow } from '../PrevArrow.tsx';
 import grade1 from '../../assets/images/grade/grade1.png';
 import grade2 from '../../assets/images/grade/grade2.png';
 import grade3 from '../../assets/images/grade/grade3.png';
-import {HeaderWrapper} from '../../style/global.ts';
-import {FiChevronLeft, FiChevronRight} from 'react-icons/fi';
-import {useState} from 'react';
+import { HeaderWrapper } from '../../style/global.ts';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { useState } from 'react';
 import Modal from 'react-modal';
-import {useEffect} from 'react';
-import {IoClose} from "react-icons/io5";
-import * as React from "react";
-import RecruitmentBanner from "./Banners/RecruitmentBanner.tsx";
-import ToursBanner from "./Banners/ToursBanner.tsx";
-import PartiesBanner from "./Banners/PartiesBanner.tsx";
+import { useEffect } from 'react';
+import { IoClose } from 'react-icons/io5';
+import * as React from 'react';
+import RecruitmentBanner from './Banners/RecruitmentBanner.tsx';
+import ToursBanner from './Banners/ToursBanner.tsx';
+import PartiesBanner from './Banners/PartiesBanner.tsx';
 
 interface ImageProps {
   $url: string;
@@ -28,12 +28,17 @@ interface ActivePagination {
 }
 
 interface PageType {
-  $type: 'recruitment' | 'tour' | 'parties'
+  $type: 'recruitment' | 'tour' | 'parties';
 }
 
-const List: React.FC<PageType> = ({$type}) => {
+interface ActiveSort {
+  $isActive: boolean;
+}
+
+const List: React.FC<PageType> = ({ $type }) => {
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  const [sortType, setSortType] = useState<'none' | 'low' | 'high' | 'asc' | 'desc'>('none');
   const employers = Array(9).fill({});
   const dotsLength = Array(3).fill({});
 
@@ -78,8 +83,8 @@ const List: React.FC<PageType> = ({$type}) => {
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
-    nextArrow: <NextArrow/>,
-    prevArrow: <PrevArrow/>,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
   };
 
   const handlePagination = (increase: boolean) => {
@@ -120,9 +125,9 @@ const List: React.FC<PageType> = ({$type}) => {
 
         <ModalContainer $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
           <div className={'close-button'}>
-            <button onClick={closeModal}><IoClose/></button>
+            <button onClick={closeModal}><IoClose /></button>
           </div>
-          <div className={'image-container'}/>
+          <div className={'image-container'} />
           <div className={'institute-name'}>
             <div>RISE</div>
             <div>Gangdong Campus</div>
@@ -153,78 +158,78 @@ const List: React.FC<PageType> = ({$type}) => {
       </Modal>
 
       <HeaderWrapper>
-        <Header/>
+        <Header />
       </HeaderWrapper>
 
-      {$type === 'recruitment' ? <RecruitmentBanner/> : $type === 'tour' ? <ToursBanner/> : <PartiesBanner/>}
+      {$type === 'recruitment' ? <RecruitmentBanner /> : $type === 'tour' ? <ToursBanner /> : <PartiesBanner />}
 
       {$type === 'recruitment' &&
-          <PopularEmployers>
-              <div>
-                  <div>{$type === 'recruitment' ? 'POPULAR EMPLOYERS' : $type === 'tour' ? 'UPCOMING TOURS' : 'UPCOMING PARTIES & EVENTS'}</div>
-                  <div>
-                    {$type === 'recruitment' ? 'Empowering Education and Revolutionizing Learning Partnerships for a Brighter Future'
-                      : $type === 'tour' ? 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'
-                        : 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'}
-                  </div>
-              </div>
+        <PopularEmployers>
+          <div>
+            <div>{$type === 'recruitment' ? 'POPULAR EMPLOYERS' : $type === 'tour' ? 'UPCOMING TOURS' : 'UPCOMING PARTIES & EVENTS'}</div>
+            <div>
+              {$type === 'recruitment' ? 'Empowering Education and Revolutionizing Learning Partnerships for a Brighter Future'
+                : $type === 'tour' ? 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'
+                  : 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'}
+            </div>
+          </div>
 
-              <div className={'image-container'}>
-                  <Slider {...settings}>
-                      <EmployerBox $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
-                          <div className={'employers-image'}/>
-                          <div className={'title'}>
-                              <img src={grade3}/>
-                              <div>RISE Gangdong</div>
-                          </div>
-                          <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
-                          <div className={'bottom-container'}>
-                              <div>2,500,000 - 2,000,000 KRW</div>
-                              <div>Sep 1st, 2023</div>
-                          </div>
-                      </EmployerBox>
+          <div className={'image-container'}>
+            <Slider {...settings}>
+              <EmployerBox $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
+                <div className={'employers-image'} />
+                <div className={'title'}>
+                  <img src={grade3} />
+                  <div>RISE Gangdong</div>
+                </div>
+                <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
+                <div className={'bottom-container'}>
+                  <div>2,500,000 - 2,000,000 KRW</div>
+                  <div>Sep 1st, 2023</div>
+                </div>
+              </EmployerBox>
 
-                      <EmployerBox $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
-                          <div className={'employers-image'}/>
-                          <div className={'title'}>
-                              <img src={grade2}/>
-                              <div>RISE Gangdong</div>
-                          </div>
-                          <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
-                          <div className={'bottom-container'}>
-                              <div>2,500,000 - 2,000,000 KRW</div>
-                              <div>Sep 1st, 2023</div>
-                          </div>
-                      </EmployerBox>
+              <EmployerBox $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
+                <div className={'employers-image'} />
+                <div className={'title'}>
+                  <img src={grade2} />
+                  <div>RISE Gangdong</div>
+                </div>
+                <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
+                <div className={'bottom-container'}>
+                  <div>2,500,000 - 2,000,000 KRW</div>
+                  <div>Sep 1st, 2023</div>
+                </div>
+              </EmployerBox>
 
-                      <EmployerBox $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
-                          <div className={'employers-image'}/>
-                          <div className={'title'}>
-                              <img src={grade1}/>
-                              <div>RISE Gangdong</div>
-                          </div>
-                          <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
-                          <div className={'bottom-container'}>
-                              <div>2,500,000 - 2,000,000 KRW</div>
-                              <div>Sep 1st, 2023</div>
-                          </div>
-                      </EmployerBox>
+              <EmployerBox $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
+                <div className={'employers-image'} />
+                <div className={'title'}>
+                  <img src={grade1} />
+                  <div>RISE Gangdong</div>
+                </div>
+                <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
+                <div className={'bottom-container'}>
+                  <div>2,500,000 - 2,000,000 KRW</div>
+                  <div>Sep 1st, 2023</div>
+                </div>
+              </EmployerBox>
 
-                      <EmployerBox $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
-                          <div className={'employers-image'}/>
-                          <div className={'title'}>
-                              <img src={grade3}/>
-                              <div>RISE Gangdong</div>
-                          </div>
-                          <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
-                          <div className={'bottom-container'}>
-                              <div>2,500,000 - 2,000,000 KRW</div>
-                              <div>Sep 1st, 2023</div>
-                          </div>
-                      </EmployerBox>
-                  </Slider>
-              </div>
-          </PopularEmployers>
+              <EmployerBox $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
+                <div className={'employers-image'} />
+                <div className={'title'}>
+                  <img src={grade3} />
+                  <div>RISE Gangdong</div>
+                </div>
+                <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
+                <div className={'bottom-container'}>
+                  <div>2,500,000 - 2,000,000 KRW</div>
+                  <div>Sep 1st, 2023</div>
+                </div>
+              </EmployerBox>
+            </Slider>
+          </div>
+        </PopularEmployers>
       }
 
       <ListContainer $type={$type}>
@@ -233,19 +238,26 @@ const List: React.FC<PageType> = ({$type}) => {
         </div>
 
         {$type !== 'recruitment' &&
-            <div className={'sub-title'}>
-              {$type === 'tour' ? 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'
-                : 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'}
-            </div>
+          <div className={'sub-title'}>
+            {$type === 'tour' ? 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'
+              : 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'}
+          </div>
         }
+
+        <div className={'button-container'}>
+          <SortButton $isActive={sortType === 'low'} onClick={() => setSortType('low')}>Low Price</SortButton>
+          <SortButton $isActive={sortType === 'high'} onClick={() => setSortType('high')}>High Price</SortButton>
+          <SortButton $isActive={sortType === 'asc'} onClick={() => setSortType('asc')}>Ascending Order</SortButton>
+          <SortButton $isActive={sortType === 'desc'} onClick={() => setSortType('desc')}>Descending Order</SortButton>
+        </div>
 
         <div className={'main-container'}>
           {employers.map((_, index) => (
             $type === 'recruitment' ?
               <EmployerBox key={index} $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'} onClick={openModal}>
-                <div className={'employers-image'}/>
+                <div className={'employers-image'} />
                 <div className={'title'}>
-                  <img src={grade3}/>
+                  <img src={grade3} />
                   <div>RISE Gangdong</div>
                 </div>
                 <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
@@ -257,7 +269,7 @@ const List: React.FC<PageType> = ({$type}) => {
               <TourAndPartiesBox key={index} $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}
                                  onClick={openModal}>
                 <div className={'container'}>
-                  <div className={'employers-image'}/>
+                  <div className={'employers-image'} />
                   <div className={'title'}>Cool Off for the Summer</div>
                   <div className={'subtitle'}>Adventure caving and river rafting experience</div>
                   <div className={'date'}>Date: Sat, Aug 26th, 2023</div>
@@ -271,11 +283,11 @@ const List: React.FC<PageType> = ({$type}) => {
         </div>
 
         <div className={'pagination-container'}>
-          <FiChevronLeft onClick={() => handlePagination(false)}/>
+          <FiChevronLeft onClick={() => handlePagination(false)} />
           {dotsLength.map((_, index) => (
-            <Dot $isActive={index === currentPage} onClick={() => handleDotPagination(index)}/>
+            <Dot $isActive={index === currentPage} onClick={() => handleDotPagination(index)} />
           ))}
-          <FiChevronRight onClick={() => handlePagination(true)}/>
+          <FiChevronRight onClick={() => handlePagination(true)} />
         </div>
       </ListContainer>
     </div>
@@ -318,7 +330,7 @@ const ModalContainer = styled.div<ImageProps>`
     background-size: cover;
     overflow: hidden;
     background-position: center;
-    background-image: url(${({$url}) => $url});
+    background-image: url(${({ $url }) => $url});
     margin: 15px 0 15px;
     border-radius: 10px;
   }
@@ -469,7 +481,7 @@ const EmployerBox = styled.div<ImageProps>`
     overflow: hidden;
     background-position: center;
     border-radius: 10px;
-    background-image: url(${({$url}) => $url});
+    background-image: url(${({ $url }) => $url});
     margin: auto;
   }
 
@@ -554,7 +566,7 @@ const TourAndPartiesBox = styled.div<ImageProps>`
   & > .container {
     width: 360px;
     height: 480px;
-    
+
     & > .employers-image {
       width: 100%;
       height: 348px;
@@ -563,7 +575,7 @@ const TourAndPartiesBox = styled.div<ImageProps>`
       overflow: hidden;
       background-position: center;
       border-radius: 10px;
-      background-image: url(${({$url}) => $url});
+      background-image: url(${({ $url }) => $url});
     }
 
     & > .title {
@@ -604,7 +616,7 @@ const TourAndPartiesBox = styled.div<ImageProps>`
         font-size: 20px;
         font-weight: 600;
       }
-      
+
       & > button {
         background-color: #FFFBD4;
         color: #F4B723;
@@ -618,7 +630,7 @@ const TourAndPartiesBox = styled.div<ImageProps>`
 `;
 
 const ListContainer = styled.div<PageType>`
-  margin: ${({$type}) => $type !== 'recruitment' ? '0 auto 10px' : '100px auto 10px'};
+  margin: ${({ $type }) => $type !== 'recruitment' ? '0 auto 10px' : '100px auto 10px'};
   height: 1400px;
   width: 1200px;
 
@@ -627,18 +639,27 @@ const ListContainer = styled.div<PageType>`
   }
 
   & > .title {
-    margin: 0 auto 20px;
+    margin: 0 auto 36px;
     width: auto;
     font-size: 32px;
     font-weight: 600;
     text-align: center;
   }
 
+  & > .button-container {
+    width: 600px;
+    margin: ${({$type})=> $type === 'recruitment' ? '20px auto' : '30px auto 0'};
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   & > .sub-title {
     font-size: 16px;
     font-weight: 400;
     color: #3E3C39;
-    margin: 20px auto 0;
+    margin: -15px auto 0;
     width: 420px;
     text-align: center;
     font-family: 'Commissioner', 'sans-serif';
@@ -675,13 +696,23 @@ const ListContainer = styled.div<PageType>`
   }
 `;
 
+const SortButton = styled.button<ActiveSort>`
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  transition: all .3s;
+  height: 100%;
+  background: ${({ $isActive }) => $isActive ? '#FAE13E' : '#F8FAFB'};
+  border-radius: 5px;
+  border: 1px solid ${({ $isActive }) => $isActive ? '#FAE13E' : '#EDEDED'};
+`;
+
 const Dot = styled.div<ActivePagination>`
   height: 8px;
   margin-left: 6px;
   cursor: pointer;
-  width: ${({$isActive}) => $isActive ? '36px' : '8px'};
+  width: ${({ $isActive }) => $isActive ? '36px' : '8px'};
   border-radius: 100px;
-  background: ${({$isActive}) => $isActive ? '#F4B723' : '#D9D9D9'};
+  background: ${({ $isActive }) => $isActive ? '#F4B723' : '#D9D9D9'};
   transition: all .3s;
 
   &:first-child {
