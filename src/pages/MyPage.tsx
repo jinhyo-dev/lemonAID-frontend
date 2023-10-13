@@ -3,10 +3,38 @@ import Header from '../components/Header.tsx';
 import styled from 'styled-components';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MdLocationPin, MdOutlineFlightTakeoff, MdOutlineWork } from 'react-icons/md';
+import axiosInstance from '../utils/AxiosInstance.ts';
+import { useEffect, useState } from 'react';
+import { MyPageProps } from '../interface/MyPageProps.ts';
+import LoadingModal from '../components/LoadingModal.tsx';
 
 const MyPage = () => {
+  const [info, setInfo] = useState<MyPageProps>({
+    amateur: 0, birthday: '', email: '', first_name: '', gender: undefined, image_path: '', is_admin: 0, last_name: '', manners: 0, nationality: '', occupation: '', phone_number: '', plan: 0, resume: '', video_messenger: '', video_messenger_id: '', visa_code: '',
+  });
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const getMyInfo = () => {
+    axiosInstance.get('/user/me')
+      .then(res => {
+        if (res.data.status === 200) {
+          setInfo({
+            ...res.data.data,
+            image_path: import.meta.env.VITE_API_URL + res.data.data.image_path,
+          });
+        }
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    getMyInfo();
+  }, []);
+
   return (
     <Container>
+      {loading && <LoadingModal />}
       <HeaderWrapper>
         <Header />
       </HeaderWrapper>
@@ -15,17 +43,17 @@ const MyPage = () => {
           <LazyLoadImage
             alt={'Profile'}
             height={'226px'}
-            src={'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80'}
+            src={info.image_path}
             width={'226px'}
             className={'lazy-load-image'}
             style={{ marginLeft: '361px' }}
           />
 
           <div className={'user-info'}>
-            <div className={'title'}>First Middle Last</div>
+            <div className={'title'}>{info.first_name} {info.last_name}</div>
 
             <div className={'info-container'}>
-              <div><MdLocationPin /> California, USA</div>
+              <div><MdLocationPin /> {info.nationality}</div>
               <div><MdOutlineFlightTakeoff /> Republic of Korea</div>
               <div><MdOutlineWork /> Graphic Designer</div>
             </div>

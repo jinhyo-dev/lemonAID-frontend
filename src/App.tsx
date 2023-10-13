@@ -8,6 +8,7 @@ import Recruitment from "./pages/Recruitment.tsx";
 import Tours from "./pages/Tours.tsx";
 import Parties from "./pages/Parties.tsx";
 import SignUp from './pages/SignUp.tsx';
+import { Toaster } from 'react-hot-toast';
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const App = () => {
     <>
       <GlobalStyle/>
       <RouterProvider router={router}/>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+      />
     </>
   )
 }

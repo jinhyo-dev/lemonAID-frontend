@@ -88,7 +88,7 @@ const List: React.FC<PageType> = ({ $type }) => {
   };
 
   const handlePagination = (increase: boolean) => {
-    const MAX_PAGE = 3;
+    const MAX_PAGE = 2;
     if (!increase && currentPage > 0) {
       setCurrentPage(currentPage - 1);
     } else if (increase && currentPage !== MAX_PAGE) {
@@ -116,45 +116,52 @@ const List: React.FC<PageType> = ({ $type }) => {
     }
   }, [modalIsOpen]);
 
+  const ModalContainerComponents = () => {
+    return (
+      <ModalContainer $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
+        <div className={'close-button'}>
+          <button onClick={closeModal}><IoClose /></button>
+        </div>
+        <div className={'image-container'} />
+        <div className={'institute-name'}>
+          <div>RISE</div>
+          <div>Gangdong Campus</div>
+        </div>
+        <div className={'table'}>
+          <div><span>Position</span><span>Teacher</span></div>
+          <div><span>Salary Range</span><span>2,400,000 - 2,900,000 KRW</span></div>
+          <div><span>Student Level</span><span>Kindy/Elemetary/Middle/High</span></div>
+          <div><span>Working Hours</span><span>9:00 am - 18:00 pm</span></div>
+          <div><span>Paid Vacation</span><span>3 Days</span></div>
+          <div><span>Annual Leave</span><span>11 Days</span></div>
+          <div><span>Severance</span><span>Provided</span></div>
+          <div><span>Insurance</span><span>Provided</span></div>
+          <div>
+            <span>Housing</span>
+            <span>Provided, <span className={'parentheses'}>(within 10min walking distance)</span></span>
+          </div>
+          <div>
+            <span>Housing Allowance</span>
+            <span>Provided, <span className={'parentheses'}>(500,000 KRW)</span></span>
+          </div>
+        </div>
+
+        <div className={'apply-button'}>
+          <button>Apply</button>
+        </div>
+      </ModalContainer>
+    );
+  };
+
   return (
     <div>
       <Modal
+        closeTimeoutMS={200}
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
-        style={customStyles}>
-
-        <ModalContainer $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
-          <div className={'close-button'}>
-            <button onClick={closeModal}><IoClose /></button>
-          </div>
-          <div className={'image-container'} />
-          <div className={'institute-name'}>
-            <div>RISE</div>
-            <div>Gangdong Campus</div>
-          </div>
-          <div className={'table'}>
-            <div><span>Position</span><span>Teacher</span></div>
-            <div><span>Salary Range</span><span>2,400,000 - 2,900,000 KRW</span></div>
-            <div><span>Student Level</span><span>Kindy/Elemetary/Middle/High</span></div>
-            <div><span>Working Hours</span><span>9:00 am - 18:00 pm</span></div>
-            <div><span>Paid Vacation</span><span>3 Days</span></div>
-            <div><span>Annual Leave</span><span>11 Days</span></div>
-            <div><span>Severance</span><span>Provided</span></div>
-            <div><span>Insurance</span><span>Provided</span></div>
-            <div>
-              <span>Housing</span>
-              <span>Provided, <span className={'parentheses'}>(within 10min walking distance)</span></span>
-            </div>
-            <div>
-              <span>Housing Allowance</span>
-              <span>Provided, <span className={'parentheses'}>(500,000 KRW)</span></span>
-            </div>
-          </div>
-
-          <div className={'apply-button'}>
-            <button>Apply</button>
-          </div>
-        </ModalContainer>
+        style={customStyles}
+      >
+        <ModalContainerComponents />
       </Modal>
 
       <HeaderWrapper>
@@ -285,7 +292,7 @@ const List: React.FC<PageType> = ({ $type }) => {
         <div className={'pagination-container'}>
           <FiChevronLeft onClick={() => handlePagination(false)} />
           {dotsLength.map((_, index) => (
-            <Dot $isActive={index === currentPage} onClick={() => handleDotPagination(index)} />
+            <Dot $isActive={index === currentPage} onClick={() => handleDotPagination(index)} key={index} />
           ))}
           <FiChevronRight onClick={() => handlePagination(true)} />
         </div>
@@ -648,7 +655,7 @@ const ListContainer = styled.div<PageType>`
 
   & > .button-container {
     width: 600px;
-    margin: ${({$type})=> $type === 'recruitment' ? '20px auto' : '30px auto 0'};
+    margin: ${({ $type }) => $type === 'recruitment' ? '20px auto' : '30px auto 0'};
     height: 35px;
     display: flex;
     align-items: center;
