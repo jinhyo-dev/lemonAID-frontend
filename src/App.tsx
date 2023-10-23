@@ -9,6 +9,7 @@ import Tours from "./pages/Tours.tsx";
 import Parties from "./pages/Parties.tsx";
 import SignUp from './pages/SignUp.tsx';
 import { Toaster } from 'react-hot-toast';
+import Resume from './pages/Resume.tsx';
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: '/parties-and-events',
         element: <Parties/>,
+      },
+      {
+        path: '/resume',
+        element: <Resume/>,
       },
     ]
   }

@@ -713,7 +713,7 @@ const SortButton = styled.button<ActiveSort>`
   border: 1px solid ${({ $isActive }) => $isActive ? '#FAE13E' : '#EDEDED'};
 `;
 
-const Dot = styled.div<ActivePagination>`
+export const Dot = styled.div<ActivePagination>`
   height: 8px;
   margin-left: 6px;
   cursor: pointer;

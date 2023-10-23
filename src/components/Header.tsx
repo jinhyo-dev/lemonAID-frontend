@@ -1,33 +1,46 @@
-import styled from "styled-components";
-import {FaUser} from "react-icons/fa";
-import {BsCalendarEvent} from "react-icons/bs";
-import {IoSearch} from "react-icons/io5";
-import {useNavigate} from "react-router-dom";
+import styled from 'styled-components';
+import { FaUser } from 'react-icons/fa';
+import { BsCalendarEvent } from 'react-icons/bs';
+import { IoSearch } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 interface ActivePageProps {
   $currentPath?: string;
+  $mouseHover: boolean;
 }
 
-const Header:React.FC = () => {
-  const navigate = useNavigate()
+const Header: React.FC = () => {
+  const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
+  const navigate = useNavigate();
   const currentPath = window.location.pathname;
 
   return (
     <StyledHeader>
-      <HeaderContainer $currentPath={currentPath}>
+      <HeaderContainer $currentPath={currentPath} $mouseHover={isMouseOver}>
         <div className={'title'} onClick={() => navigate('/')}>LEMON AID</div>
         <nav>
           <div className={'span-container'}>
-            <span onClick={() => navigate('/recruitment')} className={'recruitment'}>Recruitment</span>
+            <span className={'recruitment'} onMouseOver={() => setIsMouseOver(true)}>
+              Recruitment
+              {
+                isMouseOver &&
+                <div className={'hover-event'} onMouseOut={() => setIsMouseOver(false)}>
+                  <div onClick={() => navigate('/recruitment')}>Job Post</div>
+                  <div onClick={() => navigate('/resume')}>Resume</div>
+                </div>
+              }
+            </span>
             <span onClick={() => navigate('/tours')} className={'tours'}>Tours</span>
-            <span onClick={() => navigate('/parties-and-events')} className={'parties-and-events'}>Parties & Events</span>
+            <span onClick={() => navigate('/parties-and-events')}
+                  className={'parties-and-events'}>Parties & Events</span>
             <span>Community</span>
           </div>
 
           <div className={'icon-container'}>
-            <IoSearch className={'search'}/>
-            <BsCalendarEvent className={'calendar'}/>
-            <FaUser className={'profile'} onClick={() => navigate('/my-page')}/>
+            <IoSearch className={'search'} />
+            <BsCalendarEvent className={'calendar'} />
+            <FaUser className={'profile'} onClick={() => navigate('/my-page')} />
           </div>
 
           <div className={'button-container'}>
@@ -38,8 +51,8 @@ const Header:React.FC = () => {
         </nav>
       </HeaderContainer>
     </StyledHeader>
-  )
-}
+  );
+};
 
 const StyledHeader = styled.header`
   width: 100%;
@@ -47,11 +60,11 @@ const StyledHeader = styled.header`
   position: fixed;
   background: #fff;
   box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
-  left:0;
-  right:0;
-  top:0;
+  left: 0;
+  right: 0;
+  top: 0;
   z-index: 10;
-`
+`;
 
 const HeaderContainer = styled.div<ActivePageProps>`
   width: 80%;
@@ -92,17 +105,40 @@ const HeaderContainer = styled.div<ActivePageProps>`
         font-size: 16px;
         cursor: pointer;
       }
-      
+
       & > .recruitment {
-        color: ${({$currentPath}) => $currentPath === '/recruitment' ? '#FAE13E' : '' };
+        color: ${({ $currentPath }) => $currentPath === '/recruitment' || $currentPath === '/resume' ? '#FAE13E' : ''};
+
+        & > .hover-event {
+          display: block;
+          margin: 12rem auto 0;
+          width: 119px;
+          height: 106px;
+          box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
+          position: absolute;
+          background-color: #fff;
+
+          & > div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 50%;
+            color: #000;              
+            
+            &:hover {
+              color: #FAE13E;
+            }
+          }
+        }
       }
 
       & > .tours {
-        color: ${({$currentPath}) => $currentPath === '/tours' ? '#FAE13E' : '' };
+        color: ${({ $currentPath }) => $currentPath === '/tours' ? '#FAE13E' : ''};
       }
 
       & > .parties-and-events {
-        color: ${({$currentPath}) => $currentPath === '/parties-and-events' ? '#FAE13E' : '' };
+        color: ${({ $currentPath }) => $currentPath === '/parties-and-events' ? '#FAE13E' : ''};
       }
     }
 
@@ -112,6 +148,7 @@ const HeaderContainer = styled.div<ActivePageProps>`
 
       & > svg {
         cursor: pointer;
+
         &:first-child {
           font-size: 1.5rem;
         }
@@ -124,19 +161,19 @@ const HeaderContainer = styled.div<ActivePageProps>`
           font-size: 1.2rem;
         }
       }
-      
+
       & > .profile {
-        color: ${({$currentPath}) => $currentPath === '/my-page' ? '#FAE13E' : '' };
+        color: ${({ $currentPath }) => $currentPath === '/my-page' ? '#FAE13E' : ''};
       }
 
       & > .calendar {
-        color: ${({$currentPath}) => $currentPath === 'calendar' ? '#FAE13E' : '' };
+        color: ${({ $currentPath }) => $currentPath === 'calendar' ? '#FAE13E' : ''};
       }
     }
-    
+
     & > .button-container {
       margin-left: 2rem;
-      
+
       & > button {
         justify-content: center;
         width: 136px;
@@ -147,7 +184,7 @@ const HeaderContainer = styled.div<ActivePageProps>`
         font-weight: 400;
         border: none;
         border-radius: 8px;
-      }  
+      }
     }
 
     * {
@@ -158,6 +195,6 @@ const HeaderContainer = styled.div<ActivePageProps>`
       justify-content: space-between;
     }
   }
-`
+`;
 
-export default Header
+export default Header;
