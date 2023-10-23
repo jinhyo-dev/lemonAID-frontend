@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { SignSelectStyleProps } from '../interface/SignUpProps.ts';
 
 export const ImageContainer = styled.div`
   background: #FFFBD4;
@@ -25,7 +24,7 @@ export const FormContainer = styled.div`
   justify-content: center;
   overflow: auto;
 
-  & input[type='text'], & input[type='password'], & input[type='email'], & input[type='tel'] {
+  & input[type='text'], & input[type='password'], & input[type='email'], & input[type='tel'], .file-label {
     transition: all .1s;
     border-radius: 10px;
     border: 1px solid #B2B1AD;
@@ -195,6 +194,10 @@ export const FormContainer = styled.div`
         & > input {
           width: 100%;
         }
+        
+        & > input[type='file'] {
+          display: none;
+        }
       }
 
       & > .single-select-container {
@@ -232,7 +235,7 @@ export const FormContainer = styled.div`
   }
 `;
 
-export const CustomSelect = styled.select<SignSelectStyleProps>`
+export const CustomSelect = styled.select`
     border-radius: 10px;
     border: 1px solid #B2B1AD;
     box-sizing: border-box;
@@ -245,4 +248,12 @@ export const CustomSelect = styled.select<SignSelectStyleProps>`
   & > option[value=""][disabled] {
     display: none;
   }
+`
+
+export const FileLabel = styled.label<{$selected: boolean}>`
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  color: ${({$selected}) => $selected ? '#000' : '#ACACAC'};
 `

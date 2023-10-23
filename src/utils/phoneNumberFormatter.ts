@@ -6,3 +6,7 @@ export const phoneNumberFormatter = (phoneNumber: string): string => {
   if (number.length < 11) return number.replace(/(\d{3})(\d{3})(\d{1})/, "$1-$2-$3");
   return number.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
 };
+
+export const removeHyphens = (phoneNumber: string): string => {
+  return phoneNumber.replace(/-/g, '');
+};

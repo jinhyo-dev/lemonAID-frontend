@@ -14,6 +14,7 @@ export interface SignUpTypingProps {
   occupation?: string;
   videoMessenger?: string;
   videoMessengerId?: string;
+  userType: 1 | 2 | undefined
 }
 
 export interface SignRequestProps {
