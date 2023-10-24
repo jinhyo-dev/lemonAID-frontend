@@ -4,6 +4,7 @@ import { BsCalendarEvent } from 'react-icons/bs';
 import { IoSearch } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import Sidebar from './Sidebar.tsx';
 
 interface ActivePageProps {
   $currentPath?: string;
@@ -38,7 +39,7 @@ const Header: React.FC = () => {
           </div>
 
           <div className={'icon-container'}>
-            <IoSearch className={'search'} />
+            <IoSearch className={'search'}/>
             <BsCalendarEvent className={'calendar'} />
             <FaUser className={'profile'} onClick={() => navigate('/my-page')} />
           </div>
@@ -50,12 +51,23 @@ const Header: React.FC = () => {
           </div>
         </nav>
       </HeaderContainer>
+
+      <MobileHeaderContainer>
+        <div className={'title'} onClick={() => navigate('/')}>LEMON AID</div>
+        <div className={'button-container'}>
+          <button onClick={() => navigate('/sign-in')}>
+            Click to Chat
+          </button>
+          <Sidebar/>
+        </div>
+      </MobileHeaderContainer>
     </StyledHeader>
   );
 };
 
 const StyledHeader = styled.header`
   width: 100%;
+  min-width: 1360px;
   height: 80px;
   position: fixed;
   background: #fff;
@@ -64,9 +76,17 @@ const StyledHeader = styled.header`
   right: 0;
   top: 0;
   z-index: 10;
+  
+  @media (max-width: 750px) {
+    min-width: 0;
+  }
 `;
 
 const HeaderContainer = styled.div<ActivePageProps>`
+  @media (max-width: 750px) {
+    display: none;  
+  }
+  
   width: 80%;
   margin: auto;
   height: 100%;
@@ -76,12 +96,13 @@ const HeaderContainer = styled.div<ActivePageProps>`
 
   & > .title {
     cursor: pointer;
+    margin-top: 10px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-use-select: none;
     user-select: none;
     margin-right: auto;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Tenada', sans-serif;
     color: #FAE13E;
     font-size: 32px;
     font-weight: 700;
@@ -188,7 +209,7 @@ const HeaderContainer = styled.div<ActivePageProps>`
     }
 
     * {
-      font-family: 'Commissioner', sans-serif;
+      font-family: 'KoPubWorldDotumBold', sans-serif;
       font-weight: 400;
       display: flex;
       align-items: center;
@@ -196,5 +217,46 @@ const HeaderContainer = styled.div<ActivePageProps>`
     }
   }
 `;
+
+const MobileHeaderContainer = styled.div`
+  @media (min-width: 751px) {
+    display: none;
+  }
+
+  width: 90%;
+  margin: auto;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > .title {
+    margin-top: 10px;
+    cursor: pointer;
+    margin-right: auto;
+    font-family: 'Tenada', sans-serif;
+    color: #FAE13E;
+    font-size: 32px;
+    font-weight: 700;
+  }
+
+  & > .button-container {
+    margin-left: auto;
+    display: flex;
+    
+    & > button {
+      justify-content: center;
+      width: 136px;
+      background: #FAE13E;
+      color: #000;
+      height: 40px;
+      font-size: 16px;
+      font-weight: 400;
+      border: none;
+      border-radius: 8px;
+    }
+  }
+
+`
 
 export default Header;

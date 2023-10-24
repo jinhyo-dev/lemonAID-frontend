@@ -32,7 +32,7 @@ const Banner = styled.div`
 
     & > .title {
       font-size: 60px;
-      font-family: 'Black Ops One', cursive;
+      font-family: 'Tenada', cursive;
       text-align: right;
     }
 
@@ -40,7 +40,7 @@ const Banner = styled.div`
       margin-top: 13px;
       font-weight: 400;
       font-size: 18px;
-      font-family: 'Commissioner', sans-serif;
+      font-family: 'KoPubWorldDotumBold', sans-serif;
       text-align: right;
       color: #3E3C39;
     }
@@ -52,7 +52,7 @@ const Banner = styled.div`
 
       & > button {
         margin-top: 40px;
-        font-family: 'Commissioner', sans-serif;
+        font-family: 'KoPubWorldDotumBold', sans-serif;
         width: 100%;
         font-size: 16px;
         height: 100%;

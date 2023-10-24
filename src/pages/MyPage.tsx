@@ -127,7 +127,7 @@ const TopContainer = styled.div`
       font-weight: 400;
       font-size: 28px;
       line-height: 35px;
-      font-family: 'Black Ops One', cursive;
+      font-family: 'Tenada', cursive;
     }
 
     & > .info-container {
@@ -136,7 +136,7 @@ const TopContainer = styled.div`
       & > div {
         line-height: 24.46px;
         font-weight: 400;
-        font-family: 'Commissioner', 'sans-serif';
+        font-family: 'KoPubWorldDotumBold', 'sans-serif';
         font-size: 20px;
         color: #8B8985;
         margin-top: .7rem;
@@ -156,7 +156,7 @@ const TopContainer = styled.div`
     & > button {
       font-size: 16px;
       font-weight: 400;
-      font-family: 'Commissioner', 'sans-serif';
+      font-family: 'KoPubWorldDotumBold', 'sans-serif';
       background: #FAE13E;
       border: none;
       width: 136px;
@@ -171,7 +171,7 @@ const BottomContainer = styled.div`
   height: 50%;
 
   * {
-    font-family: 'Commissioner', 'sans-serif';
+    font-family: 'KoPubWorldDotumBold', 'sans-serif';
   }
 
   & > .information {

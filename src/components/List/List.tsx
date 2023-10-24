@@ -307,7 +307,7 @@ const ModalContainer = styled.div<ImageProps>`
   margin: auto;
 
   * {
-    font-family: 'Commissioner', 'sans-serif';
+    font-family: 'KoPubWorldDotumBold', 'sans-serif';
   }
 
   & > .close-button {
@@ -440,7 +440,7 @@ const PopularEmployers = styled.div`
     margin: auto;
     width: 420px;
     text-align: center;
-    font-family: 'Commissioner', 'sans-serif';
+    font-family: 'KoPubWorldDotumBold', 'sans-serif';
 
     &:first-child {
       font-size: 32px;
@@ -478,7 +478,7 @@ const EmployerBox = styled.div<ImageProps>`
   }
 
   * {
-    font-family: 'Commissioner', 'sans-serif' !important;
+    font-family: 'KoPubWorldDotumBold', 'sans-serif' !important;
   }
 
   & > .employers-image {
@@ -567,7 +567,7 @@ const TourAndPartiesBox = styled.div<ImageProps>`
   }
 
   * {
-    font-family: 'Commissioner', 'sans-serif' !important;
+    font-family: 'KoPubWorldDotumBold', 'sans-serif' !important;
   }
 
   & > .container {
@@ -642,7 +642,7 @@ const ListContainer = styled.div<PageType>`
   width: 1200px;
 
   * {
-    font-family: 'Commissioner', 'sans-serif';
+    font-family: 'KoPubWorldDotumBold', 'sans-serif';
   }
 
   & > .title {
@@ -669,7 +669,7 @@ const ListContainer = styled.div<PageType>`
     margin: -15px auto 0;
     width: 420px;
     text-align: center;
-    font-family: 'Commissioner', 'sans-serif';
+    font-family: 'KoPubWorldDotumBold', 'sans-serif';
   }
 
   & > .main-container {

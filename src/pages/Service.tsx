@@ -101,7 +101,7 @@ const MainTag = styled.main`
   background: linear-gradient(to bottom, #F8FAFB 0%, #F8FAFB 45%, #fff 45%, #fff 100%);
 
   * {
-    font-family: 'Commissioner', 'sans-serif';
+    font-family: 'KoPubWorldDotumBold', 'sans-serif';
   }
 
   & > .title > div {
@@ -109,7 +109,7 @@ const MainTag = styled.main`
 
     &:first-child {
       padding-top: 5rem;
-      font-family: 'Black Ops One', cursive;
+      font-family: 'Tenada', cursive;
       font-weight: 400;
       font-size: 40px;
     }

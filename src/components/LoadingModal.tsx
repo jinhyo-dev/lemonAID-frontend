@@ -113,7 +113,7 @@ const ModalContainer = styled.div`
     width: 100%;
     text-align: center;
     font-size: 1.85rem;
-    font-family: 'Commissioner', sans-serif;
+    font-family: 'KoPubWorldDotumBold', sans-serif;
     color: #FAE13E;
   }
 `;

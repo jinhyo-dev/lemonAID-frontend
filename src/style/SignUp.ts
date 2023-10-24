@@ -58,7 +58,7 @@ export const FormContainer = styled.div`
     padding: 0 5px;
 
     * {
-      font-family: 'Commissioner', sans-serif;
+      font-family: 'KoPubWorldDotumBold', sans-serif;
     }
 
     & > .title {

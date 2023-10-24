@@ -47,6 +47,11 @@ const Main = () => {
 
 const Container = styled.div`
   overflow-x: hidden;
+  min-width: 1360px;
+
+  @media (max-width: 750px) {
+    min-width: 0;
+  }
 `;
 
 const MainTag = styled.main`
@@ -61,10 +66,16 @@ const ImageContainer = styled.div`
   width: 90rem;
   height: 44rem;
   border-radius: 10px;
+  
+  @media (max-width: 750px) {
+    width: 80%;
+    height: auto;
+    margin-bottom: 80px;
+  }
 `;
 
 const Image = styled.img`
-  width: 60rem;
+  width: 100%;
   height: 100%;
   border-radius: 10px;
 `;

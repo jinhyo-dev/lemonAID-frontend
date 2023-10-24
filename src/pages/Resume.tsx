@@ -83,7 +83,7 @@ const Employees = styled.div`
     margin: 0 auto 6rem;
     width: 420px;
     text-align: center;
-    font-family: 'Commissioner', 'sans-serif';
+    font-family: 'KoPubWorldDotumBold', 'sans-serif';
     font-size: 32px;
     font-weight: 600;
   }
@@ -131,7 +131,7 @@ const EmployeesBox = styled.div<ImageProps>`
     height: 240px;
 
     & > * {
-      font-family: 'Commissioner', sans-serif;
+      font-family: 'KoPubWorldDotumBold', sans-serif;
     }
 
     & > .name-container {
