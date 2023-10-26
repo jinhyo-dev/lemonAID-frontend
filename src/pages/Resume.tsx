@@ -5,12 +5,13 @@ import styled from 'styled-components';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { Dot } from '../components/List/List.tsx';
 import { useState } from 'react';
+import { AuthProps } from '../interface/AuthProps.ts';
 
 interface ImageProps {
   $url: string;
 }
 
-const Resume = () => {
+const Resume: React.FC<AuthProps> = ({ authorized }) => {
   const employees = Array(4).fill({});
   const dotsLength = Array(3).fill({});
   const [currentPage, setCurrentPage] = useState<number>(0);
@@ -31,7 +32,7 @@ const Resume = () => {
   return (
     <Container>
       <HeaderWrapper>
-        <Header />
+        <Header authorized={authorized} />
       </HeaderWrapper>
 
       <ResumeBanner />
@@ -138,7 +139,7 @@ const EmployeesBox = styled.div<ImageProps>`
       font-size: 20px;
       font-weight: 600;
     }
-    
+
     & > .info-container {
       margin-top: 1rem;
       float: right;

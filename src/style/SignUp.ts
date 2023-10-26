@@ -4,6 +4,10 @@ export const ImageContainer = styled.div`
   background: #FFFBD4;
   width: 42.5%;
   height: 100%;
+  
+  @media (max-width: 750px) {
+    display: none;
+  }
 `;
 
 export const MainTag = styled.main`
@@ -23,6 +27,10 @@ export const FormContainer = styled.div`
   align-items: center;
   justify-content: center;
   overflow: auto;
+
+  @media (max-width: 750px) {
+    width: 100%;
+  }
 
   & input[type='text'], & input[type='password'], & input[type='email'], & input[type='tel'], .file-label {
     transition: all .1s;
@@ -67,7 +75,7 @@ export const FormContainer = styled.div`
     }
 
     & > .sub-title {
-      margin: 1rem 0 40px;
+      margin: 1rem 0 35px;
       font-size: 14px;
 
       & > span {
@@ -79,7 +87,7 @@ export const FormContainer = styled.div`
 
     & > .back-button {
       cursor: pointer;
-      margin-top: -15px;
+      margin-top: 15px;
       color: #817C70;
       font-size: 16px;
 
@@ -255,5 +263,28 @@ export const FileLabel = styled.label<{$selected: boolean}>`
   width: 100%;
   display: flex;
   align-items: center;
-  color: ${({$selected}) => $selected ? '#000' : '#ACACAC'};
+  color: ${({ $selected }) => $selected ? '#000' : '#ACACAC'};
+
+  & > span {
+    &:first-child {
+      width: 94%;
+      padding-right: 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &:last-child {
+      width: 6%;
+      display: ${({ $selected }) => $selected ? 'flex' : 'none'};
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      & > svg {
+        color: #e07676;
+        font-size: 20px;
+      }
+    }
+  }
 `

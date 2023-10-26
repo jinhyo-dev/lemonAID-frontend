@@ -1,36 +1,49 @@
 import styled from 'styled-components';
 import { FaUser } from 'react-icons/fa';
 import { BsCalendarEvent } from 'react-icons/bs';
-import { IoSearch } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import React from 'react';
 import Sidebar from './Sidebar.tsx';
+import Logo from '../assets/images/logo/Lemonaid-2.png';
+import SearchBar from './SearchBar.tsx';
+import { useCookies } from 'react-cookie';
+import { IoLogOut } from 'react-icons/io5';
+import { AuthProps } from '../interface/AuthProps.ts';
 
 interface ActivePageProps {
   $currentPath?: string;
-  $mouseHover: boolean;
 }
 
-const Header: React.FC = () => {
-  const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
+const Header: React.FC<AuthProps> = ({ authorized }) => {
+  const [, , removeCookie] = useCookies();
   const navigate = useNavigate();
   const currentPath = window.location.pathname;
 
+  const handleMyPage = () => {
+    navigate(authorized ? '/my-page' : '/sign-in');
+  };
+
+  const handleLogout = () => {
+    if (window.confirm('Do you want to log out?')) {
+      removeCookie(import.meta.env.VITE_COOKIE_NAME);
+      navigate('/');
+    }
+  };
+
   return (
     <StyledHeader>
-      <HeaderContainer $currentPath={currentPath} $mouseHover={isMouseOver}>
-        <div className={'title'} onClick={() => navigate('/')}>LEMON AID</div>
+      <HeaderContainer $currentPath={currentPath}>
+        <div className={'title'} onClick={() => navigate('/')}>
+          <img src={Logo} />
+        </div>
         <nav>
           <div className={'span-container'}>
-            <span className={'recruitment'} onMouseOver={() => setIsMouseOver(true)}>
+            <span className={'recruitment'}>
               Recruitment
-              {
-                isMouseOver &&
-                <div className={'hover-event'} onMouseOut={() => setIsMouseOver(false)}>
+                <div className={'hover-event'}>
                   <div onClick={() => navigate('/recruitment')}>Job Post</div>
                   <div onClick={() => navigate('/resume')}>Resume</div>
                 </div>
-              }
             </span>
             <span onClick={() => navigate('/tours')} className={'tours'}>Tours</span>
             <span onClick={() => navigate('/parties-and-events')}
@@ -39,13 +52,23 @@ const Header: React.FC = () => {
           </div>
 
           <div className={'icon-container'}>
-            <IoSearch className={'search'}/>
-            <BsCalendarEvent className={'calendar'} />
-            <FaUser className={'profile'} onClick={() => navigate('/my-page')} />
+            <button>
+              <BsCalendarEvent className={'calendar'} />
+            </button>
+            <SearchBar />
+            <button>
+              <FaUser className={'profile'} onClick={handleMyPage} />
+            </button>
+            {
+              authorized &&
+              <button>
+                <IoLogOut onClick={handleLogout} className={'logout'} />
+              </button>
+            }
           </div>
 
           <div className={'button-container'}>
-            <button onClick={() => navigate('/sign-in')}>
+            <button onClick={() => window.open('https://open.kakao.com/o/sYec9Pmf')}>
               Click to Chat
             </button>
           </div>
@@ -53,12 +76,14 @@ const Header: React.FC = () => {
       </HeaderContainer>
 
       <MobileHeaderContainer>
-        <div className={'title'} onClick={() => navigate('/')}>LEMON AID</div>
+        <div className={'title'} onClick={() => navigate('/')}>
+          <img src={Logo} alt={'logo'}/>
+        </div>
         <div className={'button-container'}>
           <button onClick={() => navigate('/sign-in')}>
             Click to Chat
           </button>
-          <Sidebar/>
+          <Sidebar />
         </div>
       </MobileHeaderContainer>
     </StyledHeader>
@@ -76,7 +101,7 @@ const StyledHeader = styled.header`
   right: 0;
   top: 0;
   z-index: 10;
-  
+
   @media (max-width: 750px) {
     min-width: 0;
   }
@@ -84,9 +109,9 @@ const StyledHeader = styled.header`
 
 const HeaderContainer = styled.div<ActivePageProps>`
   @media (max-width: 750px) {
-    display: none;  
+    display: none;
   }
-  
+
   width: 80%;
   margin: auto;
   height: 100%;
@@ -96,16 +121,11 @@ const HeaderContainer = styled.div<ActivePageProps>`
 
   & > .title {
     cursor: pointer;
-    margin-top: 10px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-use-select: none;
-    user-select: none;
     margin-right: auto;
-    font-family: 'Tenada', sans-serif;
-    color: #FAE13E;
-    font-size: 32px;
-    font-weight: 700;
+
+    & > img {
+      width: 185px;
+    }
   }
 
   & > nav {
@@ -128,25 +148,33 @@ const HeaderContainer = styled.div<ActivePageProps>`
       }
 
       & > .recruitment {
+        position: relative;
         color: ${({ $currentPath }) => $currentPath === '/recruitment' || $currentPath === '/resume' ? '#FAE13E' : ''};
 
-        & > .hover-event {
+        &:hover > .hover-event {
           display: block;
-          margin: 12rem auto 0;
-          width: 119px;
-          height: 106px;
-          box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
+        }
+
+        & > .hover-event {
+          display: none;
           position: absolute;
+          top: 100%;
+          left: 0;
+          width: 120px;
+          height: 100px;
+          font-size: 12px;
+          box-shadow: 0 8px 24px rgba(149, 157, 165, 0.2);
           background-color: #fff;
 
           & > div {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 100%;
             height: 50%;
-            color: #000;              
-            
+            color: #000;
+            cursor: pointer;
+            transition: color 0.3s;
+
             &:hover {
               color: #FAE13E;
             }
@@ -164,31 +192,33 @@ const HeaderContainer = styled.div<ActivePageProps>`
     }
 
     & > .icon-container {
-      width: 8rem;
+      width: 11rem;
       margin-left: 3rem;
 
-      & > svg {
-        cursor: pointer;
+      & > button {
+        height: 40px;
+        background: none;
+        border: none;
 
-        &:first-child {
-          font-size: 1.5rem;
+        & > svg {
+          cursor: pointer;
+          margin-bottom: -0.2rem;
+          font-size: 1.3rem;
+          color: #0000008A;
         }
 
-        margin-bottom: -0.2rem;
-        font-size: 1.3rem;
-        color: #0000008A;
-
-        &:last-child {
-          font-size: 1.2rem;
+        & > .profile {
+          color: ${({ $currentPath }) => $currentPath === '/my-page' ? '#FAE13E' : ''};
         }
-      }
 
-      & > .profile {
-        color: ${({ $currentPath }) => $currentPath === '/my-page' ? '#FAE13E' : ''};
-      }
+        & > .calendar {
+          font-size: 1.4rem;
+          color: ${({ $currentPath }) => $currentPath === 'calendar' ? '#FAE13E' : ''};
+        }
 
-      & > .calendar {
-        color: ${({ $currentPath }) => $currentPath === 'calendar' ? '#FAE13E' : ''};
+        & > .logout {
+          font-size: 1.6rem;
+        }
       }
     }
 
@@ -231,19 +261,18 @@ const MobileHeaderContainer = styled.div`
   align-items: center;
 
   & > .title {
-    margin-top: 10px;
     cursor: pointer;
     margin-right: auto;
-    font-family: 'Tenada', sans-serif;
-    color: #FAE13E;
-    font-size: 32px;
-    font-weight: 700;
+
+    & > img {
+      width: 185px;
+    }
   }
 
   & > .button-container {
     margin-left: auto;
     display: flex;
-    
+
     & > button {
       justify-content: center;
       width: 136px;
@@ -257,6 +286,6 @@ const MobileHeaderContainer = styled.div`
     }
   }
 
-`
+`;
 
 export default Header;

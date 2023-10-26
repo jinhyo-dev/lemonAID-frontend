@@ -5,19 +5,20 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { NextArrow } from '../NextArrow.tsx';
 import { PrevArrow } from '../PrevArrow.tsx';
-import grade1 from '../../assets/images/grade/grade1.png';
-import grade2 from '../../assets/images/grade/grade2.png';
+// import grade1 from '../../assets/images/grade/grade1.png';
+// import grade2 from '../../assets/images/grade/grade2.png';
 import grade3 from '../../assets/images/grade/grade3.png';
 import { HeaderWrapper } from '../../style/global.ts';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import { useEffect } from 'react';
 import { IoClose } from 'react-icons/io5';
 import * as React from 'react';
 import RecruitmentBanner from './Banners/RecruitmentBanner.tsx';
 import ToursBanner from './Banners/ToursBanner.tsx';
 import PartiesBanner from './Banners/PartiesBanner.tsx';
+import { AuthProps } from '../../interface/AuthProps.ts';
+import { debounce } from 'lodash';
 
 interface ImageProps {
   $url: string;
@@ -27,7 +28,7 @@ interface ActivePagination {
   $isActive: boolean;
 }
 
-interface PageType {
+interface PageType extends AuthProps {
   $type: 'recruitment' | 'tour' | 'parties';
 }
 
@@ -35,12 +36,28 @@ interface ActiveSort {
   $isActive: boolean;
 }
 
-const List: React.FC<PageType> = ({ $type }) => {
+const List: React.FC<PageType> = ({ $type, authorized }) => {
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [sortType, setSortType] = useState<'none' | 'low' | 'high' | 'asc' | 'desc'>('none');
+  const [screenWidth, setScreenWidth] = useState<number>(1920);
   const employers = Array(9).fill({});
   const dotsLength = Array(3).fill({});
+
+  const handleResize = debounce(() => {
+    setScreenWidth(window.innerWidth);
+  }, 200);
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log(screenWidth);
+  }, [screenWidth]);
 
   const getCustomStyles = () => {
     const isSmallScreen = window.innerWidth <= 770;
@@ -81,7 +98,7 @@ const List: React.FC<PageType> = ({ $type }) => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 3,
+    slidesToShow: screenWidth >= 750 ? 3 : 1,
     slidesToScroll: 1,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
@@ -101,7 +118,7 @@ const List: React.FC<PageType> = ({ $type }) => {
   };
 
   const openModal = () => {
-    setIsOpen(true);
+    authorized ? setIsOpen(true) : alert('Available after sign in');
   };
 
   const closeModal = () => {
@@ -165,7 +182,7 @@ const List: React.FC<PageType> = ({ $type }) => {
       </Modal>
 
       <HeaderWrapper>
-        <Header />
+        <Header authorized={authorized} />
       </HeaderWrapper>
 
       {$type === 'recruitment' ? <RecruitmentBanner /> : $type === 'tour' ? <ToursBanner /> : <PartiesBanner />}
@@ -183,63 +200,28 @@ const List: React.FC<PageType> = ({ $type }) => {
 
           <div className={'image-container'}>
             <Slider {...settings}>
-              <EmployerBox $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
-                <div className={'employers-image'} />
-                <div className={'title'}>
-                  <img src={grade3} />
-                  <div>RISE Gangdong</div>
-                </div>
-                <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
-                <div className={'bottom-container'}>
-                  <div>2,500,000 - 2,000,000 KRW</div>
-                  <div>Sep 1st, 2023</div>
-                </div>
-              </EmployerBox>
+              {[...Array(4)].map((_, index: number) => (
+                <EmployerBox className={'employer-container'} key={index}
+                             $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
+                  <div className={'employers-image'} />
+                  <div className={'title'}>
+                    <img src={grade3} />
+                    <div>RISE Gangdong</div>
+                  </div>
+                  <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
+                  <div className={'bottom-container'}>
+                    <div>2,500,000 - 2,000,000 KRW</div>
+                    <div>Sep 1st, 2023</div>
+                  </div>
+                </EmployerBox>
+              ))}
 
-              <EmployerBox $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
-                <div className={'employers-image'} />
-                <div className={'title'}>
-                  <img src={grade2} />
-                  <div>RISE Gangdong</div>
-                </div>
-                <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
-                <div className={'bottom-container'}>
-                  <div>2,500,000 - 2,000,000 KRW</div>
-                  <div>Sep 1st, 2023</div>
-                </div>
-              </EmployerBox>
-
-              <EmployerBox $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
-                <div className={'employers-image'} />
-                <div className={'title'}>
-                  <img src={grade1} />
-                  <div>RISE Gangdong</div>
-                </div>
-                <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
-                <div className={'bottom-container'}>
-                  <div>2,500,000 - 2,000,000 KRW</div>
-                  <div>Sep 1st, 2023</div>
-                </div>
-              </EmployerBox>
-
-              <EmployerBox $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
-                <div className={'employers-image'} />
-                <div className={'title'}>
-                  <img src={grade3} />
-                  <div>RISE Gangdong</div>
-                </div>
-                <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
-                <div className={'bottom-container'}>
-                  <div>2,500,000 - 2,000,000 KRW</div>
-                  <div>Sep 1st, 2023</div>
-                </div>
-              </EmployerBox>
             </Slider>
           </div>
         </PopularEmployers>
       }
 
-      <ListContainer $type={$type}>
+      <ListContainer $type={$type} authorized={false}>
         <div className={'title'}>
           {$type === 'recruitment' ? 'MEET ALL EMPLOYERS' : $type === 'tour' ? 'UPCOMING TOURS' : 'UPCOMING PARTIES & EVENTS'}
         </div>
@@ -333,12 +315,12 @@ const ModalContainer = styled.div<ImageProps>`
 
   & > .image-container {
     width: 100%;
-    height: 200px;
+    height: auto;
     background-size: cover;
     overflow: hidden;
     background-position: center;
     background-image: url(${({ $url }) => $url});
-    margin: 15px 0 15px;
+    margin: 10px 0 15px;
     border-radius: 10px;
   }
 
@@ -436,15 +418,27 @@ const PopularEmployers = styled.div`
   width: 1200px;
   height: 700px;
 
+  @media (max-width: 750px) {
+    width: 100%;
+  }
+
   & > div > div {
     margin: auto;
     width: 420px;
     text-align: center;
     font-family: 'KoPubWorldDotumBold', 'sans-serif';
 
+    @media (max-width: 750px) {
+      width: 100%;
+    }
+
     &:first-child {
       font-size: 32px;
       font-weight: 600;
+
+      @media (max-width: 750px) {
+        font-size: 28px;
+      }
     }
 
     &:last-child {
@@ -452,6 +446,10 @@ const PopularEmployers = styled.div`
       font-size: 16px;
       font-weight: 400;
       color: #3E3C39;
+
+      @media (max-width: 750px) {
+        width: 80%;
+      }
     }
   }
 
@@ -463,6 +461,10 @@ const PopularEmployers = styled.div`
       width: 100%;
       height: 100%;
     }
+  }
+
+  & .employer-container {
+    margin-top: 5px;
   }
 `;
 
@@ -478,7 +480,7 @@ const EmployerBox = styled.div<ImageProps>`
   }
 
   * {
-    font-family: 'KoPubWorldDotumBold', 'sans-serif' !important;
+    font-family: 'KoPubWorldDotumBold', 'sans-serif';
   }
 
   & > .employers-image {
@@ -516,6 +518,7 @@ const EmployerBox = styled.div<ImageProps>`
   }
 
   & > .subtitle {
+    font-family: 'KoPubWorldDotumLight', 'sans-serif';
     width: 100%;
     margin-top: 5px;
     text-align: left;
@@ -567,7 +570,7 @@ const TourAndPartiesBox = styled.div<ImageProps>`
   }
 
   * {
-    font-family: 'KoPubWorldDotumBold', 'sans-serif' !important;
+    font-family: 'KoPubWorldDotumBold', sans-serif;
   }
 
   & > .container {
@@ -594,16 +597,16 @@ const TourAndPartiesBox = styled.div<ImageProps>`
 
     & > .subtitle {
       width: 100%;
-      margin-top: 5px;
+      margin-top: 3px;
       text-align: left;
       font-size: 16px;
-      font-weight: 400;
+      font-family: 'KoPubWorldDotumLight', sans-serif;
       color: #3E3C39;
     }
 
     & > .date {
       width: 100%;
-      margin-top: 10px;
+      font-family: 'KoPubWorldDotumLight', sans-serif;
       text-align: left;
       font-size: 14px;
       font-weight: 400;
@@ -611,7 +614,7 @@ const TourAndPartiesBox = styled.div<ImageProps>`
     }
 
     & > .bottom-container {
-      margin-top: 10px;
+      margin-top: 6px;
       height: 35px;
       bottom: 0;
       width: 100%;
@@ -641,6 +644,10 @@ const ListContainer = styled.div<PageType>`
   height: 1400px;
   width: 1200px;
 
+  @media (max-width: 750px) {
+    width: 100%;
+  }
+
   * {
     font-family: 'KoPubWorldDotumBold', 'sans-serif';
   }
@@ -660,6 +667,10 @@ const ListContainer = styled.div<PageType>`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    
+    @media (max-width: 750px) {
+      width: 550px;
+    }
   }
 
   & > .sub-title {
@@ -677,11 +688,33 @@ const ListContainer = styled.div<PageType>`
     display: flex;
     flex-wrap: wrap;
 
+    @media (max-width: 750px) {
+      width: 95%;
+      margin: auto;
+    }
+
     & > div {
       margin-top: 50px;
       flex: 1 0 calc(33.3333% - 20px);
       margin-right: 5px;
       margin-left: 5px;
+
+      @media (max-width: 750px) {
+        flex: 1 0 calc(50% - 20px);
+        width: 45% !important;
+
+        & > .employers-image {
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 600px) {
+        flex: 1 0 calc(100% - 20px);
+
+        & > .employers-image {
+          width: 100%;
+        }
+      }
     }
   }
 
@@ -711,6 +744,11 @@ const SortButton = styled.button<ActiveSort>`
   background: ${({ $isActive }) => $isActive ? '#FAE13E' : '#F8FAFB'};
   border-radius: 5px;
   border: 1px solid ${({ $isActive }) => $isActive ? '#FAE13E' : '#EDEDED'};
+  
+  @media (max-width: 750px) {
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+  }
 `;
 
 export const Dot = styled.div<ActivePagination>`

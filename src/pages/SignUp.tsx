@@ -3,15 +3,16 @@ import { Container, HeaderWrapper } from '../style/global.ts';
 import { useNavigate } from 'react-router-dom';
 import { Transition } from 'react-transition-group';
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { AiOutlineLeft } from 'react-icons/ai';
+import { AiOutlineDelete, AiOutlineLeft } from 'react-icons/ai';
 import { SignUpTypingProps } from '../interface/SignUpProps.ts';
 import { CustomSelect, FileLabel, FormContainer, ImageContainer, MainTag } from '../style/SignUp.ts';
 import { phoneNumberFormatter, removeHyphens } from '../utils/phoneNumberFormatter.ts';
 import { camelToFuckingSnake } from '../utils/CamelToSnake.ts';
 import axiosInstance from '../utils/AxiosInstance.ts';
 import { formatDateString } from '../utils/FormatDateToString.ts';
+import { AuthProps } from '../interface/AuthProps.ts';
 
-const SignUp = () => {
+const SignUp: React.FC<AuthProps> = ({ authorized }) => {
   const navigate = useNavigate();
   const transitionDuration = 400;
   const transitionStyles: { [key: string]: React.CSSProperties } = {
@@ -60,7 +61,7 @@ const SignUp = () => {
       formElement.checkValidity() && setPageNumber(page);
     } else {
       const form = new FormData();
-      const birthday = `${signUpData.yearOfBirth}-${signUpData.monthOfBirth}-${signUpData.dateOfBirth}`
+      const birthday = `${signUpData.yearOfBirth}-${signUpData.monthOfBirth}-${signUpData.dateOfBirth}`;
       Object.entries(signUpData).map(([key, value]) => {
         if (value) {
           if (!['yearOfBirth', 'monthOfBirth', 'dateOfBirth', 'confirmPassword'].includes(key)) {
@@ -74,10 +75,10 @@ const SignUp = () => {
 
       axiosInstance.post('/auth/register', form, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': 'multipart/form-data',
+        },
       })
-        .then(res => console.log(res))
+        .then(res => console.log(res));
     }
   };
 
@@ -90,6 +91,11 @@ const SignUp = () => {
     }
   };
 
+  const deleteFile = (event: React.MouseEvent<HTMLSpanElement>, name: string) => {
+    event.preventDefault();
+    name === 'resume' ? setResume(null) : setProfileImage(null);
+  };
+
   useEffect(() => {
     console.log(signUpData);
   }, [signUpData]);
@@ -97,7 +103,7 @@ const SignUp = () => {
   return (
     <Container>
       <HeaderWrapper>
-        <Header />
+        <Header authorized={authorized} />
       </HeaderWrapper>
 
       <MainTag>
@@ -133,7 +139,6 @@ const SignUp = () => {
                     <p>Email Address <span>*</span></p>
                     <input type={'email'} onChange={handleSignUpData} name={'email'} required={true}
                            value={signUpData.email} />
-                    <div className={'verify'}>Click Here to Verify Your Email</div>
                   </div>
                 </div>
 
@@ -231,11 +236,6 @@ const SignUp = () => {
               <form style={{ ...transitionStyles[state], transitionDuration: `${transitionDuration}ms` }}
                     id={'form-2'} onSubmit={e => handleSubmitPage(e, 0)}>
                 <div className={'title'}>Sign Up</div>
-                <div className={'sub-title'}>
-                  Already Have an Account?
-                  <span onClick={() => navigate('/sign-in')}>Sign In</span>
-                </div>
-
                 <div className={'back-button'} onClick={() => setPageNumber(0)}>
                   <AiOutlineLeft /> Back
                 </div>
@@ -287,7 +287,8 @@ const SignUp = () => {
                     <p>Resume</p>
                     <input type={'file'} id={'resume'} onChange={handleFileChange} />
                     <FileLabel htmlFor={'resume'} className={'file-label'} $selected={resume !== null}>
-                      {resume ? resume.name : 'Click to Upload'}
+                      <span>{resume ? resume.name : 'Click to Upload'}</span>
+                      <span onClick={(e) => deleteFile(e, 'resume')}><AiOutlineDelete /></span>
                     </FileLabel>
                   </div>
                 </div>
@@ -297,7 +298,8 @@ const SignUp = () => {
                     <p>Photo</p>
                     <input type={'file'} id={'photo'} onChange={handleFileChange} />
                     <FileLabel htmlFor={'photo'} className={'file-label'} $selected={profileImage !== null}>
-                      {profileImage ? profileImage.name : 'Click to Upload'}
+                      <span>{profileImage ? profileImage.name : 'Click to Upload'}</span>
+                      <span onClick={(e) => deleteFile(e, 'profileImage')}><AiOutlineDelete /></span>
                     </FileLabel>
                   </div>
                 </div>

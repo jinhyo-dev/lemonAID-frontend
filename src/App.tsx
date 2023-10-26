@@ -1,72 +1,43 @@
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import Main from "./pages/Main.tsx";
-import {GlobalStyle} from "./style/global.ts";
-import SignIn from "./pages/SignIn.tsx";
-import MyPage from "./pages/MyPage.tsx";
-import Service from "./pages/Service.tsx";
-import Recruitment from "./pages/Recruitment.tsx";
-import Tours from "./pages/Tours.tsx";
-import Parties from "./pages/Parties.tsx";
-import SignUp from './pages/SignUp.tsx';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { GlobalStyle } from './style/global.ts';
 import { Toaster } from 'react-hot-toast';
-import Resume from './pages/Resume.tsx';
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    children: [
-      {
-        path: '',
-        element: <Main/>,
-      },
-      {
-        path: '/sign-in',
-        element: <SignIn/>,
-      },
-      {
-        path: '/sign-up',
-        element: <SignUp/>,
-      },
-      {
-        path: '/my-page',
-        element: <MyPage/>,
-      },
-      {
-        path: '/service',
-        element: <Service/>,
-      },
-      {
-        path: '/recruitment',
-        element: <Recruitment/>,
-      },
-      {
-        path: '/tours',
-        element: <Tours/>,
-      },
-      {
-        path: '/parties-and-events',
-        element: <Parties/>,
-      },
-      {
-        path: '/resume',
-        element: <Resume/>,
-      },
-    ]
-  }
-]);
+import ConfigAuth from './ConfigAuth.tsx';
+// import axiosInstance from './utils/AxiosInstance.ts';
 
 const App = () => {
+  // const [isAuthrorized, setIsAuthorized] = useState<boolean>(false);
+
+
+  // useEffect(() => {
+  // ga('send', 'pageview');
+  //   axiosInstance.get('/user/me')
+  //     .then(res => {
+  //       // setIsAuthorized(res.data.status === 200);
+  //       console.log(location)
+  //       if (res.data.status !== 200 && !['/sign-in', '/sign-up', '/'].includes(window.location.pathname)) {
+  //         window.location.replace('/')
+  //       }
+  //     })
+  //     .catch(err => console.log(err));
+  // }, [location]);
+
+  const router = createBrowserRouter([
+    {
+      path: '/*',
+      element: <ConfigAuth />,
+    },
+  ]);
 
   return (
     <>
-      <GlobalStyle/>
-      <RouterProvider router={router}/>
+      <GlobalStyle />
+      <RouterProvider router={router} />
       <Toaster
-        position="top-right"
+        position='top-right'
         reverseOrder={false}
       />
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;

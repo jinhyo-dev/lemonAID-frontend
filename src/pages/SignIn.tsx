@@ -11,8 +11,9 @@ import { SignInProps } from '../interface/SignInProps.ts';
 import axiosInstance from '../utils/AxiosInstance.ts';
 import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
+import { AuthProps } from '../interface/AuthProps.ts';
 
-const SignIn = () => {
+const SignIn: React.FC<AuthProps> = ({ authorized }) => {
   const navigate = useNavigate();
   const [, setCookies] = useCookies();
   const [loginData, setLoginData] = useState<SignInProps>({
@@ -37,19 +38,19 @@ const SignIn = () => {
           setCookies(import.meta.env.VITE_COOKIE_NAME, res.data.session, {
             sameSite: 'none',
             secure: true,
-            path: '/'
-          })
+            path: '/',
+          });
 
           toast.success('Success !', {
             duration: 1000,
             style: {
               backgroundColor: '#fff',
               width: '16rem',
-              fontSize: '20px'
-            }
-          })
+              fontSize: '20px',
+            },
+          });
 
-          navigate('/')
+          navigate('/');
         }
       })
       .catch(err => {
@@ -58,16 +59,16 @@ const SignIn = () => {
           style: {
             backgroundColor: '#fff',
             width: '16rem',
-            fontSize: '20px'
-          }
-        })
-      })
+            fontSize: '20px',
+          },
+        });
+      });
   };
 
   return (
     <Container>
       <HeaderWrapper>
-        <Header />
+        <Header authorized={authorized} />
       </HeaderWrapper>
 
       <MainTag>
@@ -84,13 +85,13 @@ const SignIn = () => {
             <div className={'input-container'}>
               <div>Username or Email</div>
               <input placeholder={'e.g. lemonade123@gmail.com'} type={'text'} required={true} value={loginData.email}
-                     onChange={handleLoginData} name={'email'}/>
+                     onChange={handleLoginData} name={'email'} />
             </div>
 
             <div className={'input-container'} style={{ marginTop: '1rem' }}>
               <div>Password</div>
               <input placeholder={'e.g. lemonade1234!'} type={'password'} required={true} value={loginData.password}
-                     onChange={handleLoginData} name={'password'}/>
+                     onChange={handleLoginData} name={'password'} />
             </div>
 
             <div className={'input-container'}>

@@ -4,6 +4,10 @@ export const ImageContainer = styled.div`
   background: #FFFBD4;
   width: 42.5%;
   height: 100%;
+  
+  @media (max-width: 750px) {
+    display: none;
+  }
 `;
 
 export const MainTag = styled.main`
@@ -19,6 +23,10 @@ export const FormContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  @media (max-width: 750px) {
+    width: 100%;
+  }
 
   & > form {
     height: auto;

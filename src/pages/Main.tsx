@@ -1,18 +1,20 @@
 import Header from '../components/Header.tsx';
 import styled from 'styled-components';
 import Slider from 'react-slick';
-import picture1 from '../assets/images/picture-1.png';
-import picture2 from '../assets/images/picture-2.png';
-import picture3 from '../assets/images/picture-3.png';
-import picture4 from '../assets/images/picture-4.png';
-import picture5 from '../assets/images/picture-5.png';
+import picture1 from '../assets/images/MainBanner/picture-1.png';
+import picture2 from '../assets/images/MainBanner/picture-2.png';
+import picture3 from '../assets/images/MainBanner/picture-3.png';
+import picture4 from '../assets/images/MainBanner/picture-4.png';
+import picture5 from '../assets/images/MainBanner/picture-5.png';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { NextArrow } from '../components/NextArrow.tsx';
 import { PrevArrow } from '../components/PrevArrow.tsx';
 import { HeaderWrapper } from '../style/global.ts';
+import React from 'react';
+import { AuthProps } from '../interface/AuthProps.ts';
 
-const Main = () => {
+const Main: React.FC<AuthProps> = ({ authorized }) => {
   const settings = {
     dots: true,
     infinite: true,
@@ -28,7 +30,7 @@ const Main = () => {
   return (
     <Container>
       <HeaderWrapper>
-        <Header />
+        <Header authorized={authorized} />
       </HeaderWrapper>
       <MainTag>
         <ImageContainer>
@@ -66,7 +68,7 @@ const ImageContainer = styled.div`
   width: 90rem;
   height: 44rem;
   border-radius: 10px;
-  
+
   @media (max-width: 750px) {
     width: 80%;
     height: auto;

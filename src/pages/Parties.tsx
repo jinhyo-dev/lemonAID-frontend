@@ -1,9 +1,11 @@
-import List from "../components/List/List.tsx";
+import List from '../components/List/List.tsx';
+import React from 'react';
+import { AuthProps } from '../interface/AuthProps.ts';
 
-const Parties = () => {
+const Parties: React.FC<AuthProps> = ({ authorized }) => {
   return (
-    <List $type={'parties'}/>
-  )
-}
+    <List $type={'parties'} authorized={authorized} />
+  );
+};
 
-export default Parties
+export default Parties;

@@ -19,29 +19,31 @@ const Sidebar = () => {
         <AiOutlineMenu onClick={() => setIsOpen(!isOpen)} />}
 
       <SidebarContainer $isOpen={isOpen} $isClicked={isClicked}>
-        <form className={'search-bar'}>
-          <input type={'text'} />
-          <AiOutlineSearch />
-        </form>
+        {
+          isOpen &&
+          <>
+            <form className={'search-bar'}>
+              <input type={'text'} />
+              <AiOutlineSearch />
+            </form>
 
-        <div className={'icon-container'}>
-          <BsCalendarEvent className={'calendar'} />
-          <FaUser className={'profile'} />
-        </div>
-
-        <div className={'text-container'}>
-          <div onClick={() => setIsClicked(!isClicked)}>Recruitment</div>
-          {
-            // isClicked &&
-            <div className={'clicked-nav'}>
-              <div>Job Posts</div>
-              <div>Resume</div>
+            <div className={'icon-container'}>
+              <BsCalendarEvent className={'calendar'} />
+              <FaUser className={'profile'} />
             </div>
-          }
-          <div>Tours</div>
-          <div>Parties & Events</div>
-          <div>Community</div>
-        </div>
+
+            <div className={'text-container'}>
+              <div onClick={() => setIsClicked(!isClicked)}>Recruitment</div>
+              <div className={'clicked-nav'}>
+                <div>Job Posts</div>
+                <div>Resume</div>
+              </div>
+              <div>Tours</div>
+              <div>Parties & Events</div>
+              <div>Community</div>
+            </div>
+          </>
+        }
       </SidebarContainer>
     </StyledSidebar>
   );
@@ -132,7 +134,7 @@ const SidebarContainer = styled.div<Props>`
       text-align: center;
       font-size: 16px;
       display: ${({ $isClicked }) => $isClicked ? 'block' : 'none'};
-      
+
       & > div {
         margin-top: 1rem;
       }

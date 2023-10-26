@@ -40,9 +40,15 @@ const Banner = styled.div`
   display: flex;
   align-items: center;
 
+  @media (max-width: 750px) {
+    width: 90%;
+    display: block;
+    height: auto;
+  }
+
   & > .text-container {
     height: auto;
-    width: 45%;
+    width: 100%;
 
     * {
       font-family: 'Tenada', cursive;
@@ -54,12 +60,21 @@ const Banner = styled.div`
       width: 440px;
       height: auto;
 
+      @media (max-width: 750px) {
+        width: 100%;
+      }
+
       * {
         height: 80px;
       }
 
       & > .first {
         font-size: 60px;
+
+        @media (max-width: 750px) {
+          padding-top: 30px;
+          font-size: 50px;
+        }
       }
 
       & > .second {
@@ -67,6 +82,10 @@ const Banner = styled.div`
         position: relative;
         width: 100%;
         height: auto;
+
+        @media (max-width: 750px) {
+          margin: 0;
+        }
 
         & > div {
           &:first-child {
@@ -79,6 +98,13 @@ const Banner = styled.div`
             z-index: 0;
             position: relative;
             margin-right: 42px;
+
+            @media (max-width: 750px) {
+              font-size: 32px;
+              height: 34px;
+              width: 198px;
+              margin-right: 43%;
+            }
           }
 
           &:last-child {
@@ -90,6 +116,12 @@ const Banner = styled.div`
             top: 0;
             transform: translateY(-20px);
             margin-right: 20px;
+
+            @media (max-width: 750px) {
+              font-size: 32px;
+              transform: translateY(-6px);
+              margin-right: 43%;
+            }
           }
         }
       }
@@ -99,6 +131,11 @@ const Banner = styled.div`
         margin: 65px 0 15px;
         font-size: 60px;
         text-align: right;
+
+        @media (max-width: 750px) {
+          font-size: 50px;
+          margin: 65px 0 15px -26%;
+        }
       }
 
       & > .fourth {
@@ -106,6 +143,11 @@ const Banner = styled.div`
         position: relative;
         width: 100%;
         height: 3rem;
+
+        @media (max-width: 750px) {
+          margin: 5px 0 5px;
+        }
+
 
         & > div {
           &:first-child {
@@ -127,6 +169,10 @@ const Banner = styled.div`
             top: 0;
             transform: translateY(-20px);
             margin-left: 22px;
+            
+            @media (max-width: 750px) {
+              transform: translateY(-17px);
+            }
           }
         }
       }
@@ -135,7 +181,7 @@ const Banner = styled.div`
     & > .info-text {
       font-weight: 400;
       font-size: 18px;
-      font-family: 'KoPubWorldDotumBold', sans-serif;
+      font-family: 'KoPubWorldDotumLight', sans-serif;
       color: #3E3C39;
     }
 
@@ -145,13 +191,17 @@ const Banner = styled.div`
 
       & > button {
         margin-top: 40px;
-        font-family: 'KoPubWorldDotumBold', sans-serif;
+        font-family: 'KoPubWorldDotumLight', sans-serif;
         width: 100%;
         font-size: 16px;
         height: 100%;
         border-radius: 10px;
         background: #FAE13E;
         border: none;
+
+        @media (max-width: 750px) {
+          margin-top: 25px;
+        }
       }
     }
   }
@@ -160,6 +210,11 @@ const Banner = styled.div`
 const Image = styled.img`
   height: 80%;
   margin-left: auto;
+
+  @media (max-width: 750px) {
+    margin-top: 10px;
+    width: 100%;
+  }
 `;
 
 export default RecruitmentBanner
