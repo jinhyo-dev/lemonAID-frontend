@@ -55,10 +55,6 @@ const List: React.FC<PageType> = ({ $type, authorized }) => {
     };
   }, []);
 
-  useEffect(() => {
-    console.log(screenWidth);
-  }, [screenWidth]);
-
   const getCustomStyles = () => {
     const isSmallScreen = window.innerWidth <= 770;
 
@@ -658,6 +654,10 @@ const ListContainer = styled.div<PageType>`
     font-size: 32px;
     font-weight: 600;
     text-align: center;
+
+    @media (max-width: 500px) {
+      font-size: 20px;
+    }
   }
 
   & > .button-container {
@@ -667,9 +667,13 @@ const ListContainer = styled.div<PageType>`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    
+
     @media (max-width: 750px) {
       width: 550px;
+    }
+
+    @media (max-width: 500px) {
+      width: 95%;
     }
   }
 
@@ -742,12 +746,19 @@ const SortButton = styled.button<ActiveSort>`
   transition: all .3s;
   height: 100%;
   background: ${({ $isActive }) => $isActive ? '#FAE13E' : '#F8FAFB'};
+  color: #000;
   border-radius: 5px;
   border: 1px solid ${({ $isActive }) => $isActive ? '#FAE13E' : '#EDEDED'};
-  
+
   @media (max-width: 750px) {
     padding-left: 1.2rem;
     padding-right: 1.2rem;
+  }
+
+  @media (max-width: 500px) {
+    font-size: 10px;
+    padding-left: .6rem;
+    padding-right: .6rem;
   }
 `;
 

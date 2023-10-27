@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { FaUser } from 'react-icons/fa';
 import { BsCalendarEvent } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import React from 'react';
 import Sidebar from './Sidebar.tsx';
 import Logo from '../assets/images/logo/Lemonaid-2.png';
@@ -17,7 +17,8 @@ interface ActivePageProps {
 const Header: React.FC<AuthProps> = ({ authorized }) => {
   const [, , removeCookie] = useCookies();
   const navigate = useNavigate();
-  const currentPath = window.location.pathname;
+  const location = useLocation()
+  const currentPath = location.pathname
 
   const handleMyPage = () => {
     navigate(authorized ? '/my-page' : '/sign-in');
@@ -80,10 +81,10 @@ const Header: React.FC<AuthProps> = ({ authorized }) => {
           <img src={Logo} alt={'logo'}/>
         </div>
         <div className={'button-container'}>
-          <button onClick={() => navigate('/sign-in')}>
+          <button onClick={() => window.open('https://open.kakao.com/o/sYec9Pmf')}>
             Click to Chat
           </button>
-          <Sidebar />
+          <Sidebar authorized={authorized} />
         </div>
       </MobileHeaderContainer>
     </StyledHeader>
@@ -104,6 +105,10 @@ const StyledHeader = styled.header`
 
   @media (max-width: 750px) {
     min-width: 0;
+  }
+  
+  @media (max-width: 500px) {
+    height: 60px;
   }
 `;
 
@@ -253,6 +258,10 @@ const MobileHeaderContainer = styled.div`
     display: none;
   }
 
+  @media (max-width: 500px) {
+    height: 60px;
+  }
+
   width: 90%;
   margin: auto;
   height: 100%;
@@ -266,6 +275,10 @@ const MobileHeaderContainer = styled.div`
 
     & > img {
       width: 185px;
+
+      @media (max-width: 500px) {
+        width: 105px;
+      }
     }
   }
 
@@ -283,6 +296,13 @@ const MobileHeaderContainer = styled.div`
       font-weight: 400;
       border: none;
       border-radius: 8px;
+      
+      @media (max-width: 500px) {
+        width: 93px;
+        height: 25px;
+        font-size: 10px;
+        border-radius: 5px;
+      }
     }
   }
 

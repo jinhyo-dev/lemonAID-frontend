@@ -14,6 +14,10 @@ export const MainTag = styled.main`
   width: 100%;
   height: calc(100vh - 80px);
   display: flex;
+
+  @media (max-width: 500px) {
+    height: calc(100vh - 60px);
+  }
 `;
 
 export const FormContainer = styled.div`

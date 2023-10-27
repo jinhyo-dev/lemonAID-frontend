@@ -9,7 +9,7 @@ import Parties from './pages/Parties.tsx';
 import SignUp from './pages/SignUp.tsx';
 import Resume from './pages/Resume.tsx';
 import Search from './pages/Search.tsx';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axiosInstance from './utils/AxiosInstance.ts';
 import LoadingModal from './components/LoadingModal.tsx';
 
@@ -110,9 +110,9 @@ const ConfigAuth = () => {
   //   },
   // ]);
 
-  const getComponents = (path: string): JSX.Element => {
+  const getComponents = (path: string): React.ReactElement => {
     if (location.pathname.startsWith('/search')) {
-      return <Search />;
+      return <Search authorized={isAuthorized.authorized} />;
     } else {
       switch (path) {
         case '/':

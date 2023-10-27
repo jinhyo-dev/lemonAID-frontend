@@ -102,6 +102,10 @@ const MainTag = styled.main`
   height: calc(100vh - 80px);
   background: linear-gradient(to bottom, #F8FAFB 0%, #F8FAFB 45%, #fff 45%, #fff 100%);
 
+  @media (max-width: 500px) {
+    height: calc(100vh - 60px);
+  }
+
   * {
     font-family: 'KoPubWorldDotumBold', 'sans-serif';
   }

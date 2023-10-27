@@ -117,4 +117,8 @@ export const Container = styled.div`
 
 export const HeaderWrapper = styled.div`
   height: 80px;
+
+  @media (max-width: 500px) {
+    height: 60px;
+  }
 `

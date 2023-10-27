@@ -195,6 +195,7 @@ const Banner = styled.div`
         width: 100%;
         font-size: 16px;
         height: 100%;
+        color: #000;
         border-radius: 10px;
         background: #FAE13E;
         border: none;

@@ -62,6 +62,10 @@ const MainTag = styled.main`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @media (max-width: 500px) {
+    height: calc(100vh - 60px);
+  }
 `;
 
 const ImageContainer = styled.div`

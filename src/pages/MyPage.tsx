@@ -127,6 +127,10 @@ const MainTag = styled.main`
   width: 100%;
   height: calc(100vh - 80px);
   overflow-y: hidden;
+
+  @media (max-width: 500px) {
+    height: calc(100vh - 60px);
+  }
 `;
 
 const TopContainer = styled.div`
