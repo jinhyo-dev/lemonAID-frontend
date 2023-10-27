@@ -51,13 +51,23 @@ const SignIn: React.FC<AuthProps> = ({ authorized }) => {
           });
 
           navigate('/');
+        } else  {
+          toast.error(res.data.message, {
+            duration: 3000,
+            style: {
+              backgroundColor: '#ff4a4a',
+              width: '16rem',
+              fontSize: '20px',
+              color: '#fff'
+            },
+          });
         }
       })
       .catch(err => {
         toast.error(err.response.data.message, {
           duration: 1000,
           style: {
-            backgroundColor: '#fff',
+            backgroundColor: '#f00',
             width: '16rem',
             fontSize: '20px',
           },

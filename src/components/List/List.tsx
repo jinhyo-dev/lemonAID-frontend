@@ -417,6 +417,10 @@ const PopularEmployers = styled.div`
   @media (max-width: 750px) {
     width: 100%;
   }
+  
+  @media (max-width: 500px) {
+    height: auto;
+  }
 
   & > div > div {
     margin: auto;
@@ -435,6 +439,10 @@ const PopularEmployers = styled.div`
       @media (max-width: 750px) {
         font-size: 28px;
       }
+
+      @media (max-width: 500px) {
+        font-size: 20px;
+      }
     }
 
     &:last-child {
@@ -445,6 +453,10 @@ const PopularEmployers = styled.div`
 
       @media (max-width: 750px) {
         width: 80%;
+      }
+
+      @media (max-width: 500px) {
+        font-size: 13px;
       }
     }
   }
@@ -461,6 +473,15 @@ const PopularEmployers = styled.div`
 
   & .employer-container {
     margin-top: 5px;
+    
+    & .title > div {
+      color: #F4B723;
+    }
+    
+    & > .bottom-container > div {
+      border: 1px solid #FAE13E;
+      background: #FFFBD4;
+    }
   }
 `;
 
@@ -470,6 +491,11 @@ const EmployerBox = styled.div<ImageProps>`
   cursor: pointer;
   border-radius: 10px;
   transition: all .25s;
+  
+  @media (max-width: 500px) {
+    width: 100% !important;
+    height: 420px;
+  }
 
   &:hover {
     transform: translateY(-5px);
@@ -488,18 +514,34 @@ const EmployerBox = styled.div<ImageProps>`
     border-radius: 10px;
     background-image: url(${({ $url }) => $url});
     margin: auto;
+
+    @media (max-width: 500px) {
+      width: 100% !important;
+      height: 312px;
+    }
   }
 
   & > .title {
     margin-top: 15px;
     display: flex;
+    align-items: center;
     height: 31px;
     width: 100%;
     font-weight: 600;
     font-size: 20px;
 
+    @media (max-width: 500px) {
+      font-size: 16px;
+      margin-top: 8px;
+    }
+
     & > img {
       width: 31px;
+
+      @media (max-width: 500px) {
+        height: 24px;
+        width: 24px;
+      }
     }
 
     & > div {
@@ -521,6 +563,10 @@ const EmployerBox = styled.div<ImageProps>`
     font-size: 16px;
     font-weight: 400;
     color: #3E3C39;
+
+    @media (max-width: 500px) {
+      font-size: 13px;
+    }
   }
 
   & > .bottom-container {
@@ -530,6 +576,7 @@ const EmployerBox = styled.div<ImageProps>`
     display: flex;
 
     & > div {
+      font-family: 'KoPubWorldDotumLight','sans-serif';
       display: flex;
       align-items: center;
       width: auto;
@@ -542,6 +589,13 @@ const EmployerBox = styled.div<ImageProps>`
       font-weight: 400;
       text-align: center;
       background: #F8FAFB;
+
+      @media (max-width: 500px) {
+        font-size: 11px;
+        padding-left: 15px;
+        padding-right: 15px;
+        height: 20px;
+      }
 
       &:first-child {
         margin-right: 7px;

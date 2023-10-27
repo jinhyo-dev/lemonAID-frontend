@@ -75,6 +75,11 @@ const Banner = styled.div`
           padding-top: 30px;
           font-size: 50px;
         }
+
+        @media (max-width: 500px) {
+          font-size: 32px;
+          padding-top: 18px;
+        }
       }
 
       & > .second {
@@ -85,6 +90,10 @@ const Banner = styled.div`
 
         @media (max-width: 750px) {
           margin: 0;
+        }
+
+        @media (max-width: 500px) {
+          margin: -20px 0 0;
         }
 
         & > div {
@@ -105,6 +114,11 @@ const Banner = styled.div`
               width: 198px;
               margin-right: 43%;
             }
+            
+            @media (max-width: 500px) {
+              width: 104px;
+              height: 17px;
+            }
           }
 
           &:last-child {
@@ -122,6 +136,11 @@ const Banner = styled.div`
               transform: translateY(-6px);
               margin-right: 43%;
             }
+
+            @media (max-width: 500px) {
+              font-size: 20px;
+              transform: translateY(-6px);
+            }
           }
         }
       }
@@ -136,6 +155,11 @@ const Banner = styled.div`
           font-size: 50px;
           margin: 65px 0 15px -26%;
         }
+
+        @media (max-width: 500px) {
+          margin: 45px 0 0 -26%;
+          font-size: 32px;
+        }
       }
 
       & > .fourth {
@@ -148,6 +172,9 @@ const Banner = styled.div`
           margin: 5px 0 5px;
         }
 
+        @media (max-width: 500px) {
+          margin: -15px 0 5px;
+        }
 
         & > div {
           &:first-child {
@@ -158,6 +185,11 @@ const Banner = styled.div`
             box-sizing: border-box;
             z-index: 0;
             position: relative;
+
+            @media (max-width: 500px) {
+              width: 132px;
+              height: 17px;
+            }
           }
 
           &:last-child {
@@ -169,9 +201,14 @@ const Banner = styled.div`
             top: 0;
             transform: translateY(-20px);
             margin-left: 22px;
-            
+
             @media (max-width: 750px) {
               transform: translateY(-17px);
+            }
+
+            @media (max-width: 500px) {
+              font-size: 20px;
+              transform: translateY(-8px);
             }
           }
         }
@@ -183,11 +220,21 @@ const Banner = styled.div`
       font-size: 18px;
       font-family: 'KoPubWorldDotumLight', sans-serif;
       color: #3E3C39;
+      
+      @media (max-width: 500px) {
+        font-size: 13px;
+        margin-top: -15px;
+      }
     }
 
     & > .button-container {
       width: 166px;
       height: 45px;
+
+      @media (max-width: 500px) {
+        width: 137px;
+        height: 35px;
+      }
 
       & > button {
         margin-top: 40px;
@@ -202,6 +249,12 @@ const Banner = styled.div`
 
         @media (max-width: 750px) {
           margin-top: 25px;
+        }
+
+        @media (max-width: 500px) {
+          margin-top: 15px;
+          font-size: 13px;
+          border-radius: 5px;
         }
       }
     }

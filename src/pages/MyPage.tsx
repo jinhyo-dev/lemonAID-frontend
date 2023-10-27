@@ -69,8 +69,8 @@ const MyPage: React.FC<AuthProps> = ({ authorized }) => {
 
               <div className={'info-container'}>
                 <div><MdLocationPin /> {info.nationality}</div>
-                <div><MdOutlineFlightTakeoff /> Republic of Korea</div>
-                <div><MdOutlineWork /> Graphic Designer</div>
+                <div><MdOutlineFlightTakeoff /> {info.nationality}</div>
+                <div><MdOutlineWork /> {info.occupation ?? 'Out of work'}</div>
                 <button className={'edit-button'}>Edit Profile</button>
               </div>
             </div>
@@ -81,40 +81,40 @@ const MyPage: React.FC<AuthProps> = ({ authorized }) => {
           </div>
         </TopContainer>
 
-        <BottomContainer>
-          <div className={'information'}>Information</div>
+        {/*<BottomContainer>*/}
+        {/*  <div className={'information'}>Information</div>*/}
 
-          <div className={'information-container'}>
-            <div className={'box'}>
-              <div>
-                <LazyLoadImage
-                  alt={'Profile'}
-                  height={'58px'}
-                  src={'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80'}
-                  width={'58px'}
-                  className={'lazy-load-image'}
-                />
-                Perfect
-              </div>
-              <div>Manners</div>
-            </div>
+        {/*  <div className={'information-container'}>*/}
+        {/*    <div className={'box'}>*/}
+        {/*      <div>*/}
+        {/*        <LazyLoadImage*/}
+        {/*          alt={'Profile'}*/}
+        {/*          height={'58px'}*/}
+        {/*          src={'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80'}*/}
+        {/*          width={'58px'}*/}
+        {/*          className={'lazy-load-image'}*/}
+        {/*        />*/}
+        {/*        Perfect*/}
+        {/*      </div>*/}
+        {/*      <div>Manners</div>*/}
+        {/*    </div>*/}
 
-            <div className={'box'}>
-              <div>
-                <LazyLoadImage
-                  alt={'Profile'}
-                  height={'58px'}
-                  src={'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80'}
-                  width={'58px'}
-                  className={'lazy-load-image'}
-                />
-                Amateur
-              </div>
-              <div>Level</div>
-            </div>
-          </div>
+        {/*    <div className={'box'}>*/}
+        {/*      <div>*/}
+        {/*        <LazyLoadImage*/}
+        {/*          alt={'Profile'}*/}
+        {/*          height={'58px'}*/}
+        {/*          src={'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80'}*/}
+        {/*          width={'58px'}*/}
+        {/*          className={'lazy-load-image'}*/}
+        {/*        />*/}
+        {/*        Amateur*/}
+        {/*      </div>*/}
+        {/*      <div>Level</div>*/}
+        {/*    </div>*/}
+        {/*  </div>*/}
 
-        </BottomContainer>
+        {/*</BottomContainer>*/}
 
       </MainTag>
     </Container>
@@ -135,11 +135,12 @@ const MainTag = styled.main`
 
 const TopContainer = styled.div`
   width: 100%;
-  height: 45%;
+  height: 100%;
   min-width: 1030px;
   background: #F8FAFB;
   display: flex;
   align-items: center;
+  justify-content: center;
 
   @media (max-width: 750px) {
     width: 100%;
@@ -149,15 +150,16 @@ const TopContainer = styled.div`
   & .edit-button {
     font-size: 16px;
     font-weight: 400;
-    font-family: 'KoPubWorldDotumBold', 'sans-serif';
+    font-family: 'KoPubWorldDotumLight', 'sans-serif';
     background: #FAE13E;
     border: none;
     width: 136px;
     height: 40px;
     border-radius: 8px;
-    
+    color: #000;
+
     @media (max-width: 750px) {
-      margin-top: 20px;
+      margin: 20px auto 0;
     }
   }
 
@@ -166,11 +168,15 @@ const TopContainer = styled.div`
     align-items: center;
     height: auto;
     width: auto;
-    margin-left: 361px;
-    
+    //margin-left: 361px;
+
     @media (max-width: 750px) {
       width: auto;
       margin: auto;
+    }
+
+    @media (max-width: 750px) {
+      display: block;
     }
 
     & > .lazy-load-image {
@@ -187,9 +193,10 @@ const TopContainer = styled.div`
     & > .user-info {
       height: 10rem;
       margin-left: 3.5rem;
-      
+
       @media (max-width: 750px) {
         height: 13rem;
+        margin: 2rem auto 0;
       }
 
       & > .title {
@@ -197,10 +204,18 @@ const TopContainer = styled.div`
         font-size: 28px;
         line-height: 35px;
         font-family: 'Tenada', cursive;
+        
+        @media (max-width: 750px) {
+          text-align: center;
+        }
       }
 
       & > .info-container {
         margin-top: 1.7rem;
+
+        @media (max-width: 750px) {
+          text-align: center;
+        }
 
         & > div {
           line-height: 24.46px;
@@ -215,13 +230,13 @@ const TopContainer = styled.div`
             margin-right: .3rem;
           }
         }
-        
+
         & > button {
           @media (min-width: 751px) {
             display: none;
           }
         }
-        
+
         @media (max-width: 750px) {
           margin-top: 1rem;
           & > div {
@@ -235,12 +250,11 @@ const TopContainer = styled.div`
         }
       }
     }
-
-
+    
     & > .button-container {
       height: 10.5rem;
       margin-left: 3.5rem;
-      
+
       @media (max-width: 750px) {
         display: none;
       }
@@ -248,6 +262,7 @@ const TopContainer = styled.div`
   }
 `;
 
+/*
 const BottomContainer = styled.div`
   width: 100%;
   height: 50%;
@@ -286,7 +301,7 @@ const BottomContainer = styled.div`
       padding-right: 0;
       width: auto;
     }
-    
+
     & > .box {
       width: 306px;
       height: 154px;
@@ -303,7 +318,7 @@ const BottomContainer = styled.div`
       }
 
       & > div {
-        
+
         &:first-child {
           font-weight: 500;
           font-size: 32px;
@@ -334,4 +349,4 @@ const BottomContainer = styled.div`
       }
     }
   }
-`;
+`;*/
