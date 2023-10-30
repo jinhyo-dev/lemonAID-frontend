@@ -1,15 +1,15 @@
-import { Container, HeaderWrapper } from '../style/global.ts';
+import {Container, HeaderWrapper} from '../style/global.ts';
 import Header from '../components/Header.tsx';
 import styled from 'styled-components';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
-import { MdLocationPin, MdOutlineFlightTakeoff, MdOutlineWork } from 'react-icons/md';
+import {LazyLoadImage} from 'react-lazy-load-image-component';
+import {MdLocationPin, MdOutlineFlightTakeoff, MdOutlineWork} from 'react-icons/md';
 import axiosInstance from '../utils/AxiosInstance.ts';
-import React, { useEffect, useState } from 'react';
-import { MyPageProps } from '../interface/MyPageProps.ts';
+import React, {useEffect, useState} from 'react';
+import {MyPageProps} from '../interface/MyPageProps.ts';
 import LoadingModal from '../components/LoadingModal.tsx';
-import { AuthProps } from '../interface/AuthProps.ts';
+import {AuthProps} from '../interface/AuthProps.ts';
 
-const MyPage: React.FC<AuthProps> = ({ authorized }) => {
+const MyPage: React.FC<AuthProps> = ({authorized}) => {
   const [info, setInfo] = useState<MyPageProps>({
     amateur: 0,
     birthday: '',
@@ -51,9 +51,9 @@ const MyPage: React.FC<AuthProps> = ({ authorized }) => {
 
   return (
     <Container>
-      {loading && <LoadingModal />}
+      <LoadingModal isOpen={loading}/>
       <HeaderWrapper>
-        <Header authorized={authorized} />
+        <Header authorized={authorized}/>
       </HeaderWrapper>
       <MainTag>
         <TopContainer>
@@ -68,9 +68,9 @@ const MyPage: React.FC<AuthProps> = ({ authorized }) => {
               <div className={'title'}>{info.first_name} {info.last_name}</div>
 
               <div className={'info-container'}>
-                <div><MdLocationPin /> {info.nationality}</div>
-                <div><MdOutlineFlightTakeoff /> {info.nationality}</div>
-                <div><MdOutlineWork /> {info.occupation ?? 'Out of work'}</div>
+                <div><MdLocationPin/> {info.nationality}</div>
+                <div><MdOutlineFlightTakeoff/> {info.nationality}</div>
+                <div><MdOutlineWork/> {info.occupation ?? 'Out of work'}</div>
                 <button className={'edit-button'}>Edit Profile</button>
               </div>
             </div>
@@ -204,7 +204,7 @@ const TopContainer = styled.div`
         font-size: 28px;
         line-height: 35px;
         font-family: 'Tenada', cursive;
-        
+
         @media (max-width: 750px) {
           text-align: center;
         }
@@ -250,7 +250,7 @@ const TopContainer = styled.div`
         }
       }
     }
-    
+
     & > .button-container {
       height: 10.5rem;
       margin-left: 3.5rem;
