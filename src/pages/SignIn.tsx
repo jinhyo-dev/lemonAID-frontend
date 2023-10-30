@@ -34,6 +34,7 @@ const SignIn: React.FC<AuthProps> = ({ authorized }) => {
     e.preventDefault();
     axiosInstance.post('/auth/login', JSON.stringify(loginData))
       .then(res => {
+        console.log(res)
         if (res.data.status === 200) {
           setCookies(import.meta.env.VITE_COOKIE_NAME, res.data.session, {
             sameSite: 'none',
@@ -46,7 +47,7 @@ const SignIn: React.FC<AuthProps> = ({ authorized }) => {
             style: {
               backgroundColor: '#fff',
               width: '16rem',
-              fontSize: '20px',
+              fontSize: '20px'
             },
           });
 
@@ -67,9 +68,10 @@ const SignIn: React.FC<AuthProps> = ({ authorized }) => {
         toast.error(err.response.data.message, {
           duration: 1000,
           style: {
-            backgroundColor: '#f00',
+            backgroundColor: '#ff4a4a',
             width: '16rem',
             fontSize: '20px',
+            color: '#fff'
           },
         });
       });

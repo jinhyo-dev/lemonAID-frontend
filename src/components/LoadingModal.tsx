@@ -1,7 +1,11 @@
 import Modal from 'react-modal';
 import styled from 'styled-components';
 
-const LoadingModal = () => {
+interface ModalProps {
+  isOpen: boolean;
+}
+
+const LoadingModal = ({ isOpen }: ModalProps) => {
   const customStyles = {
     content: {
       top: '50%',
@@ -30,8 +34,9 @@ const LoadingModal = () => {
   return (
     <Modal
       closeTimeoutMS={200}
-      isOpen={true}
+      isOpen={isOpen}
       style={customStyles}
+      ariaHideApp={false}
     >
       <ModalContainer>
         <div className={'spinner-container'}>
@@ -43,7 +48,7 @@ const LoadingModal = () => {
             <div className='dot' />
           </div>
         </div>
-        <div className={'loading'}>Loading...</div>
+        <div className={'loading'}>Loading ...</div>
       </ModalContainer>
     </Modal>
   );
@@ -60,12 +65,21 @@ const ModalContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+
+    @media (max-width: 500px) {
+      height: 28%;
+    }
   }
 
   .spinner {
     width: 65px;
     height: 65px;
     position: relative;
+    
+    @media (max-width: 500px) {
+      width: 40px;
+      height: 40px;
+    }
   }
 
   .spinner .dot {
@@ -81,6 +95,11 @@ const ModalContainer = styled.div`
     height: 9px;
     border-radius: 50%;
     background-color: #FAE13E;
+
+    @media (max-width: 500px) {
+      width: 6px;
+      height: 6px;
+    }
   }
 
   @keyframes spin {
@@ -115,6 +134,10 @@ const ModalContainer = styled.div`
     font-size: 1.85rem;
     font-family: 'KoPubWorldDotumBold', sans-serif;
     color: #FAE13E;
+
+    @media (max-width: 500px) {
+      font-size: 1.2rem;
+    }
   }
 `;
 

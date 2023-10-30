@@ -11,6 +11,7 @@ import { camelToFuckingSnake } from '../utils/CamelToSnake.ts';
 import axiosInstance from '../utils/AxiosInstance.ts';
 import { formatDateString } from '../utils/FormatDateToString.ts';
 import { AuthProps } from '../interface/AuthProps.ts';
+import LoadingModal from '../components/LoadingModal.tsx';
 
 const SignUp: React.FC<AuthProps> = ({ authorized }) => {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ const SignUp: React.FC<AuthProps> = ({ authorized }) => {
   };
   const currentYear = new Date().getFullYear();
   const [pageNumber, setPageNumber] = useState<0 | 1>(0);
+  const [loading, setLoading] = useState<boolean>(false);
   const [signUpData, setSignUpData] = useState<SignUpTypingProps>({
     confirmPassword: '',
     dateOfBirth: '',
@@ -57,9 +59,14 @@ const SignUp: React.FC<AuthProps> = ({ authorized }) => {
     e.preventDefault();
 
     if (page === 1) {
-      const formElement = document.getElementById('form-1') as HTMLFormElement;
-      formElement.checkValidity() && setPageNumber(page);
+      if (signUpData.password !== signUpData.confirmPassword) {
+        alert('Those passwords didn’t match. Try again.');
+      } else {
+        const formElement = document.getElementById('form-1') as HTMLFormElement;
+        formElement.checkValidity() && setPageNumber(page);
+      }
     } else {
+      setLoading(true);
       const form = new FormData();
       const birthday = `${signUpData.yearOfBirth}-${signUpData.monthOfBirth}-${signUpData.dateOfBirth}`;
       Object.entries(signUpData).map(([key, value]) => {
@@ -78,7 +85,16 @@ const SignUp: React.FC<AuthProps> = ({ authorized }) => {
           'Content-Type': 'multipart/form-data',
         },
       })
-        .then(res => console.log(res));
+        .then(res => {
+          if (res.status === 201) {
+            alert('Successfully account created. Please wait until the administrator approves.');
+            navigate('/');
+          } else {
+            alert(res.data.message);
+          }
+        })
+        .catch(() => alert('The file size is large, or there is a problem with the network.'))
+        .finally(() => setLoading(false));
     }
   };
 
@@ -97,11 +113,30 @@ const SignUp: React.FC<AuthProps> = ({ authorized }) => {
   };
 
   useEffect(() => {
-    console.log(signUpData);
-  }, [signUpData]);
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+
+    const handlePopState = () => {
+      const confirmExit = window.confirm('Leave this site?');
+      if (!confirmExit) {
+        history.pushState(null, '', window.location.href);
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
 
   return (
     <Container>
+      <LoadingModal isOpen={loading} />
       <HeaderWrapper>
         <Header authorized={authorized} />
       </HeaderWrapper>
@@ -267,7 +302,7 @@ const SignUp: React.FC<AuthProps> = ({ authorized }) => {
 
                 <div className={'input-container'}>
                   <div className={'double-input-container'}>
-                    <p>Select a Video Messenger</p>
+                    <p>Video Messenger</p>
                     <CustomSelect name={'videoMessenger'} onChange={handleSignUpData}
                                   style={{ width: '100%' }} value={signUpData.videoMessenger}>
                       <option value={''} defaultChecked={true} disabled={true}>Select messenger</option>
@@ -284,7 +319,7 @@ const SignUp: React.FC<AuthProps> = ({ authorized }) => {
 
                 <div className={'input-container'}>
                   <div className={'single-input-container'}>
-                    <p>Resume</p>
+                    <p>Resume <span>(Max file size: 6MB)</span></p>
                     <input type={'file'} id={'resume'} onChange={handleFileChange} />
                     <FileLabel htmlFor={'resume'} className={'file-label'} $selected={resume !== null}>
                       <span>{resume ? resume.name : 'Click to Upload'}</span>
@@ -295,7 +330,7 @@ const SignUp: React.FC<AuthProps> = ({ authorized }) => {
 
                 <div className={'input-container'}>
                   <div className={'single-input-container'}>
-                    <p>Photo</p>
+                    <p>Photo <span>(Max file size: 5MB)</span></p>
                     <input type={'file'} id={'photo'} onChange={handleFileChange} />
                     <FileLabel htmlFor={'photo'} className={'file-label'} $selected={profileImage !== null}>
                       <span>{profileImage ? profileImage.name : 'Click to Upload'}</span>

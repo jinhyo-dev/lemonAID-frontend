@@ -130,6 +130,11 @@ const HeaderContainer = styled.div<ActivePageProps>`
 
     & > img {
       width: 185px;
+      transition: .2s transform;
+      
+      &:hover {
+        transform: translateY(-2px);
+      }
     }
   }
 
@@ -150,6 +155,10 @@ const HeaderContainer = styled.div<ActivePageProps>`
       * {
         font-size: 16px;
         cursor: pointer;
+        transition: color 0.2s;
+        &:hover {
+          color: #FAE13E;
+        }
       }
 
       & > .recruitment {
@@ -178,7 +187,14 @@ const HeaderContainer = styled.div<ActivePageProps>`
             height: 50%;
             color: #000;
             cursor: pointer;
-            transition: color 0.3s;
+            
+            &:first-child {
+              color: ${({ $currentPath }) => $currentPath === '/recruitment' ? '#FAE13E' : ''};
+            }
+            
+            &:last-child {
+              color: ${({ $currentPath }) => $currentPath === '/resume' ? '#FAE13E' : ''};
+            }
 
             &:hover {
               color: #FAE13E;

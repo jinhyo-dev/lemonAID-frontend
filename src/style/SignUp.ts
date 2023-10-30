@@ -15,8 +15,8 @@ export const MainTag = styled.main`
   height: calc(100vh - 80px);
   display: flex;
 
-  @media (max-width: 500px) {
-    height: calc(100vh - 60px);
+  @media (max-width: 750px) {
+    height: auto;
   }
 `;
 
@@ -33,6 +33,7 @@ export const FormContainer = styled.div`
   overflow: auto;
 
   @media (max-width: 750px) {
+    padding: 2rem;
     width: 100%;
   }
 
@@ -50,13 +51,21 @@ export const FormContainer = styled.div`
       border: none;
       outline: 2px solid #F7C324;
     }
+    
+    @media (max-width: 500px) {
+      font-size: 13px;
+    }
   }
 
   & p {
     font-weight: 500;
     font-size: 16px;
     margin-bottom: 12px;
-
+    
+    @media (max-width: 500px) {
+      font-size: 13px;
+    }
+    
     & > span {
       color: #e73b3b;
     }
@@ -65,9 +74,14 @@ export const FormContainer = styled.div`
   & > form {
     height: 84%;
     max-height: 55rem;
-    overflow-y: auto;
     width: 416px;
     padding: 0 5px;
+    
+    @media (max-width: 750px) {
+      height: 830px;
+      max-height: none;
+      overflow-y: hidden;
+    }
 
     * {
       font-family: 'KoPubWorldDotumBold', sans-serif;
@@ -145,7 +159,6 @@ export const FormContainer = styled.div`
         font-size: 16px;
         color: #000;
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
       }
 
       .radio-button__custom {
@@ -153,11 +166,10 @@ export const FormContainer = styled.div`
         top: 50%;
         left: 0;
         transform: translateY(-50%);
-        width: 16px;
-        height: 16px;
+        width: 13px;
+        height: 13px;
         border-radius: 50%;
         border: 2px solid #555;
-        transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
       }
 
       .radio-button__input:checked + .radio-button__label .radio-button__custom {
@@ -223,6 +235,7 @@ export const FormContainer = styled.div`
           font-size: 15px;
           padding-left: 1.5rem;
           padding-right: 1.5rem;
+          color: #000;
           height: 50px;
           width: 100%;
         }

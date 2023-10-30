@@ -1,11 +1,11 @@
 import Header from '../components/Header.tsx';
 import { Container, HeaderWrapper } from '../style/global.ts';
-import ResumeBanner from '../components/List/Banners/ResumeBanner.tsx';
 import styled from 'styled-components';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { Dot } from '../components/List/List.tsx';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { AuthProps } from '../interface/AuthProps.ts';
+import Banner from '../components/List/Banner.tsx';
 
 interface ImageProps {
   $url: string;
@@ -35,7 +35,7 @@ const Resume: React.FC<AuthProps> = ({ authorized }) => {
         <Header authorized={authorized} />
       </HeaderWrapper>
 
-      <ResumeBanner />
+      <Banner $type={'recruitment'} authorized={authorized} />
 
       <Employees>
         <div className={'title'}>MEET ALL EMPLOYEES</div>
@@ -49,10 +49,6 @@ const Resume: React.FC<AuthProps> = ({ authorized }) => {
                 I'm GilDong Hong, and I have a deep passion for learning. For me, every day is an opportunity to acquire
                 new knowledge and skills. Whether it's exploring a new language, delving into a complex subject, or
                 experimenting with a new hobby, I find immense joy in the process of discovery.
-              </div>
-              <div className={'price-container'}>
-                <div>2,500,000 - 2,000,000 KRW</div>
-                <div>Any Information?</div>
               </div>
               <div className={'hire-button-container'}>
                 <button>
@@ -80,6 +76,10 @@ const Employees = styled.div`
   width: 1200px;
   height: auto;
 
+  @media (max-width: 750px) {
+    width: 100%;
+  }
+
   & > .title {
     margin: 0 auto 6rem;
     width: 420px;
@@ -87,6 +87,14 @@ const Employees = styled.div`
     font-family: 'KoPubWorldDotumBold', 'sans-serif';
     font-size: 32px;
     font-weight: 600;
+
+    @media (max-width: 750px) {
+      font-size: 24px;
+    }
+    
+    @media (max-width: 500px) {
+      width: 90%;
+    }
   }
 
   & > .pagination-container {
@@ -107,8 +115,6 @@ const Employees = styled.div`
   }
 `;
 
-export default Resume;
-
 const EmployeesBox = styled.div<ImageProps>`
   width: 100%;
   height: 361px;
@@ -117,19 +123,43 @@ const EmployeesBox = styled.div<ImageProps>`
   align-items: center;
   justify-content: space-between;
 
+  @media (max-width: 750px) {
+    margin: 3rem auto 0;
+    width: 90%;
+    display: flex;
+    height: auto;
+    flex-direction: column;
+    justify-content: center;
+  }
+
   & > .img-container {
-    width: 361px;
+    width: 310px;
     height: 100%;
     border-radius: 10px;
     background-size: cover;
     overflow: hidden;
     background-position: center;
     background-image: url(${({ $url }) => $url});
+
+    @media (max-width: 750px) {
+      width: 312px;
+      height: 312px;
+    }
+
+    @media (max-width: 500px) {
+      width: 100%;
+      height: 312px;
+    }
   }
 
   & > .text-container {
     width: 710px;
     height: 240px;
+
+    @media (max-width: 750px) {
+      width: 100%;
+      height: auto;
+    }
 
     & > * {
       font-family: 'KoPubWorldDotumBold', sans-serif;
@@ -138,40 +168,19 @@ const EmployeesBox = styled.div<ImageProps>`
     & > .name-container {
       font-size: 20px;
       font-weight: 600;
+
+      @media (max-width: 750px) {
+        margin-top: 1rem;
+      }
     }
 
     & > .info-container {
+      font-family: 'KoPubWorldDotumLight', sans-serif;
       margin-top: 1rem;
       float: right;
       width: 99%;
       font-size: 16px;
       font-weight: 400;
-    }
-
-    & > .price-container {
-      bottom: 0;
-      width: 100%;
-      display: flex;
-
-      & > div {
-        margin-top: 2rem;
-        display: flex;
-        align-items: center;
-        width: auto;
-        padding-left: 20px;
-        padding-right: 20px;
-        height: 30px;
-        border-radius: 5px;
-        border: 1px solid #EDEDED;
-        font-size: 13px;
-        font-weight: 400;
-        text-align: center;
-        background: #F8FAFB;
-
-        &:first-child {
-          margin-right: 7px;
-        }
-      }
     }
 
     & > .hire-button-container {
@@ -188,3 +197,5 @@ const EmployeesBox = styled.div<ImageProps>`
     }
   }
 `;
+
+export default Resume;

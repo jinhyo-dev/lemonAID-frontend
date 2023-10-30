@@ -12,6 +12,7 @@ import Search from './pages/Search.tsx';
 import React, { useEffect, useState } from 'react';
 import axiosInstance from './utils/AxiosInstance.ts';
 import LoadingModal from './components/LoadingModal.tsx';
+import ScrollToTop from './components/ScrollToTop.tsx';
 
 interface AuthProps {
   loading: boolean;
@@ -141,7 +142,11 @@ const ConfigAuth = () => {
 
 
   return (
-    isAuthorized.loading ? <LoadingModal /> : getComponents(location.pathname)
+    <>
+      <ScrollToTop/>
+      <LoadingModal isOpen={isAuthorized.loading} />
+      {getComponents(location.pathname)}
+    </>
   );
 };
 

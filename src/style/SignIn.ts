@@ -27,7 +27,7 @@ export const FormContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   @media (max-width: 750px) {
     width: 100%;
   }
@@ -35,6 +35,10 @@ export const FormContainer = styled.div`
   & > form {
     height: auto;
     width: 416px;
+
+    @media (max-width: 500px) {
+      width: 80%;
+    }
 
     * {
       font-family: 'KoPubWorldDotumBold', sans-serif;
@@ -112,6 +116,13 @@ export const FormContainer = styled.div`
       font-size: 13px;
       font-weight: 400;
 
+      @media (max-width: 500px) {
+        & > div {
+          display: none;
+        }
+
+        justify-content: center;
+      }
 
       & > div {
         width: 128px;

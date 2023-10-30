@@ -14,11 +14,9 @@ import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { IoClose } from 'react-icons/io5';
 import * as React from 'react';
-import RecruitmentBanner from './Banners/RecruitmentBanner.tsx';
-import ToursBanner from './Banners/ToursBanner.tsx';
-import PartiesBanner from './Banners/PartiesBanner.tsx';
 import { AuthProps } from '../../interface/AuthProps.ts';
 import { debounce } from 'lodash';
+import Banner from './Banner.tsx';
 
 interface ImageProps {
   $url: string;
@@ -28,7 +26,7 @@ interface ActivePagination {
   $isActive: boolean;
 }
 
-interface PageType extends AuthProps {
+export interface PageType extends AuthProps {
   $type: 'recruitment' | 'tour' | 'parties';
 }
 
@@ -46,9 +44,12 @@ const List: React.FC<PageType> = ({ $type, authorized }) => {
 
   const handleResize = debounce(() => {
     setScreenWidth(window.innerWidth);
+    console.log(window.innerWidth)
   }, 200);
 
   useEffect(() => {
+    setScreenWidth(window.innerWidth);
+
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -59,7 +60,7 @@ const List: React.FC<PageType> = ({ $type, authorized }) => {
     const isSmallScreen = window.innerWidth <= 770;
 
     const width = isSmallScreen ? '80%' : '500px';
-    const height = isSmallScreen ? '28rem' : '865px';
+    const height = isSmallScreen ? '80%' : '865px';
 
     return {
       content: {
@@ -173,6 +174,7 @@ const List: React.FC<PageType> = ({ $type, authorized }) => {
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         style={customStyles}
+        ariaHideApp={false}
       >
         <ModalContainerComponents />
       </Modal>
@@ -181,7 +183,7 @@ const List: React.FC<PageType> = ({ $type, authorized }) => {
         <Header authorized={authorized} />
       </HeaderWrapper>
 
-      {$type === 'recruitment' ? <RecruitmentBanner /> : $type === 'tour' ? <ToursBanner /> : <PartiesBanner />}
+      <Banner $type={$type} authorized={authorized} />
 
       {$type === 'recruitment' &&
         <PopularEmployers>
@@ -217,7 +219,7 @@ const List: React.FC<PageType> = ({ $type, authorized }) => {
         </PopularEmployers>
       }
 
-      <ListContainer $type={$type} authorized={false}>
+      <ListContainer $type={$type}>
         <div className={'title'}>
           {$type === 'recruitment' ? 'MEET ALL EMPLOYERS' : $type === 'tour' ? 'UPCOMING TOURS' : 'UPCOMING PARTIES & EVENTS'}
         </div>
@@ -311,7 +313,7 @@ const ModalContainer = styled.div<ImageProps>`
 
   & > .image-container {
     width: 100%;
-    height: auto;
+    height: 200px;
     background-size: cover;
     overflow: hidden;
     background-position: center;
@@ -323,6 +325,11 @@ const ModalContainer = styled.div<ImageProps>`
   & > .institute-name {
     width: 100%;
     height: 60px;
+
+    @media (max-width: 750px) {
+      height: 40px;
+    }
+
     background: #F8FAFB;
     border-radius: 10px;
     display: flex;
@@ -341,6 +348,20 @@ const ModalContainer = styled.div<ImageProps>`
         font-weight: 400;
         padding-right: 2rem;
       }
+
+      @media (max-width: 750px) {
+        &:first-child {
+          padding-left: 1rem;
+          font-size: 16px;
+          font-weight: 600;
+        }
+
+        &:last-child {
+          font-size: 12px;
+          font-weight: 400;
+          padding-right: 1rem;
+        }
+      }
     }
   }
 
@@ -354,9 +375,27 @@ const ModalContainer = styled.div<ImageProps>`
     flex-direction: column;
     justify-content: space-between;
 
+    @media (max-width: 500px) {
+      height: 330px;
+    }
+
     & > div {
       height: auto;
       width: 100%;
+
+      @media (max-width: 500px) {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        
+        &:first-child {
+          margin-top: 15px !important;
+        }
+
+        &:last-child {
+          margin-bottom: 15px !important;
+        }
+      }
 
       &:first-child {
         margin-top: 20px;
@@ -368,6 +407,10 @@ const ModalContainer = styled.div<ImageProps>`
 
       & .parentheses {
         font-size: 13px;
+
+        @media (max-width: 500px) {
+          font-size: 8.5px;
+        }
       }
 
       & > span {
@@ -384,6 +427,18 @@ const ModalContainer = styled.div<ImageProps>`
           padding-right: 25px;
           color: #000;
         }
+
+        @media (max-width: 500px) {
+          font-size: 10px;
+
+          &:first-child {
+            padding-left: 1rem;
+          }
+
+          &:last-child {
+            padding-right: 1rem;
+          }
+        }
       }
     }
   }
@@ -395,12 +450,13 @@ const ModalContainer = styled.div<ImageProps>`
 
     & > button {
       border-radius: 10px;
-      width: 416px;
+      width: 100%;
       height: 100%;
       border: none;
       cursor: pointer;
       background: #FAE13E;
       transition: background-color .25s;
+      margin-bottom: 1rem;
 
       &:hover {
         background: #dcc532;
@@ -417,7 +473,7 @@ const PopularEmployers = styled.div`
   @media (max-width: 750px) {
     width: 100%;
   }
-  
+
   @media (max-width: 500px) {
     height: auto;
   }
@@ -473,11 +529,11 @@ const PopularEmployers = styled.div`
 
   & .employer-container {
     margin-top: 5px;
-    
+
     & .title > div {
       color: #F4B723;
     }
-    
+
     & > .bottom-container > div {
       border: 1px solid #FAE13E;
       background: #FFFBD4;
@@ -491,7 +547,7 @@ const EmployerBox = styled.div<ImageProps>`
   cursor: pointer;
   border-radius: 10px;
   transition: all .25s;
-  
+
   @media (max-width: 500px) {
     width: 100% !important;
     height: 420px;
@@ -576,7 +632,7 @@ const EmployerBox = styled.div<ImageProps>`
     display: flex;
 
     & > div {
-      font-family: 'KoPubWorldDotumLight','sans-serif';
+      font-family: 'KoPubWorldDotumLight', 'sans-serif';
       display: flex;
       align-items: center;
       width: auto;
@@ -615,6 +671,11 @@ const TourAndPartiesBox = styled.div<ImageProps>`
   box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
   transition: all .25s;
 
+  @media (max-width: 500px) {
+    width: 100% !important;
+    height: 460px;
+  }
+
   &:hover {
     transform: translateY(-5px);
   }
@@ -626,6 +687,11 @@ const TourAndPartiesBox = styled.div<ImageProps>`
   & > .container {
     width: 360px;
     height: 480px;
+    
+    @media (max-width: 750px) {
+      width: 90%;
+      height: 95%;
+    }
 
     & > .employers-image {
       width: 100%;
@@ -636,6 +702,11 @@ const TourAndPartiesBox = styled.div<ImageProps>`
       background-position: center;
       border-radius: 10px;
       background-image: url(${({ $url }) => $url});
+
+      @media (max-width: 750px) {
+        width: 100% !important;
+        height: 312px;
+      }
     }
 
     & > .title {
@@ -643,6 +714,10 @@ const TourAndPartiesBox = styled.div<ImageProps>`
       width: 100%;
       font-weight: 600;
       font-size: 20px;
+
+      @media (max-width: 500px) {
+        font-size: 16px;
+      }
     }
 
     & > .subtitle {
@@ -652,6 +727,10 @@ const TourAndPartiesBox = styled.div<ImageProps>`
       font-size: 16px;
       font-family: 'KoPubWorldDotumLight', sans-serif;
       color: #3E3C39;
+
+      @media (max-width: 500px) {
+        font-size: 13px;
+      }
     }
 
     & > .date {
@@ -661,6 +740,10 @@ const TourAndPartiesBox = styled.div<ImageProps>`
       font-size: 14px;
       font-weight: 400;
       color: #3E3C39;
+
+      @media (max-width: 500px) {
+        font-size: 12px;
+      }
     }
 
     & > .bottom-container {
@@ -671,10 +754,18 @@ const TourAndPartiesBox = styled.div<ImageProps>`
       display: flex;
       justify-content: space-between;
       align-items: center;
+      
+      @media (max-width: 500px) {
+        height: 28px;
+      }
 
       & > div {
         font-size: 20px;
         font-weight: 600;
+        
+        @media (max-width: 500px) {
+          font-size: 16px;
+        }
       }
 
       & > button {
@@ -684,13 +775,17 @@ const TourAndPartiesBox = styled.div<ImageProps>`
         height: 100%;
         border: none;
         border-radius: 5px;
+
+        @media (max-width: 500px) {
+          width: 100px;
+        }
       }
     }
   }
 `;
 
-const ListContainer = styled.div<PageType>`
-  margin: ${({ $type }) => $type !== 'recruitment' ? '0 auto 10px' : '100px auto 10px'};
+const ListContainer = styled.div<Omit<PageType, 'authorized'>>`
+  margin: 100px auto 10px;
   height: 1400px;
   width: 1200px;
 
@@ -727,7 +822,7 @@ const ListContainer = styled.div<PageType>`
     }
 
     @media (max-width: 500px) {
-      width: 95%;
+      width: 90%;
     }
   }
 
@@ -739,6 +834,11 @@ const ListContainer = styled.div<PageType>`
     width: 420px;
     text-align: center;
     font-family: 'KoPubWorldDotumBold', 'sans-serif';
+    
+    @media (max-width: 500px) {
+      font-size: 13px;
+      width: 90%;
+    }
   }
 
   & > .main-container {
