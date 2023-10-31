@@ -13,7 +13,7 @@ import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
 import { AuthProps } from '../interface/AuthProps.ts';
 
-const SignIn: React.FC<AuthProps> = ({ authorized }) => {
+const SignIn: React.FC<AuthProps> = ({ authorized, permission }) => {
   const navigate = useNavigate();
   const [, setCookies] = useCookies();
   const [loginData, setLoginData] = useState<SignInProps>({
@@ -34,7 +34,7 @@ const SignIn: React.FC<AuthProps> = ({ authorized }) => {
     e.preventDefault();
     axiosInstance.post('/auth/login', JSON.stringify(loginData))
       .then(res => {
-        console.log(res)
+        console.log(res);
         if (res.data.status === 200) {
           setCookies(import.meta.env.VITE_COOKIE_NAME, res.data.session, {
             sameSite: 'none',
@@ -47,19 +47,19 @@ const SignIn: React.FC<AuthProps> = ({ authorized }) => {
             style: {
               backgroundColor: '#fff',
               width: '16rem',
-              fontSize: '20px'
+              fontSize: '20px',
             },
           });
 
           navigate('/');
-        } else  {
+        } else {
           toast.error(res.data.message, {
             duration: 3000,
             style: {
               backgroundColor: '#ff4a4a',
               width: '16rem',
               fontSize: '20px',
-              color: '#fff'
+              color: '#fff',
             },
           });
         }
@@ -71,7 +71,7 @@ const SignIn: React.FC<AuthProps> = ({ authorized }) => {
             backgroundColor: '#ff4a4a',
             width: '16rem',
             fontSize: '20px',
-            color: '#fff'
+            color: '#fff',
           },
         });
       });
@@ -80,7 +80,7 @@ const SignIn: React.FC<AuthProps> = ({ authorized }) => {
   return (
     <Container>
       <HeaderWrapper>
-        <Header authorized={authorized} />
+        <Header authorized={authorized} permission={permission} />
       </HeaderWrapper>
 
       <MainTag>

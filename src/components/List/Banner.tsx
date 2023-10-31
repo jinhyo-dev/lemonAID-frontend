@@ -35,7 +35,7 @@ const Banner: React.FC<PageType> = ({ $type }) => {
   );
 };
 
-const BannerContainer = styled.div <Omit<PageType, 'authorized'>>`
+const BannerContainer = styled.div <Pick<PageType, '$type'>>`
   width: 100%;
   height: 530px;
   background: #FFFBD4;
@@ -153,7 +153,7 @@ const BannerContainer = styled.div <Omit<PageType, 'authorized'>>`
 `;
 
 
-const Image = styled.img<Omit<PageType, 'authorized'>>`
+const Image = styled.img<Pick<PageType, '$type'>>`
   @media (min-width: 751px) {
     width: ${({ $type }) => $type === 'recruitment' ? '50%' : '60%'};
     margin-right: auto;

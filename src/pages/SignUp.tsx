@@ -13,7 +13,7 @@ import { formatDateString } from '../utils/FormatDateToString.ts';
 import { AuthProps } from '../interface/AuthProps.ts';
 import LoadingModal from '../components/LoadingModal.tsx';
 
-const SignUp: React.FC<AuthProps> = ({ authorized }) => {
+const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
   const navigate = useNavigate();
   const transitionDuration = 400;
   const transitionStyles: { [key: string]: React.CSSProperties } = {
@@ -138,7 +138,7 @@ const SignUp: React.FC<AuthProps> = ({ authorized }) => {
     <Container>
       <LoadingModal isOpen={loading} />
       <HeaderWrapper>
-        <Header authorized={authorized} />
+        <Header authorized={authorized} permission={permission} />
       </HeaderWrapper>
 
       <MainTag>

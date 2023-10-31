@@ -11,7 +11,7 @@ interface ImageProps {
   $url: string;
 }
 
-const Resume: React.FC<AuthProps> = ({ authorized }) => {
+const Resume: React.FC<AuthProps> = ({ authorized, permission }) => {
   const employees = Array(4).fill({});
   const dotsLength = Array(3).fill({});
   const [currentPage, setCurrentPage] = useState<number>(0);
@@ -32,10 +32,10 @@ const Resume: React.FC<AuthProps> = ({ authorized }) => {
   return (
     <Container>
       <HeaderWrapper>
-        <Header authorized={authorized} />
+        <Header authorized={authorized} permission={permission} />
       </HeaderWrapper>
 
-      <Banner $type={'recruitment'} authorized={authorized} />
+      <Banner $type={'recruitment'} authorized={authorized} permission={permission} />
 
       <Employees>
         <div className={'title'}>MEET ALL EMPLOYEES</div>
@@ -91,7 +91,7 @@ const Employees = styled.div`
     @media (max-width: 750px) {
       font-size: 24px;
     }
-    
+
     @media (max-width: 500px) {
       width: 90%;
     }

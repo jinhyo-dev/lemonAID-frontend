@@ -5,15 +5,15 @@ import { useParams } from 'react-router-dom';
 import { AuthProps } from '../interface/AuthProps.ts';
 import React from 'react';
 
-const Search: React.FC<AuthProps> = ({ authorized }) => {
+const Search: React.FC<AuthProps> = ({ authorized, permission }) => {
   const { searchValue } = useParams();
 
-  console.log(searchValue);
+  console.log(searchValue)
 
   return (
     <Container>
       <HeaderWrapper>
-        <Header authorized={authorized} />
+        <Header authorized={authorized} permission={permission}/>
       </HeaderWrapper>
 
       <SearchValueContainer>

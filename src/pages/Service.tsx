@@ -1,13 +1,15 @@
-import { Container } from '../style/global.ts';
+import { Container, HeaderWrapper } from '../style/global.ts';
 import Header from '../components/Header.tsx';
 import styled from 'styled-components';
 import React from 'react';
 import { AuthProps } from '../interface/AuthProps.ts';
 
-const Service: React.FC<AuthProps> = ({ authorized }) => {
+const Service: React.FC<AuthProps> = ({ authorized, permission }) => {
   return (
     <Container>
-      <Header authorized={authorized} />
+      <HeaderWrapper>
+        <Header authorized={authorized} permission={permission} />
+      </HeaderWrapper>
       <MainTag>
         <div className={'title'}>
           <div>Lemon Aid Packages</div>

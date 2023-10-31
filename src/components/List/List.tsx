@@ -34,7 +34,7 @@ interface ActiveSort {
   $isActive: boolean;
 }
 
-const List: React.FC<PageType> = ({ $type, authorized }) => {
+const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [sortType, setSortType] = useState<'none' | 'low' | 'high' | 'asc' | 'desc'>('none');
@@ -180,10 +180,10 @@ const List: React.FC<PageType> = ({ $type, authorized }) => {
       </Modal>
 
       <HeaderWrapper>
-        <Header authorized={authorized} />
+        <Header authorized={authorized} permission={permission}/>
       </HeaderWrapper>
 
-      <Banner $type={$type} authorized={authorized} />
+      <Banner $type={$type} authorized={authorized} permission={permission}/>
 
       {$type === 'recruitment' &&
         <PopularEmployers>
@@ -784,7 +784,7 @@ const TourAndPartiesBox = styled.div<ImageProps>`
   }
 `;
 
-const ListContainer = styled.div<Omit<PageType, 'authorized'>>`
+const ListContainer = styled.div<Pick<PageType, '$type'>>`
   margin: 100px auto 10px;
   height: 1400px;
   width: 1200px;

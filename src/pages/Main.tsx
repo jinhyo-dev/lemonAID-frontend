@@ -14,7 +14,7 @@ import { HeaderWrapper } from '../style/global.ts';
 import React from 'react';
 import { AuthProps } from '../interface/AuthProps.ts';
 
-const Main: React.FC<AuthProps> = ({ authorized }) => {
+const Main: React.FC<AuthProps> = ({ authorized, permission }) => {
   const settings = {
     dots: true,
     infinite: true,
@@ -30,7 +30,7 @@ const Main: React.FC<AuthProps> = ({ authorized }) => {
   return (
     <Container>
       <HeaderWrapper>
-        <Header authorized={authorized} />
+        <Header authorized={authorized} permission={permission} />
       </HeaderWrapper>
       <MainTag>
         <ImageContainer>

@@ -13,15 +13,20 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from './utils/AxiosInstance.ts';
 import LoadingModal from './components/LoadingModal.tsx';
 import ScrollToTop from './components/ScrollToTop.tsx';
+import AdminButton from './components/AdminButton.tsx';
+import { Permission } from './interface/AuthProps.ts';
+import UserManage from './pages/admin/UserManage.tsx';
+import NotFound from './components/NotFound.tsx';
 
 interface AuthProps {
   loading: boolean;
   authorized: boolean;
+  permission: Permission;
 }
 
 const ConfigAuth = () => {
   const [isAuthorized, setIsAuthorized] = useState<AuthProps>({
-    authorized: false, loading: true,
+    authorized: false, loading: true, permission: Permission.Undefined,
   });
 
   const location = useLocation();
@@ -29,7 +34,13 @@ const ConfigAuth = () => {
   useEffect(() => {
     axiosInstance.get('/user/me')
       .then(res => {
-        setIsAuthorized({ authorized: res.data.status === 200, loading: false });
+        if (res.data.status === 200) {
+          const permission = res.data.data.user_type === 1 ? Permission.ACADEMY :
+            res.data.data.user_type === 2 ? Permission.TEACHER : res.data.data.user_type === 3 ? Permission.ADMIN : Permission.Undefined;
+          setIsAuthorized({ authorized: res.data.status === 200, loading: false, permission: permission });
+        } else {
+          setIsAuthorized({ authorized: false, loading: false, permission: Permission.Undefined });
+        }
       })
       .catch(err => console.log(err));
   }, [location]);
@@ -113,29 +124,31 @@ const ConfigAuth = () => {
 
   const getComponents = (path: string): React.ReactElement => {
     if (location.pathname.startsWith('/search')) {
-      return <Search authorized={isAuthorized.authorized} />;
+      return <Search authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
     } else {
       switch (path) {
         case '/':
-          return <Main authorized={isAuthorized.authorized} />;
+          return <Main authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
         case '/sign-in':
-          return <SignIn authorized={isAuthorized.authorized} />;
+          return <SignIn authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
         case '/sign-up':
-          return <SignUp authorized={isAuthorized.authorized} />;
+          return <SignUp authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
         case '/recruitment':
-          return <Recruitment authorized={isAuthorized.authorized} />;
+          return <Recruitment authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
         case '/service':
-          return <Service authorized={isAuthorized.authorized} />;
+          return <Service authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
         case '/resume':
-          return <Resume authorized={isAuthorized.authorized} />;
+          return <Resume authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
         case '/tours':
-          return <Tours authorized={isAuthorized.authorized} />;
+          return <Tours authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
         case '/parties-and-events':
-          return <Parties authorized={isAuthorized.authorized} />;
+          return <Parties authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
         case '/my-page':
-          return <MyPage authorized={isAuthorized.authorized} />;
+          return <MyPage authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
+        case '/admin/new-user':
+          return <UserManage authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
         default:
-          return <Resume authorized={isAuthorized.authorized} />;
+          return <NotFound authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
       }
     }
   };
@@ -143,9 +156,10 @@ const ConfigAuth = () => {
 
   return (
     <>
-      <ScrollToTop/>
+      <ScrollToTop />
       <LoadingModal isOpen={isAuthorized.loading} />
-      {getComponents(location.pathname)}
+      {!isAuthorized.loading && getComponents(location.pathname)}
+      {isAuthorized.permission === Permission.ADMIN && <AdminButton />}
     </>
   );
 };

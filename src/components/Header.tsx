@@ -14,7 +14,7 @@ interface ActivePageProps {
   $currentPath?: string;
 }
 
-const Header: React.FC<AuthProps> = ({ authorized }) => {
+const Header: React.FC<AuthProps> = ({ authorized, permission }) => {
   const [, , removeCookie] = useCookies();
   const navigate = useNavigate();
   const location = useLocation()
@@ -26,7 +26,7 @@ const Header: React.FC<AuthProps> = ({ authorized }) => {
 
   const handleLogout = () => {
     if (window.confirm('Do you want to log out?')) {
-      removeCookie(import.meta.env.VITE_COOKIE_NAME);
+      removeCookie(import.meta.env.VITE_COOKIE_NAME, { path: '/' });
       navigate('/');
     }
   };
@@ -84,7 +84,7 @@ const Header: React.FC<AuthProps> = ({ authorized }) => {
           <button onClick={() => window.open('https://open.kakao.com/o/sYec9Pmf')}>
             Click to Chat
           </button>
-          <Sidebar authorized={authorized} />
+          <Sidebar authorized={authorized} permission={permission}/>
         </div>
       </MobileHeaderContainer>
     </StyledHeader>
