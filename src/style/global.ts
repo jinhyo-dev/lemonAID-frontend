@@ -92,6 +92,36 @@ export const GlobalStyle = createGlobalStyle`
       left: -9%;
     }
   }
+  
+  .custom-modal-arrow-left {
+    position: fixed;
+    font-size: 2rem;
+    top: 9rem;
+    cursor: pointer;
+    color: #FAE13E;
+    left: 2.5rem;
+    z-index: 1;
+
+    @media (max-width: 500px) {
+      left: 1.5rem;
+      font-size: 1.4rem;
+    }
+  }
+  
+  .custom-modal-arrow-right {
+    position: fixed;
+    font-size: 2rem;
+    top: 9rem;
+    cursor: pointer;
+    color: #FAE13E;
+    right: 2.5rem;
+    z-index: 1;
+
+    @media (max-width: 500px) {
+      right: 1.5rem;
+      font-size: 1.4rem;
+    }
+  }
 
   .lazy-load-image {
     border-radius: 50%;

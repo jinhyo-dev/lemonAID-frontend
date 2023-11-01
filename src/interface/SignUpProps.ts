@@ -11,7 +11,6 @@ export interface SignUpTypingProps {
   gender?: 'Male' | 'Female' | 'OtHer';
   nationality?: string;
   visaCode?: string;
-  occupation?: string;
   videoMessenger?: string;
   videoMessengerId?: string;
   userType: 1 | 2 | undefined

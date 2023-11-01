@@ -30,6 +30,7 @@ const MyPage: React.FC<AuthProps> = ({ authorized, permission }) => {
     visa_code: '',
   });
   const [loading, setLoading] = useState<boolean>(true);
+  const [editTagOpen, setEditTagOpen] = useState<boolean>(false);
 
   const getMyInfo = () => {
     axiosInstance.get('/user/me')
@@ -56,7 +57,7 @@ const MyPage: React.FC<AuthProps> = ({ authorized, permission }) => {
         <Header authorized={authorized} permission={permission} />
       </HeaderWrapper>
       <MainTag>
-        <TopContainer>
+        <TopContainer $open={editTagOpen}>
           <div className={'container'}>
             <LazyLoadImage
               alt={'Profile'}
@@ -75,46 +76,14 @@ const MyPage: React.FC<AuthProps> = ({ authorized, permission }) => {
             </div>
 
             <div className={'button-container'}>
-              <button className={'edit-button'}>Edit Profile</button>
+              <button className={'edit-button'} onClick={() => setEditTagOpen(!editTagOpen)}>Edit Profile</button>
             </div>
           </div>
+
+          <EditContainer $open={editTagOpen}>
+
+          </EditContainer>
         </TopContainer>
-
-        {/*<BottomContainer>*/}
-        {/*  <div className={'information'}>Information</div>*/}
-
-        {/*  <div className={'information-container'}>*/}
-        {/*    <div className={'box'}>*/}
-        {/*      <div>*/}
-        {/*        <LazyLoadImage*/}
-        {/*          alt={'Profile'}*/}
-        {/*          height={'58px'}*/}
-        {/*          src={'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80'}*/}
-        {/*          width={'58px'}*/}
-        {/*          className={'lazy-load-image'}*/}
-        {/*        />*/}
-        {/*        Perfect*/}
-        {/*      </div>*/}
-        {/*      <div>Manners</div>*/}
-        {/*    </div>*/}
-
-        {/*    <div className={'box'}>*/}
-        {/*      <div>*/}
-        {/*        <LazyLoadImage*/}
-        {/*          alt={'Profile'}*/}
-        {/*          height={'58px'}*/}
-        {/*          src={'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80'}*/}
-        {/*          width={'58px'}*/}
-        {/*          className={'lazy-load-image'}*/}
-        {/*        />*/}
-        {/*        Amateur*/}
-        {/*      </div>*/}
-        {/*      <div>Level</div>*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-
-        {/*</BottomContainer>*/}
-
       </MainTag>
     </Container>
   );
@@ -125,14 +94,13 @@ export default MyPage;
 const MainTag = styled.main`
   width: 100%;
   height: calc(100vh - 80px);
-  overflow-y: hidden;
 
   @media (max-width: 500px) {
     height: calc(100vh - 60px);
   }
 `;
 
-const TopContainer = styled.div`
+const TopContainer = styled.div<{$open: boolean}>`
   width: 100%;
   height: 100%;
   min-width: 1030px;
@@ -140,6 +108,8 @@ const TopContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
 
   @media (max-width: 750px) {
     width: 100%;
@@ -165,8 +135,11 @@ const TopContainer = styled.div`
   & > .container {
     display: flex;
     align-items: center;
+    text-align: center;
     height: auto;
     width: auto;
+    transition: margin-bottom .25s;
+    margin-bottom: ${({$open}) => $open ? '45vh' : '0'};
 
     @media (max-width: 750px) {
       width: auto;
@@ -260,91 +233,13 @@ const TopContainer = styled.div`
   }
 `;
 
-/*
-const BottomContainer = styled.div`
-  width: 100%;
-  height: 50%;
-
-  * {
-    font-family: 'KoPubWorldDotumBold', 'sans-serif';
-  }
-
-  @media (max-width: 750px) {
-    padding-left: 5%;
-    padding-right: 5%;
-  }
-
-  & > .information {
-    margin-left: 361px;
-    margin-top: 3rem;
-    font-weight: 600;
-    font-size: 25px;
-    line-height: 30.58px;
-
-    @media (max-width: 750px) {
-      margin-left: 0;
-    }
-  }
-
-  & > .information-container {
-    width: 722px;
-    display: flex;
-    height: auto;
-    padding-left: 361px;
-    padding-right: 361px;
-    margin-top: 2rem;
-
-    @media (max-width: 750px) {
-      padding-left: 0;
-      padding-right: 0;
-      width: auto;
-    }
-
-    & > .box {
-      width: 306px;
-      height: 154px;
-      border-radius: 10px;
-      border: 1px solid #D9D9D9;
-      margin-left: 1.5rem;
-
-      @media (max-width: 750px) {
-        width: 43%;
-      }
-
-      &:first-child {
-        margin-left: 0;
-      }
-
-      & > div {
-
-        &:first-child {
-          font-weight: 500;
-          font-size: 32px;
-          width: 65%;
-          margin: 1.3rem auto;
-          height: auto;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-
-          @media (max-width: 750px) {
-            width: 85%;
-            font-size: 28px;
-          }
-        }
-
-        &:last-child {
-          font-weight: 400;
-          font-size: 20px;
-          width: 65%;
-          margin: 1rem auto;
-          color: #878787;
-
-          @media (max-width: 750px) {
-            width: 85%;
-          }
-        }
-      }
-    }
-  }
-`;*/
+const EditContainer = styled.div<{ $open: boolean }>`
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%) translateY(${({ $open }) => $open ? '15vh' : '200vh'});
+  transition: transform 0.25s;
+  width: 1030px;
+  height: 40vh;
+  background-color: #f00;
+  visibility: ${({ $open }) => $open ? 'visible' : 'hidden'};
+`;

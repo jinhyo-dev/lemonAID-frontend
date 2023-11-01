@@ -14,9 +14,11 @@ import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { IoClose } from 'react-icons/io5';
 import * as React from 'react';
-import { AuthProps } from '../../interface/AuthProps.ts';
+import { AuthProps, Permission } from '../../interface/AuthProps.ts';
 import { debounce } from 'lodash';
 import Banner from './Banner.tsx';
+import { ModalNextArrow } from '../Modal/ModalNextArrow.tsx';
+import { ModalPrevArrow } from '../Modal/ModalPrevArrow.tsx';
 
 interface ImageProps {
   $url: string;
@@ -44,7 +46,7 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
 
   const handleResize = debounce(() => {
     setScreenWidth(window.innerWidth);
-    console.log(window.innerWidth)
+    console.log(window.innerWidth);
   }, 200);
 
   useEffect(() => {
@@ -101,6 +103,15 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
     prevArrow: <PrevArrow />,
   };
 
+  const modalSetting = {
+    infinite: true,
+    speed: 700,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    nextArrow: <ModalNextArrow />,
+    prevArrow: <ModalPrevArrow />,
+  };
+
   const handlePagination = (increase: boolean) => {
     const MAX_PAGE = 2;
     if (!increase && currentPage > 0) {
@@ -136,7 +147,16 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
         <div className={'close-button'}>
           <button onClick={closeModal}><IoClose /></button>
         </div>
-        <div className={'image-container'} />
+        <div className={'image-container'}>
+          <Slider {...modalSetting}>
+            <Image $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
+              <div>1/2</div>
+            </Image>
+            <Image $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
+              <div>2/2</div>
+            </Image>
+          </Slider>
+        </div>
         <div className={'institute-name'}>
           <div>RISE</div>
           <div>Gangdong Campus</div>
@@ -180,10 +200,10 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
       </Modal>
 
       <HeaderWrapper>
-        <Header authorized={authorized} permission={permission}/>
+        <Header authorized={authorized} permission={permission} />
       </HeaderWrapper>
 
-      <Banner $type={$type} authorized={authorized} permission={permission}/>
+      <Banner $type={$type} authorized={authorized} permission={permission} />
 
       {$type === 'recruitment' &&
         <PopularEmployers>
@@ -203,7 +223,7 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
                              $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
                   <div className={'employers-image'} />
                   <div className={'title'}>
-                    <img src={grade3} />
+                    {permission === Permission.ADMIN && <img src={grade3} alt={'grade'} />}
                     <div>RISE Gangdong</div>
                   </div>
                   <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
@@ -244,7 +264,7 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
               <EmployerBox key={index} $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'} onClick={openModal}>
                 <div className={'employers-image'} />
                 <div className={'title'}>
-                  <img src={grade3} />
+                  {permission === Permission.ADMIN && <img src={grade3} alt={'grade'} />}
                   <div>RISE Gangdong</div>
                 </div>
                 <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
@@ -281,7 +301,7 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
   );
 };
 
-const ModalContainer = styled.div<ImageProps>`
+export const ModalContainer = styled.div<ImageProps>`
   width: 90%;
   height: 95%;
   margin: auto;
@@ -317,7 +337,7 @@ const ModalContainer = styled.div<ImageProps>`
     background-size: cover;
     overflow: hidden;
     background-position: center;
-    background-image: url(${({ $url }) => $url});
+      // background-image: url(${({ $url }) => $url});
     margin: 10px 0 15px;
     border-radius: 10px;
   }
@@ -387,7 +407,7 @@ const ModalContainer = styled.div<ImageProps>`
         display: flex;
         align-items: center;
         justify-content: space-between;
-        
+
         &:first-child {
           margin-top: 15px !important;
         }
@@ -460,6 +480,28 @@ const ModalContainer = styled.div<ImageProps>`
 
       &:hover {
         background: #dcc532;
+      }
+    }
+  }
+
+  & > .accept-button {
+    width: 100%;
+    height: 45px;
+    display: flex;
+    justify-content: space-between;
+
+    & > button {
+      border-radius: 5px;
+      width: 48%;
+      height: 100%;
+      border: none;
+      cursor: pointer;
+      background: #FAE13E;
+      font-size: 18px;
+      transition: background-color .25s;
+
+      &:last-child {
+        background: #ccc;
       }
     }
   }
@@ -593,6 +635,7 @@ const EmployerBox = styled.div<ImageProps>`
 
     & > img {
       width: 31px;
+      margin-right: 12px;
 
       @media (max-width: 500px) {
         height: 24px;
@@ -602,7 +645,6 @@ const EmployerBox = styled.div<ImageProps>`
 
     & > div {
       margin-top: 3.5px;
-      margin-left: 12px;
       width: auto;
       color: #010101;
       align-content: center;
@@ -687,7 +729,7 @@ const TourAndPartiesBox = styled.div<ImageProps>`
   & > .container {
     width: 360px;
     height: 480px;
-    
+
     @media (max-width: 750px) {
       width: 90%;
       height: 95%;
@@ -754,7 +796,7 @@ const TourAndPartiesBox = styled.div<ImageProps>`
       display: flex;
       justify-content: space-between;
       align-items: center;
-      
+
       @media (max-width: 500px) {
         height: 28px;
       }
@@ -762,7 +804,7 @@ const TourAndPartiesBox = styled.div<ImageProps>`
       & > div {
         font-size: 20px;
         font-weight: 600;
-        
+
         @media (max-width: 500px) {
           font-size: 16px;
         }
@@ -834,7 +876,7 @@ const ListContainer = styled.div<Pick<PageType, '$type'>>`
     width: 420px;
     text-align: center;
     font-family: 'KoPubWorldDotumBold', 'sans-serif';
-    
+
     @media (max-width: 500px) {
       font-size: 13px;
       width: 90%;
@@ -927,6 +969,41 @@ export const Dot = styled.div<ActivePagination>`
 
   &:first-child {
     margin-left: 0;
+  }
+`;
+
+export const Image = styled.div<ImageProps>`
+  width: 100%;
+  height: 200px;
+  border-radius: 10px;
+  background-size: cover;
+  overflow: hidden;
+  background-position: center;
+  background-image: url(${({ $url }) => $url});
+
+  & > div {
+    float: right;
+    width: 60px;
+    border-radius: 10px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, .5);
+    color: #FAE13E;
+    margin-top: 160px;
+    text-align: center;
+    margin-right: 9px;
+    font-family: 'KoPubWorldDotumBold', sans-serif;
+    font-size: 17px;
+
+    @media (max-width: 500px) {
+      width: 40px;
+      height: 22px;
+      border-radius: 7px;
+      margin-top: 170px;
+      font-size: 12px;
+    }
   }
 `;
 

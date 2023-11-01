@@ -17,6 +17,7 @@ import AdminButton from './components/AdminButton.tsx';
 import { Permission } from './interface/AuthProps.ts';
 import UserManage from './pages/admin/UserManage.tsx';
 import NotFound from './components/NotFound.tsx';
+import NoticeManage from './pages/admin/NoticeManage.tsx';
 
 interface AuthProps {
   loading: boolean;
@@ -147,6 +148,8 @@ const ConfigAuth = () => {
           return <MyPage authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
         case '/admin/new-user':
           return <UserManage authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
+        case '/admin/new-notice':
+          return <NoticeManage authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
         default:
           return <NotFound authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
       }

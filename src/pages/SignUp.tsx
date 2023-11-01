@@ -34,7 +34,6 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
     lastName: '',
     monthOfBirth: '',
     nationality: '',
-    occupation: '',
     password: '',
     phoneNumber: '',
     videoMessenger: '',
@@ -45,6 +44,16 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
   });
   const [resume, setResume] = useState<File | null>(null);
   const [profileImage, setProfileImage] = useState<File | null>(null);
+
+  const nationality = [
+    'Australia',
+    'Canada',
+    'Ireland',
+    'New Zealand',
+    'South Africa',
+    'United Kingdom',
+    'United States of America',
+  ];
 
   const handleSignUpData = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -276,27 +285,32 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
                 </div>
 
                 <div className={'input-container'}>
-                  <div className={'single-select-container'}>
+                  <div
+                    className={!nationality.includes(signUpData.nationality ?? '') && signUpData.nationality !== '' ? 'single-input-container' : 'single-select-container'}>
                     <p>Nationality</p>
-                    <CustomSelect onChange={handleSignUpData} name={'nationality'} value={signUpData.nationality}>
-                      <option value={''} defaultChecked={true} disabled={true}>Select nationality</option>
-                      <option value={'korea'}>Korea</option>
-                      <option value={'japan'}>Japan</option>
-                    </CustomSelect>
+                    {
+                      !nationality.includes(signUpData.nationality ?? '') && signUpData.nationality !== '' ?
+                        <input type={'text'} placeholder={'Enter nationality'}
+                               value={signUpData.nationality === 'etc' ? '' : signUpData.nationality}
+                               name={'nationality'} onChange={handleSignUpData} /> :
+                        <CustomSelect onChange={handleSignUpData} name={'nationality'} value={signUpData.nationality}>
+                          <option value={''} defaultChecked={true} disabled={true}>Select nationality</option>
+                          {nationality.map((option, index) => (
+                            <option key={index} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                          <option value={'etc'}>etc</option>
+                        </CustomSelect>
+                    }
                   </div>
                 </div>
 
                 <div className={'input-container'}>
-                  <div className={'double-input-container'}>
+                  <div className={'single-input-container'}>
                     <p>Visa Code</p>
                     <input type={'text'} placeholder={'e.g. MH190M192'} value={signUpData.visaCode}
                            name={'visaCode'} onChange={handleSignUpData} />
-                  </div>
-
-                  <div className={'double-input-container'}>
-                    <p>Occupation</p>
-                    <input type={'text'} placeholder={'e.g. Graphic Designer'} value={signUpData.occupation}
-                           name={'occupation'} onChange={handleSignUpData} />
                   </div>
                 </div>
 
@@ -306,14 +320,16 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
                     <CustomSelect name={'videoMessenger'} onChange={handleSignUpData}
                                   style={{ width: '100%' }} value={signUpData.videoMessenger}>
                       <option value={''} defaultChecked={true} disabled={true}>Select messenger</option>
-                      <option value={'instagram'}>Instagram</option>
+                      <option value={'skype'}>Skype</option>
+                      <option value={'zoom'}>Zoom</option>
                     </CustomSelect>
                   </div>
 
                   <div className={'double-input-container'}>
                     <p>ID</p>
                     <input type={'text'} name={'videoMessengerId'} onChange={handleSignUpData}
-                           placeholder={'e.g. 21983091'} value={signUpData.videoMessengerId} />
+                           placeholder={signUpData.videoMessenger === 'zoom' ? 'Zoom doesn\'t need id.' : 'e.g. 21983091'}
+                           value={signUpData.videoMessengerId} readOnly={signUpData.videoMessenger === 'zoom'} />
                   </div>
                 </div>
 
@@ -344,7 +360,7 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
                   <div className='radio-buttons-container'>
                     <div className='radio-button'>
                       <input name='userType' id='academy' value={1} className='radio-button__input'
-                             type='radio' onChange={handleSignUpData} />
+                             type='radio' onChange={handleSignUpData} required={true} />
                       <label htmlFor='academy' className='radio-button__label'>
                         <span className='radio-button__custom' />
                         Academy

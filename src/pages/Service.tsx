@@ -6,10 +6,11 @@ import { AuthProps } from '../interface/AuthProps.ts';
 
 const Service: React.FC<AuthProps> = ({ authorized, permission }) => {
   return (
-    <Container>
+    <Container style={{ overflowX: 'auto' }}>
       <HeaderWrapper>
         <Header authorized={authorized} permission={permission} />
       </HeaderWrapper>
+
       <MainTag>
         <div className={'title'}>
           <div>Lemon Aid Packages</div>
@@ -127,6 +128,16 @@ const MainTag = styled.main`
       font-weight: 400;
       font-size: 18px;
     }
+
+    @media (max-width: 500px) {
+      &:first-child {
+        font-size: 25px;
+      }
+
+      &:last-child {
+        font-size: 13px;
+      }
+    }
   }
 `;
 
@@ -136,6 +147,13 @@ const LemonAidPackages = styled.div`
   margin: 5rem auto 0;
   display: flex;
   justify-content: space-between;
+
+  @media (max-width: 750px) {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: auto;
+  }
 
   & > .premium {
     border: 3px solid #FAE13E;
@@ -152,9 +170,25 @@ const LemonAidPackages = styled.div`
     border-radius: 15px;
     background: #fff;
 
+    @media (max-width: 750px) {
+      margin-top: 3rem;
+      
+      &:first-child {
+        margin-top: 0;
+      }
+      
+      &:last-child {
+        margin-bottom: 3rem;
+      }
+    }
+
+    @media (max-width: 500px) {
+      width: 90%;
+    }
+
     & > .package-name {
       margin: auto;
-      width: 276px;
+      width: 80%;
       height: 11.25rem;
       flex-direction: column;
       border-bottom: 1px solid #D4D4D4;
@@ -208,7 +242,7 @@ const LemonAidPackages = styled.div`
     }
 
     & > button {
-      width: 287px;
+      width: 80%;
       height: 45px;
       display: block;
       margin: 3rem auto;

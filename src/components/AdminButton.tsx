@@ -21,7 +21,7 @@ const AdminButton = () => {
       <FaUserGear />
       <AdminNav $isClick={isClick} onClick={(e) => e.stopPropagation()}>
         <button onClick={() => handlePage('/admin/new-user')}>신규회원 관리</button>
-        <button>공고 관리</button>
+        <button onClick={() => handlePage('/admin/new-notice')}>공고 관리</button>
         <button>투어 및 파티 관리</button>
         <button>프로필 관리</button>
         <button>공고 신청서 관리</button>
