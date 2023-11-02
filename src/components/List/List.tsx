@@ -381,6 +381,8 @@ export const ModalContainer = styled.div<ImageProps>`
       overflow: auto;
 
       & > label {
+        cursor: pointer;
+
         & > div {
           margin: 15px auto 0;
           border-radius: 8px;
@@ -394,7 +396,7 @@ export const ModalContainer = styled.div<ImageProps>`
           box-sizing: border-box;
 
           & > div {
-            width: 85%;
+            width: 90%;
           }
 
           & > button {
@@ -405,17 +407,30 @@ export const ModalContainer = styled.div<ImageProps>`
             font-size: 24px;
             color: #ef4444;
 
-            &:last-child {
-              color: #02a;
-              font-size: 22px;
-
-              & > svg {
-                margin-bottom: -3.5px;
-              }
-            }
-
             & > svg {
               margin-bottom: -4px;
+            }
+          }
+        }
+      }
+
+      & > .file-single-label-hidden {
+        & > div {
+          border: none;
+          box-shadow: none;
+          display: flex;
+          align-items: center;
+          background-color: rgb(0, 0, 0, .6);
+
+          & > div {
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            font-size: 16px;
+
+            & > svg {
+              margin-bottom: -3px;
+              font-size: 18px;
             }
           }
         }
