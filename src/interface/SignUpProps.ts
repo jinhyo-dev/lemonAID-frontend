@@ -10,6 +10,7 @@ export interface SignUpTypingProps {
   yearOfBirth: string;
   gender?: 'Male' | 'Female' | 'OtHer';
   nationality?: string;
+  occupation?: string;
   visaCode?: string;
   videoMessenger?: string;
   videoMessengerId?: string;

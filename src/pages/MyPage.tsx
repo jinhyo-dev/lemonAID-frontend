@@ -81,7 +81,24 @@ const MyPage: React.FC<AuthProps> = ({ authorized, permission }) => {
           </div>
 
           <EditContainer $open={editTagOpen}>
+            <div className={'vertical'}>
+              <div className={'row'}>
+              </div>
+              <div className={'row'}></div>
+              <div className={'row'}></div>
+            </div>
 
+            <div className={'vertical'}>
+              <div className={'row'}></div>
+              <div className={'row'}></div>
+              <div className={'row'}></div>
+            </div>
+
+            <div className={'vertical'}>
+              <div className={'row'}></div>
+              <div className={'row'}></div>
+              <div className={'row'}></div>
+            </div>
           </EditContainer>
         </TopContainer>
       </MainTag>
@@ -131,7 +148,7 @@ const TopContainer = styled.div<{$open: boolean}>`
       margin: 20px auto 0;
     }
   }
-
+  
   & > .container {
     display: flex;
     align-items: center;
@@ -240,6 +257,21 @@ const EditContainer = styled.div<{ $open: boolean }>`
   transition: transform 0.25s;
   width: 1030px;
   height: 40vh;
-  background-color: #f00;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 10px 50px;
   visibility: ${({ $open }) => $open ? 'visible' : 'hidden'};
+  display: flex;
+
+  & > .vertical {
+    width: 33.3333%;
+    background: #faaa;
+
+    & > .row {
+      margin: auto;
+      width: 90%;
+      height: 33.333%;
+      background: #f00;
+    }
+  }
 `;

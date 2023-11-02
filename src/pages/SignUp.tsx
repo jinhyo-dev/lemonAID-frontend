@@ -34,6 +34,7 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
     lastName: '',
     monthOfBirth: '',
     nationality: '',
+    occupation: '',
     password: '',
     phoneNumber: '',
     videoMessenger: '',
@@ -307,10 +308,16 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
                 </div>
 
                 <div className={'input-container'}>
-                  <div className={'single-input-container'}>
+                  <div className={'double-input-container'}>
                     <p>Visa Code</p>
                     <input type={'text'} placeholder={'e.g. MH190M192'} value={signUpData.visaCode}
                            name={'visaCode'} onChange={handleSignUpData} />
+                  </div>
+
+                  <div className={'double-input-container'}>
+                    <p>Occupation</p>
+                    <input type={'text'} placeholder={'e.g. Web designer'} value={signUpData.occupation}
+                           name={'occupation'} onChange={handleSignUpData} />
                   </div>
                 </div>
 

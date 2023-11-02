@@ -46,7 +46,6 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
 
   const handleResize = debounce(() => {
     setScreenWidth(window.innerWidth);
-    console.log(window.innerWidth);
   }, 200);
 
   useEffect(() => {
@@ -337,9 +336,91 @@ export const ModalContainer = styled.div<ImageProps>`
     background-size: cover;
     overflow: hidden;
     background-position: center;
-      // background-image: url(${({ $url }) => $url});
     margin: 10px 0 15px;
     border-radius: 10px;
+  }
+
+  & > .image-submit-container {
+    width: 100%;
+    height: 200px;
+    margin: 10px 0 15px;
+    border-radius: 10px;
+
+    & > input[type='file'] {
+      display: none;
+    }
+
+    & > .file-label-full {
+      height: 100%;
+      width: 100%;
+      background: rgba(0, 0, 0, .65);
+      color: #fff;
+      cursor: pointer;
+      border-radius: 10px;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      display: flex;
+
+      & > div {
+        font-family: 'KoPubWorldDotumBold', sans-serif;
+
+        &:first-child {
+          font-size: 1.8rem;
+        }
+
+        &:last-child {
+          font-size: .85rem;
+        }
+      }
+    }
+
+    & > .label-container {
+      width: 100%;
+      height: 200px;
+      overflow: auto;
+
+      & > label {
+        & > div {
+          margin: 15px auto 0;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          width: 98%;
+          height: 50px;
+          box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+          padding-left: 1.5rem;
+          padding-right: 1.5rem;
+          box-sizing: border-box;
+
+          & > div {
+            width: 85%;
+          }
+
+          & > button {
+            margin-left: auto;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 24px;
+            color: #ef4444;
+
+            &:last-child {
+              color: #02a;
+              font-size: 22px;
+
+              & > svg {
+                margin-bottom: -3.5px;
+              }
+            }
+
+            & > svg {
+              margin-bottom: -4px;
+            }
+          }
+        }
+      }
+    }
   }
 
   & > .institute-name {
@@ -385,7 +466,7 @@ export const ModalContainer = styled.div<ImageProps>`
     }
   }
 
-  & > .table {
+  & .table {
     margin: 15px 0 15px;
     width: 100%;
     height: 420px;
@@ -463,7 +544,70 @@ export const ModalContainer = styled.div<ImageProps>`
     }
   }
 
-  & > .apply-button {
+  & .submit-table {
+    & > div {
+      display: flex;
+      align-items: center;
+
+      select,
+      input {
+        margin-left: auto;
+        width: 9.5rem;
+        padding-left: .5rem;
+        padding-right: .5rem;
+        height: 100%;
+        border-radius: 5px;
+        border: 1px solid #B2B1AD;
+        box-sizing: border-box;
+        font-size: 11px;
+        transition: all .1s;
+
+        &:focus {
+          border: none;
+          outline: 2px solid #F7C324;
+        }
+      }
+
+      select:last-child,
+      input:last-child {
+        margin-right: 1rem;
+      }
+
+      & > .double-input-container {
+        margin-right: 1rem;
+        margin-left: auto;
+        width: auto;
+        display: flex;
+        align-items: center;
+        height: 100%;
+
+        & > span {
+          margin-left: .35rem;
+          margin-right: .35rem;
+          color: #B2B1AD;
+          font-size: 12px;
+        }
+
+        & > .react-datepicker-wrapper {
+          height: 100%;
+          width: 7rem;
+
+          & input {
+            width: 100%;
+          }
+        }
+
+        & > input {
+          width: 8rem;
+          margin: 0;
+          height: 100%;
+        }
+
+      }
+    }
+  }
+
+  & .apply-button {
     width: 100%;
     height: 45px;
     text-align: center;
@@ -484,7 +628,7 @@ export const ModalContainer = styled.div<ImageProps>`
     }
   }
 
-  & > .accept-button {
+  & .accept-button {
     width: 100%;
     height: 45px;
     display: flex;

@@ -31,7 +31,7 @@ export const GlobalStyle = createGlobalStyle`
     url('https://cdn.jsdelivr.net/gh/webfontworld/kopus/KoPubWorldDotumLight.ttf') format("truetype");
     font-display: swap;
   }
-  
+
   * {
     margin: 0;
     font-family: 'Noto Sans KR', sans-serif;
@@ -86,13 +86,13 @@ export const GlobalStyle = createGlobalStyle`
     border: none;
     outline: none;
     background: transparent;
-    
+
     @media (max-width: 750px) {
       font-size: 1.5rem;
       left: -9%;
     }
   }
-  
+
   .custom-modal-arrow-left {
     position: fixed;
     font-size: 2rem;
@@ -107,7 +107,7 @@ export const GlobalStyle = createGlobalStyle`
       font-size: 1.4rem;
     }
   }
-  
+
   .custom-modal-arrow-right {
     position: fixed;
     font-size: 2rem;
@@ -120,6 +120,16 @@ export const GlobalStyle = createGlobalStyle`
     @media (max-width: 500px) {
       right: 1.5rem;
       font-size: 1.4rem;
+    }
+  }
+
+  .react-datepicker__header {
+    background: #FAE13E;
+  }
+
+  .react-datepicker__triangle {
+    &::after {
+      border-bottom-color: #FAE13E !important;
     }
   }
 
