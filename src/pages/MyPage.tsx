@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { MyPageProps } from '../interface/MyPageProps.ts';
 import LoadingModal from '../components/LoadingModal.tsx';
 import { AuthProps } from '../interface/AuthProps.ts';
+import DefaultProfile from '../assets/images/logo/Lemonaid-1.png';
 
 const MyPage: React.FC<AuthProps> = ({ authorized, permission }) => {
   const [info, setInfo] = useState<MyPageProps>({
@@ -30,7 +31,7 @@ const MyPage: React.FC<AuthProps> = ({ authorized, permission }) => {
     visa_code: '',
   });
   const [loading, setLoading] = useState<boolean>(true);
-  const [editTagOpen, setEditTagOpen] = useState<boolean>(false);
+  // const [editTagOpen, setEditTagOpen] = useState<boolean>(false);
 
   const getMyInfo = () => {
     axiosInstance.get('/user/me')
@@ -38,7 +39,7 @@ const MyPage: React.FC<AuthProps> = ({ authorized, permission }) => {
         if (res.data.status === 200) {
           setInfo({
             ...res.data.data,
-            image_path: import.meta.env.VITE_API_URL + res.data.data.image_path,
+            image_path: res.data.data.image_path ? import.meta.env.VITE_API_URL + res.data.data.image_path : DefaultProfile,
           });
         }
       })
@@ -56,52 +57,57 @@ const MyPage: React.FC<AuthProps> = ({ authorized, permission }) => {
       <HeaderWrapper>
         <Header authorized={authorized} permission={permission} />
       </HeaderWrapper>
-      <MainTag>
-        <TopContainer $open={editTagOpen}>
-          <div className={'container'}>
-            <LazyLoadImage
-              alt={'Profile'}
-              src={info.image_path}
-              className={'lazy-load-image'}
-            />
 
-            <div className={'user-info'}>
-              <div className={'title'}>{info.first_name} {info.last_name}</div>
+      {!loading &&
+        <MainTag>
+          <TopContainer $open={false}>
+            <div className={'container'}>
+              <LazyLoadImage
+                alt={'Profile'}
+                src={info.image_path}
+                className={'lazy-load-image'}
+              />
 
-              <div className={'info-container'}>
-                <div><MdLocationPin /> {info.nationality}</div>
-                <div><MdOutlineWork /> {info.occupation ?? 'Out of work'}</div>
-                <button className={'edit-button'}>Edit Profile</button>
+              <div className={'user-info'}>
+                <div className={'title'}>{info.first_name} {info.last_name}</div>
+
+                <div className={'info-container'}>
+                  <div><MdLocationPin /> {info.nationality}</div>
+                  <div><MdOutlineWork /> {info.occupation ?? 'Out of work'}</div>
+                  <button className={'edit-button'}>Edit Profile</button>
+                </div>
+              </div>
+
+              <div className={'button-container'}>
+                <button className={'edit-button'} onClick={() => alert('Edit profile feature is not yet enabled.')}>Edit
+                  Profile
+                </button>
               </div>
             </div>
 
-            <div className={'button-container'}>
-              <button className={'edit-button'} onClick={() => setEditTagOpen(!editTagOpen)}>Edit Profile</button>
-            </div>
-          </div>
-
-          <EditContainer $open={editTagOpen}>
-            <div className={'vertical'}>
-              <div className={'row'}>
+            <EditContainer $open={false}>
+              <div className={'vertical'}>
+                <div className={'row'}>
+                </div>
+                <div className={'row'}></div>
+                <div className={'row'}></div>
               </div>
-              <div className={'row'}></div>
-              <div className={'row'}></div>
-            </div>
 
-            <div className={'vertical'}>
-              <div className={'row'}></div>
-              <div className={'row'}></div>
-              <div className={'row'}></div>
-            </div>
+              <div className={'vertical'}>
+                <div className={'row'}></div>
+                <div className={'row'}></div>
+                <div className={'row'}></div>
+              </div>
 
-            <div className={'vertical'}>
-              <div className={'row'}></div>
-              <div className={'row'}></div>
-              <div className={'row'}></div>
-            </div>
-          </EditContainer>
-        </TopContainer>
-      </MainTag>
+              <div className={'vertical'}>
+                <div className={'row'}></div>
+                <div className={'row'}></div>
+                <div className={'row'}></div>
+              </div>
+            </EditContainer>
+          </TopContainer>
+        </MainTag>
+      }
     </Container>
   );
 };
@@ -117,7 +123,7 @@ const MainTag = styled.main`
   }
 `;
 
-const TopContainer = styled.div<{$open: boolean}>`
+const TopContainer = styled.div<{ $open: boolean }>`
   width: 100%;
   height: 100%;
   min-width: 1030px;
@@ -148,7 +154,7 @@ const TopContainer = styled.div<{$open: boolean}>`
       margin: 20px auto 0;
     }
   }
-  
+
   & > .container {
     display: flex;
     align-items: center;
@@ -156,7 +162,7 @@ const TopContainer = styled.div<{$open: boolean}>`
     height: auto;
     width: auto;
     transition: margin-bottom .25s;
-    margin-bottom: ${({$open}) => $open ? '45vh' : '0'};
+    margin-bottom: ${({ $open }) => $open ? '45vh' : '0'};
 
     @media (max-width: 750px) {
       width: auto;
@@ -170,6 +176,7 @@ const TopContainer = styled.div<{$open: boolean}>`
     & > .lazy-load-image {
       width: 226px;
       height: 226px;
+      object-fit: scale-down;
 
       @media (max-width: 750px) {
         margin: auto;

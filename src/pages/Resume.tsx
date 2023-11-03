@@ -6,12 +6,14 @@ import { Dot } from '../components/List/List.tsx';
 import React, { useState } from 'react';
 import { AuthProps } from '../interface/AuthProps.ts';
 import Banner from '../components/List/Banner.tsx';
+import { useNavigate } from 'react-router-dom';
 
 interface ImageProps {
   $url: string;
 }
 
 const Resume: React.FC<AuthProps> = ({ authorized, permission }) => {
+  const navigate = useNavigate()
   const employees = Array(4).fill({});
   const dotsLength = Array(3).fill({});
   const [currentPage, setCurrentPage] = useState<number>(0);
@@ -29,6 +31,13 @@ const Resume: React.FC<AuthProps> = ({ authorized, permission }) => {
     setCurrentPage(index);
   };
 
+  const handleHireButton = () => {
+    if (!authorized) {
+      alert('Available after sign in');
+      navigate('/sign-in')
+    }
+  }
+
   return (
     <Container>
       <HeaderWrapper>
@@ -44,14 +53,9 @@ const Resume: React.FC<AuthProps> = ({ authorized, permission }) => {
                         $url={'https://pictures.tribuna.com/image/2122cea9-ce71-43ee-a2be-909e5e7602e3?width=1920&quality=100'}>
             <div className={'img-container'} />
             <div className={'text-container'}>
-              <div className={'name-container'}>GilDong Hong</div>
-              <div className={'info-container'}>
-                I'm GilDong Hong, and I have a deep passion for learning. For me, every day is an opportunity to acquire
-                new knowledge and skills. Whether it's exploring a new language, delving into a complex subject, or
-                experimenting with a new hobby, I find immense joy in the process of discovery.
-              </div>
+              <div className={'name-container'}>GilDong Hong <span>South Korea</span></div>
               <div className={'hire-button-container'}>
-                <button>
+                <button onClick={handleHireButton}>
                   Hire Now
                 </button>
               </div>
@@ -155,6 +159,10 @@ const EmployeesBox = styled.div<ImageProps>`
   & > .text-container {
     width: 710px;
     height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 
     @media (max-width: 750px) {
       width: 100%;
@@ -168,9 +176,16 @@ const EmployeesBox = styled.div<ImageProps>`
     & > .name-container {
       font-size: 20px;
       font-weight: 600;
+      
+      & > span {
+        font-family: 'KoPubWorldDotumLight', sans-serif;
+        margin-left: 5px;
+        font-size: 17px;
+        color: #888;
+      }
 
       @media (max-width: 750px) {
-        margin-top: 1rem;
+        margin-top: 2rem;
       }
     }
 

@@ -1,18 +1,24 @@
-import List, {ModalContainer} from '../components/List/List.tsx';
-import {AuthProps, Permission} from '../interface/AuthProps.ts';
+import List, { ModalContainer } from '../components/List/List.tsx';
+import { AuthProps, Permission } from '../interface/AuthProps.ts';
 import styled from 'styled-components';
-import {IoClose} from 'react-icons/io5';
+import { IoClose } from 'react-icons/io5';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import * as React from 'react';
-import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import Modal from 'react-modal';
-import {ImageListProps, JobPostTypeProps} from '../interface/JobPostProps.ts';
-import {AiOutlineDelete, AiOutlineFileAdd} from 'react-icons/ai';
+import { ImageListProps, JobPostTypeProps } from '../interface/JobPostProps.ts';
+import { AiOutlineDelete, AiOutlineFileAdd } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../utils/AxiosInstance.ts';
+import { camelToFuckingSnake } from '../utils/CamelToSnake.ts';
 
-const Recruitment: React.FC<AuthProps> = ({authorized, permission}) => {
+const Recruitment: React.FC<AuthProps> = ({ authorized, permission }) => {
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [postTypeData, setPostTypeData] = useState<JobPostTypeProps>({
+    academy: '',
+    campus: '',
+    category: 'Full Time',
     position: 'Native Teacher',
     startSalary: NaN,
     endSalary: NaN,
@@ -27,11 +33,13 @@ const Recruitment: React.FC<AuthProps> = ({authorized, permission}) => {
     housingAllowance: NaN,
   });
   const [imageList, setImageList] = useState<ImageListProps>({
-    image1: {value: null, show: false},
-    image2: {value: null, show: false},
-    image3: {value: null, show: false},
-    image4: {value: null, show: false},
+    image1: { value: null, show: false },
+    image2: { value: null, show: false },
+    image3: { value: null, show: false },
+    image4: { value: null, show: false },
   });
+
+  const navigate = useNavigate();
 
   const getCustomStyles = () => {
     const isSmallScreen = window.innerWidth <= 770;
@@ -80,7 +88,7 @@ const Recruitment: React.FC<AuthProps> = ({authorized, permission}) => {
         [dateDivision]: event,
       }));
     } else {
-      const {name, value} = event!.target;
+      const { name, value } = event!.target;
 
       setPostTypeData(prevState => ({
         ...prevState,
@@ -92,8 +100,39 @@ const Recruitment: React.FC<AuthProps> = ({authorized, permission}) => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    console.log(postTypeData);
-    console.log(imageList);
+    if (!authorized) {
+      alert('Available after sign in');
+      navigate('/sign-in');
+    } else if (Object.values(imageList).every(item => item.value === null)) {
+      alert('At least one image is required.');
+    } else {
+      const payload: any = {};
+
+      for (const key in postTypeData) {
+        if (Object.prototype.hasOwnProperty.call(postTypeData, key)) {
+          let newValue = postTypeData[key];
+
+          if (['workingStartHour', 'workingEndHour'].includes(key)) {
+            const value = postTypeData[key];
+            const formattedTime = `${String(value.getHours()).padStart(2, '0')}:${String(value.getMinutes()).padStart(2, '0')}`;
+            newValue = formattedTime;
+          }
+
+          const newKey = camelToFuckingSnake(key);
+          payload[newKey] = ['paidVacation', 'annualLeave'].includes(key) ? Number(newValue) : newValue;
+        }
+      }
+
+      axiosInstance.post('/post/job_post', payload)
+        .then(res => {
+          if (res.status === 200) {
+            // TODO
+          } else {
+            alert(res.data.message);
+          }
+        })
+        .catch(err => alert(err.response.data.message));
+    }
   };
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -103,7 +142,7 @@ const Recruitment: React.FC<AuthProps> = ({authorized, permission}) => {
     if (selectedFile) {
       setImageList(prevImageList => ({
         ...prevImageList,
-        [elementId]: {value: selectedFile, show: true},
+        [elementId]: { value: selectedFile, show: true },
       }));
     }
   };
@@ -111,28 +150,16 @@ const Recruitment: React.FC<AuthProps> = ({authorized, permission}) => {
   const addFileList = (key: string) => {
     setImageList(prevImageList => ({
       ...prevImageList,
-      [key]: {...prevImageList[key], show: true},
+      [key]: { ...prevImageList[key], show: true },
     }));
   };
 
   const deleteFileList = (key: string) => {
     setImageList(prevImageList => ({
       ...prevImageList,
-      [key]: {value: null, show: false},
+      [key]: { value: null, show: false },
     }));
   };
-
-  useEffect(() => {
-    if (modalIsOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
-  }, [modalIsOpen]);
-
-  useEffect(() => {
-    console.log(imageList);
-  }, [imageList]);
 
   return (
     <>
@@ -145,14 +172,14 @@ const Recruitment: React.FC<AuthProps> = ({authorized, permission}) => {
       >
         <ModalContainer $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
           <div className={'close-button'}>
-            <button onClick={closeModal}><IoClose/></button>
+            <button onClick={closeModal}><IoClose /></button>
           </div>
 
           <div className={'image-submit-container'}>
-            <input type={'file'} id={'image1'} onChange={handleFileChange}/>
-            <input type={'file'} id={'image2'} onChange={handleFileChange}/>
-            <input type={'file'} id={'image3'} onChange={handleFileChange}/>
-            <input type={'file'} id={'image4'} onChange={handleFileChange}/>
+            <input type={'file'} id={'image1'} onChange={handleFileChange} />
+            <input type={'file'} id={'image2'} onChange={handleFileChange} />
+            <input type={'file'} id={'image3'} onChange={handleFileChange} />
+            <input type={'file'} id={'image4'} onChange={handleFileChange} />
 
             {
               Object.values(imageList).every(item => item.value === null && !item.show) ? (
@@ -162,38 +189,49 @@ const Recruitment: React.FC<AuthProps> = ({authorized, permission}) => {
                   </label>) :
                 <div className={'label-container'}>
                   {
-                    Object.entries(imageList).map(([key, value], index) => {
-                      index === 0 && console.log('\n');
-                      console.log(key, value);
-
-                      return (
-                        <label htmlFor={value.show ? key : ''} key={index}
-                               className={`file-single-label ${value.show ? 'file-single-label-show' : 'file-single-label-hidden'}`}>
-                          <div style={{margin: index === 0 ? '2px auto 0' : index === 3 ? '15px auto' : ''}}>
-                            {
-                              value.show ?
-                                <>
-                                  <div>{value.value?.name ?? 'Click to Upload'}</div>
-                                  <button onClick={() => deleteFileList(key)}><AiOutlineDelete/></button>
-                                </> :
-                                <div onClick={() => addFileList(key)}><AiOutlineFileAdd/> Add Image</div>
-                            }
-                          </div>
-                        </label>
-                      );
-                    })}
+                    Object.entries(imageList).map(([key, value], index) => (
+                      <label htmlFor={value.show ? key : ''} key={index}
+                             className={`file-single-label ${value.show ? 'file-single-label-show' : 'file-single-label-hidden'}`}>
+                        <div style={{ margin: index === 0 ? '2px auto 0' : index === 3 ? '15px auto' : '' }}>
+                          {
+                            value.show ?
+                              <>
+                                <div>{value.value?.name ?? 'Click to Upload'}</div>
+                                <button onClick={() => deleteFileList(key)}><AiOutlineDelete /></button>
+                              </> :
+                              <div onClick={() => addFileList(key)}>
+                                <AiOutlineFileAdd /> Add Image
+                              </div>
+                          }
+                        </div>
+                      </label>
+                    ))}
                 </div>
             }
 
           </div>
 
-          <div className={'institute-name'}>
-            <div>RISE</div>
-            <div>Gangdong Campus</div>
-          </div>
-
           <form onSubmit={handleSubmit}>
             <div className={'table submit-table'}>
+              <div>
+                <span>Academy name</span>
+                <input type={'text'} placeholder={'e.g. RISE'} name={'academy'}
+                       value={postTypeData.academy} required={true} onChange={handlePostData} />
+              </div>
+
+              <div>
+                <span>Campus name</span>
+                <input type={'text'} placeholder={'e.g. Gangdong Campus'} name={'campus'}
+                       value={postTypeData.campus} required={true} onChange={handlePostData} />
+              </div>
+              <div>
+                <span>Category</span>
+                <select name={'category'} value={postTypeData.category} required={true} onChange={handlePostData}>
+                  <option value={'Full Time'}>Full Time</option>
+                  <option value={'Part Time'}>Part Time</option>
+                </select>
+              </div>
+
               <div>
                 <span>Position</span>
                 <select name={'position'} value={postTypeData.position} required={true} onChange={handlePostData}>
@@ -208,11 +246,11 @@ const Recruitment: React.FC<AuthProps> = ({authorized, permission}) => {
                 <div className={'double-input-container'}>
                   <input type={'text'} placeholder={'Amount (Unit: KRW)'} name={'startSalary'}
                          value={isNaN(postTypeData.startSalary) ? '' : postTypeData.startSalary}
-                         required={true} onChange={handlePostData}/>
+                         required={true} onChange={handlePostData} />
                   <span>-</span>
                   <input type={'text'} placeholder={'Amount (Unit: KRW)'} name={'endSalary'}
                          value={isNaN(postTypeData.endSalary) ? '' : postTypeData.endSalary}
-                         required={true} onChange={handlePostData}/>
+                         required={true} onChange={handlePostData} />
                 </div>
               </div>
 
@@ -237,7 +275,7 @@ const Recruitment: React.FC<AuthProps> = ({authorized, permission}) => {
                                 minute: '2-digit',
                               }) : undefined}
                               dateFormat='h:mm aa'
-                              onChange={e => handlePostData(e, 'workingStartHour')}/>
+                              onChange={e => handlePostData(e, 'workingStartHour')} />
                   <span>-</span>
                   <DatePicker showTimeSelectOnly={true} showTimeSelect={true} timeCaption='Time' timeIntervals={30}
                               placeholderText={'End hour'} className={'time-picker'}
@@ -246,7 +284,7 @@ const Recruitment: React.FC<AuthProps> = ({authorized, permission}) => {
                                 minute: '2-digit',
                               }) : undefined}
                               dateFormat='h:mm aa'
-                              onChange={e => handlePostData(e, 'workingEndHour')}/>
+                              onChange={e => handlePostData(e, 'workingEndHour')} />
                 </div>
               </div>
 
@@ -254,15 +292,14 @@ const Recruitment: React.FC<AuthProps> = ({authorized, permission}) => {
                 <span>Paid Vacation</span>
                 <input type={'text'} placeholder={'Unit: day'} name={'paidVacation'}
                        value={isNaN(postTypeData.paidVacation) ? '' : postTypeData.paidVacation}
-                       required={true} onChange={handlePostData}/>
+                       required={true} onChange={handlePostData} />
               </div>
-
 
               <div>
                 <span>Annual Leave</span>
                 <input type={'text'} placeholder={'Unit: day'} name={'annualLeave'}
                        value={isNaN(postTypeData.annualLeave) ? '' : postTypeData.annualLeave}
-                       required={true} onChange={handlePostData}/>
+                       required={true} onChange={handlePostData} />
               </div>
 
               <div>
@@ -293,7 +330,7 @@ const Recruitment: React.FC<AuthProps> = ({authorized, permission}) => {
                 <span>Housing Allowance</span>
                 <input type={'text'} placeholder={'Amount (Unit: KRW)'} name={'housingAllowance'}
                        value={isNaN(postTypeData.housingAllowance) ? '' : postTypeData.housingAllowance}
-                       required={true} onChange={handlePostData}/>
+                       required={true} onChange={handlePostData} />
               </div>
             </div>
 
@@ -303,7 +340,7 @@ const Recruitment: React.FC<AuthProps> = ({authorized, permission}) => {
           </form>
         </ModalContainer>
       </Modal>
-      <List $type={'recruitment'} authorized={authorized} permission={permission}/>
+      <List $type={'recruitment'} authorized={authorized} permission={permission} />
       {permission !== Permission.ADMIN && <Button onClick={() => setIsOpen(true)}>Create Job Post</Button>}
     </>
   );
@@ -329,6 +366,14 @@ const Button = styled.button`
 
   &:hover {
     box-shadow: rgba(0, 0, 0, 0.25) 0 14px 28px, rgba(0, 0, 0, 0.22) 0 10px 10px;
+  }
+
+  @media (max-width: 500px) {
+    width: 8rem;
+    height: 2.6rem;
+    right: 3%;
+    bottom: 2%;
+    font-size: .8rem;
   }
 `;
 

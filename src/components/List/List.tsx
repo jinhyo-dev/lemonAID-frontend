@@ -313,6 +313,10 @@ export const ModalContainer = styled.div<ImageProps>`
     width: 100%;
     height: 28px;
 
+    @media (max-width: 500px) {
+      display: none;
+    }
+
     & > button {
       float: right;
       height: 28px;
@@ -367,10 +371,18 @@ export const ModalContainer = styled.div<ImageProps>`
 
         &:first-child {
           font-size: 1.8rem;
+          
+          @media (max-width: 500px) {
+            font-size: 1rem;
+          }
         }
 
         &:last-child {
           font-size: .85rem;
+          
+          @media (max-width: 500px) {
+            font-size: .6rem;
+          }
         }
       }
     }
@@ -394,6 +406,13 @@ export const ModalContainer = styled.div<ImageProps>`
           padding-left: 1.5rem;
           padding-right: 1.5rem;
           box-sizing: border-box;
+          
+          @media (max-width: 500px) {
+            height: 40px;
+            font-size: 12px;
+            padding-left: .8rem;
+            padding-right: .8rem;
+          }
 
           & > div {
             width: 90%;
@@ -406,6 +425,10 @@ export const ModalContainer = styled.div<ImageProps>`
             background: none;
             font-size: 24px;
             color: #ef4444;
+            
+            @media (max-width: 500px) {
+              font-size: 17px;
+            }
 
             & > svg {
               margin-bottom: -4px;
@@ -427,6 +450,14 @@ export const ModalContainer = styled.div<ImageProps>`
             text-align: center;
             color: #fff;
             font-size: 16px;
+            
+            @media (max-width: 500px) {
+              font-size: 12px;
+              
+              & > svg {
+                font-size: 14.5px !important;
+              }
+            }
 
             & > svg {
               margin-bottom: -3px;
@@ -560,6 +591,8 @@ export const ModalContainer = styled.div<ImageProps>`
   }
 
   & .submit-table {
+    height: 510px;
+    
     & > div {
       display: flex;
       align-items: center;
@@ -576,11 +609,19 @@ export const ModalContainer = styled.div<ImageProps>`
         box-sizing: border-box;
         font-size: 11px;
         transition: all .1s;
+        
+        @media (max-width: 500px) {
+          width: 7.5rem;
+        }
 
         &:focus {
           border: none;
           outline: 2px solid #F7C324;
         }
+      }
+      
+      select {
+        color: #000;
       }
 
       select:last-child,
@@ -606,6 +647,10 @@ export const ModalContainer = styled.div<ImageProps>`
         & > .react-datepicker-wrapper {
           height: 100%;
           width: 7rem;
+          
+          @media (max-width: 500px) {
+            width: 4.5rem;
+          }
 
           & input {
             width: 100%;
@@ -616,9 +661,23 @@ export const ModalContainer = styled.div<ImageProps>`
           width: 8rem;
           margin: 0;
           height: 100%;
+          
+          @media (max-width: 500px) {
+            width: 4.5rem;
+          }
         }
-
       }
+    }
+  }
+
+  & .tour-submit-table {
+    & > div {
+      height: 2.5rem;
+    }
+
+    input {
+      width: 15rem !important;
+      font-size: 14px !important;
     }
   }
 
@@ -634,6 +693,7 @@ export const ModalContainer = styled.div<ImageProps>`
       border: none;
       cursor: pointer;
       background: #FAE13E;
+      color: #000;
       transition: background-color .25s;
       margin-bottom: 1rem;
 

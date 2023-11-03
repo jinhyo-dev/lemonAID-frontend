@@ -162,3 +162,11 @@ export const HeaderWrapper = styled.div`
     height: 60px;
   }
 `
+
+export const AdminPageTitle = styled.div`
+  font-size: 30px;
+  color: #000;
+  font-family: 'KoPubWorldDotumBold', sans-serif;
+  margin-top: 5vh;
+  margin-left: 10%;
+`

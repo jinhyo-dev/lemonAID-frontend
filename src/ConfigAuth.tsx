@@ -18,6 +18,7 @@ import { Permission } from './interface/AuthProps.ts';
 import UserManage from './pages/admin/UserManage.tsx';
 import NotFound from './components/NotFound.tsx';
 import NoticeManage from './pages/admin/NoticeManage.tsx';
+import ToursAndPartiesManage from './pages/admin/ToursAndPartiesManage.tsx';
 
 interface AuthProps {
   loading: boolean;
@@ -150,6 +151,8 @@ const ConfigAuth = () => {
           return <UserManage authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
         case '/admin/new-notice':
           return <NoticeManage authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
+        case '/admin/tour-and-party-manage':
+          return <ToursAndPartiesManage authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
         default:
           return <NotFound authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
       }

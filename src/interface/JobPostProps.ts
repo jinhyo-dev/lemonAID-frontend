@@ -1,4 +1,8 @@
 export interface JobPostTypeProps {
+  [key: string]: any;
+  academy: string;
+  campus: string;
+  category: string;
   position: string;
   startSalary: number;
   endSalary: number;
