@@ -16,7 +16,7 @@ const UserManage: React.FC<AuthProps> = ({ authorized, permission }) => {
   const getNewUser = () => {
     setLoading(true);
 
-    axiosInstance.get('/auth/approval_queue')
+    axiosInstance.get('/auth/approval_user')
       .then((res) => {
         if (res.data.status === 200) {
           const updatedData = res.data.data.map((item: any) => ({
@@ -40,7 +40,7 @@ const UserManage: React.FC<AuthProps> = ({ authorized, permission }) => {
         }
       });
 
-      axiosInstance.put('/auth/accept_user', payload)
+      axiosInstance.put('/auth/approval_user', payload)
         .then(res => {
           if (res.data.status === 200) {
             alert('회원가입이 정상적으로 완료되었습니다.');
@@ -61,7 +61,7 @@ const UserManage: React.FC<AuthProps> = ({ authorized, permission }) => {
         }
       });
 
-      axiosInstance.delete('/auth/deny_user', { data: payload })
+      axiosInstance.delete('/auth/approval_user', { data: payload })
         .then(res => {
           if (res.data.status === 200) {
             alert('회원가입 비승인이 정상적으로 완료되었습니다.');

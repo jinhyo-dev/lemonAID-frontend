@@ -126,7 +126,31 @@ const Recruitment: React.FC<AuthProps> = ({ authorized, permission }) => {
       axiosInstance.post('/post/job_post', payload)
         .then(res => {
           if (res.status === 200) {
-            // TODO
+            const form = new FormData();
+            const imageArray: any = Object.keys(imageList).map((key) => {
+              const image = imageList[key];
+              if (image.value !== null) {
+                if (Array.isArray(image.value)) {
+                  return image.value[0]; // 또는 다른 방식으로 처리
+                }
+                return image.value;
+              }
+              return null;
+            }).filter((image) => image !== null);
+
+            console.log(imageArray)
+
+            form.append('images', imageArray);
+            form.append('id', res.data.id);
+
+            axiosInstance.post('/post/job_images_upload', form, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            })
+              .then(res => console.log(res))
+              .catch(err => alert(err.response.data.message));
+            // .finally(() => )
           } else {
             alert(res.data.message);
           }
