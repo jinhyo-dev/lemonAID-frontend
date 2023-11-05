@@ -138,7 +138,28 @@ const ToursAndPartiesManage: React.FC<AuthProps> = ({ authorized, permission }) 
       axiosInstance.post(`/post/${modalState.type === 'tour' ? 'tour' : 'party_and_events'}`, payload)
         .then(res => {
           if (res.data.status === 200) {
-            // TODO
+            if (res.status === 200) {
+              const form = new FormData();
+
+              form.append('id', res.data.id);
+              form.append('post_type', modalState.type === 'tour' ? 'TOUR' : 'PARTY_AND_EVENTS')
+
+              Object.keys(imageList).map((key) => {
+                const image = imageList[key];
+                if (image.value !== null) {
+                  form.append('images', image.value, image.value.name);
+                }
+              });
+
+              axiosInstance.post('/post/images_upload', form, {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+              })
+                .then(res => console.log(res))
+                .catch(err => alert(err.response.data.message));
+              // .finally(() => )
+            }
           } else {
             alert(res.data.message)
           }

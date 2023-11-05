@@ -127,21 +127,19 @@ const Recruitment: React.FC<AuthProps> = ({ authorized, permission }) => {
         .then(res => {
           if (res.status === 200) {
             const form = new FormData();
-            const imageArray: any = Object.keys(imageList).map((key) => {
+
+            form.append('id', res.data.id);
+
+            Object.keys(imageList).map((key) => {
               const image = imageList[key];
               if (image.value !== null) {
-                if (Array.isArray(image.value)) {
-                  return image.value[0]; // 또는 다른 방식으로 처리
-                }
-                return image.value;
+                form.append('images', image.value, image.value.name);
               }
-              return null;
-            }).filter((image) => image !== null);
+            });
 
-            console.log(imageArray)
-
-            form.append('images', imageArray);
-            form.append('id', res.data.id);
+            for (let [key, value] of form.entries()) {
+              console.log(key, value);
+            }
 
             axiosInstance.post('/post/job_images_upload', form, {
               headers: {
