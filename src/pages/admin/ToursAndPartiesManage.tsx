@@ -12,6 +12,7 @@ import { ImageListProps } from '../../interface/JobPostProps.ts';
 import { ToursAndPartiesProps } from '../../interface/ToursAndPartiesProps.ts';
 import axiosInstance from '../../utils/AxiosInstance.ts';
 import { camelToFuckingSnake } from '../../utils/CamelToSnake.ts';
+import LoadingModal from '../../components/LoadingModal.tsx';
 
 interface ModalProps {
   isOpen: boolean;
@@ -20,6 +21,7 @@ interface ModalProps {
 
 const ToursAndPartiesManage: React.FC<AuthProps> = ({ authorized, permission }) => {
   const [modalState, setModalState] = useState<ModalProps>({ isOpen: false, type: '' });
+  const [loading, setLoading] = useState<boolean>(false);
   const [imageList, setImageList] = useState<ImageListProps>({
     image1: { value: null, show: false },
     image2: { value: null, show: false },
@@ -134,6 +136,7 @@ const ToursAndPartiesManage: React.FC<AuthProps> = ({ authorized, permission }) 
         const newKey = key === 'name' ? (modalState.type === 'tour' ? 'tour_name' : 'party_name') : camelToFuckingSnake(key);
         payload[newKey] = newValue;
       }
+      setLoading(true);
 
       axiosInstance.post(`/post/${modalState.type === 'tour' ? 'tour' : 'party_and_events'}`, payload)
         .then(res => {
@@ -142,30 +145,29 @@ const ToursAndPartiesManage: React.FC<AuthProps> = ({ authorized, permission }) 
               const form = new FormData();
 
               form.append('id', res.data.id);
-              form.append('post_type', modalState.type === 'tour' ? 'TOUR' : 'PARTY_AND_EVENTS')
+              form.append('post_type', modalState.type === 'tour' ? 'TOUR' : 'PARTY_AND_EVENTS');
 
-              const imageArray: any = Object.keys(imageList).map((key) => {
+              Object.keys(imageList).map((key) => {
                 const image = imageList[key];
                 if (image.value !== null) {
-                  return image.value
+                  form.append('images', image.value, image.value.name);
                 }
               });
 
-              form.append('images', imageArray);
               axiosInstance.post('/post/images_upload', form, {
                 headers: {
                   'Content-Type': 'multipart/form-data',
                 },
               })
-                .then(res => console.log(res))
-                .catch(err => alert(err.response.data.message));
-              // .finally(() => )
+                .then(res => alert(res.data.message))
+                .catch(err => alert(err.response.data.message))
+                .finally(() => setLoading(false));
             }
           } else {
-            alert(res.data.message)
+            alert(res.data.message);
           }
         })
-        .catch(err => alert(err.response.data.message))
+        .catch(err => alert(err.response.data.message));
     }
   };
 
@@ -187,6 +189,7 @@ const ToursAndPartiesManage: React.FC<AuthProps> = ({ authorized, permission }) 
     <>
       {permission !== Permission.ADMIN ? <NotFound permission={permission} authorized={authorized} /> :
         <Container style={{ overflowX: 'auto' }}>
+          <LoadingModal isOpen={loading} />
           <Modal
             closeTimeoutMS={200}
             isOpen={modalState.isOpen}
@@ -273,7 +276,7 @@ const ToursAndPartiesManage: React.FC<AuthProps> = ({ authorized, permission }) 
 
                   <div>
                     <span>Date</span>
-                    <input type={'text'} placeholder={'Date'} name={'date'}
+                    <input type={'date'} placeholder={'Date'} name={'date'}
                            value={data.date} required={true} onChange={handlePostData} />
                   </div>
 

@@ -25,7 +25,7 @@ const LoadingModal = ({ isOpen }: ModalProps) => {
     },
     overlay: {
       overflow: 'auto',
-      zIndex: 11,
+      zIndex: 9999,
       backgroundColor: 'rgba(0, 0, 0, .7)',
       backdropFilter: 'blur(2px)',
     },
