@@ -137,16 +137,12 @@ const Recruitment: React.FC<AuthProps> = ({ authorized, permission }) => {
               }
             });
 
-            for (let [key, value] of form.entries()) {
-              console.log(key, value);
-            }
-
             axiosInstance.post('/post/job_images_upload', form, {
               headers: {
                 'Content-Type': 'multipart/form-data',
               },
             })
-              .then(res => console.log(res))
+              .then(res => alert(res.data.message))
               .catch(err => alert(err.response.data.message));
             // .finally(() => )
           } else {

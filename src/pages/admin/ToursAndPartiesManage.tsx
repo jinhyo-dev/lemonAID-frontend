@@ -144,13 +144,14 @@ const ToursAndPartiesManage: React.FC<AuthProps> = ({ authorized, permission }) 
               form.append('id', res.data.id);
               form.append('post_type', modalState.type === 'tour' ? 'TOUR' : 'PARTY_AND_EVENTS')
 
-              Object.keys(imageList).map((key) => {
+              const imageArray: any = Object.keys(imageList).map((key) => {
                 const image = imageList[key];
                 if (image.value !== null) {
-                  form.append('images', image.value, image.value.name);
+                  return image.value
                 }
               });
 
+              form.append('images', imageArray);
               axiosInstance.post('/post/images_upload', form, {
                 headers: {
                   'Content-Type': 'multipart/form-data',

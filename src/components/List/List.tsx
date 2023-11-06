@@ -10,7 +10,7 @@ import { PrevArrow } from '../PrevArrow.tsx';
 import grade3 from '../../assets/images/grade/grade3.png';
 import { HeaderWrapper } from '../../style/global.ts';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Modal from 'react-modal';
 import { IoClose } from 'react-icons/io5';
 import * as React from 'react';
@@ -19,6 +19,11 @@ import { debounce } from 'lodash';
 import Banner from './Banner.tsx';
 import { ModalNextArrow } from '../Modal/ModalNextArrow.tsx';
 import { ModalPrevArrow } from '../Modal/ModalPrevArrow.tsx';
+import axiosInstance from '../../utils/AxiosInstance.ts';
+import LoadingModal from '../LoadingModal.tsx';
+import { numberWithCommas } from '../../utils/numberFormat.ts';
+import { formatDateString } from '../../utils/FormatDate.ts';
+import LemonaidLogo from '../../assets/images/logo/Lemonaid-1.png';
 
 interface ImageProps {
   $url: string;
@@ -37,12 +42,16 @@ interface ActiveSort {
 }
 
 const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
-  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
-  const [sortType, setSortType] = useState<'none' | 'low' | 'high' | 'asc' | 'desc'>('none');
+  const [sortType, setSortType] = useState<'none' | 'dateAsc' | 'dateDesc' | 'priceAsc' | 'priceDesc'>('none');
+  const [loading, setLoading] = useState<boolean>(true);
   const [screenWidth, setScreenWidth] = useState<number>(1920);
-  const employers = Array(9).fill({});
-  const dotsLength = Array(3).fill({});
+  const [pageLength, setPageLength] = useState<number>(NaN);
+
+  const [data, setData] = useState<any>([]);
+  const [modalData, setModalData] = useState<any>([]);
+  const scrollToFocus = useRef<HTMLDivElement | null>(null);
 
   const handleResize = debounce(() => {
     setScreenWidth(window.innerWidth);
@@ -56,6 +65,33 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  const fetchData = () => {
+    setLoading(true);
+    axiosInstance.get($type === 'tour' ? '/post/tour' : '')
+      .then(res => {
+        if (res.data.status === 200) {
+          const chunkedData = res.data.data.reduce((resultArray: any, item: any, index: number) => {
+            const chunkIndex = Math.floor(index / 9);
+
+            if (!resultArray[chunkIndex]) {
+              resultArray[chunkIndex] = []; // start a new chunk
+            }
+
+            resultArray[chunkIndex].push(item);
+
+            return resultArray;
+          }, []);
+
+          setData(chunkedData);
+          setPageLength(Math.ceil(res.data.data.length / 9));
+        } else {
+          alert(res.data.message);
+        }
+      })
+      .catch(err => console.log(err))
+      .finally(() => setLoading(false));
+  };
 
   const getCustomStyles = () => {
     const isSmallScreen = window.innerWidth <= 770;
@@ -112,10 +148,9 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
   };
 
   const handlePagination = (increase: boolean) => {
-    const MAX_PAGE = 2;
-    if (!increase && currentPage > 0) {
+    if (!increase && currentPage > 1) {
       setCurrentPage(currentPage - 1);
-    } else if (increase && currentPage !== MAX_PAGE) {
+    } else if (increase && (currentPage !== pageLength)) {
       setCurrentPage(currentPage + 1);
     }
   };
@@ -124,12 +159,35 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
     setCurrentPage(index);
   };
 
-  const openModal = () => {
+  const openModal = (value: any) => {
+    setModalData(value);
     authorized ? setIsOpen(true) : alert('Available after sign in');
   };
 
   const closeModal = () => {
     setIsOpen(false);
+  };
+
+  const sortData = () => {
+    const sortedData: any = [...data];
+    switch (sortType) {
+      case 'dateAsc':
+        sortedData.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        break;
+      case 'dateDesc':
+        sortedData.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        break;
+      case 'priceAsc':
+        sortedData.sort((a: any, b: any) => a.price - b.price);
+        break;
+      case 'priceDesc':
+        sortedData.sort((a: any, b: any) => b.price - a.price);
+        break;
+      default:
+        break;
+    }
+
+    setData(sortedData);
   };
 
   useEffect(() => {
@@ -140,6 +198,18 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
     }
   }, [modalIsOpen]);
 
+  useEffect(() => {
+    scrollToFocus.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [currentPage]);
+
+  useEffect(() => {
+    sortData()
+  }, [sortType]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const ModalContainerComponents = () => {
     return (
       <ModalContainer $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
@@ -148,35 +218,59 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
         </div>
         <div className={'image-container'}>
           <Slider {...modalSetting}>
-            <Image $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
+            {
+              modalData.images.split(',').map((imageSrc: string, index: number) => {
+                console.log(imageSrc);
+                return (
+                  <Image $url={import.meta.env.VITE_API_URL + imageSrc} key={index}>
+                    <div>{index + 1} / {modalData.images.split(',').length}</div>
+                  </Image>
+                );
+              })
+            }
+            {/*<Image $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
               <div>1/2</div>
             </Image>
             <Image $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
               <div>2/2</div>
-            </Image>
+            </Image>*/}
           </Slider>
         </div>
         <div className={'institute-name'}>
-          <div>RISE</div>
-          <div>Gangdong Campus</div>
+          <div>{modalData.tour_name}</div>
+          <div>{modalData.description}</div>
         </div>
         <div className={'table'}>
-          <div><span>Position</span><span>Teacher</span></div>
-          <div><span>Salary Range</span><span>2,400,000 - 2,900,000 KRW</span></div>
-          <div><span>Student Level</span><span>Kindy/Elemetary/Middle/High</span></div>
-          <div><span>Working Hours</span><span>9:00 am - 18:00 pm</span></div>
-          <div><span>Paid Vacation</span><span>3 Days</span></div>
-          <div><span>Annual Leave</span><span>11 Days</span></div>
-          <div><span>Severance</span><span>Provided</span></div>
-          <div><span>Insurance</span><span>Provided</span></div>
           <div>
-            <span>Housing</span>
-            <span>Provided, <span className={'parentheses'}>(within 10min walking distance)</span></span>
+            <span>{$type === 'recruitment' ? 'Position' : 'Company'}</span><span>{$type === 'recruitment' ? 'Teacher' : modalData.company}</span>
           </div>
           <div>
-            <span>Housing Allowance</span>
-            <span>Provided, <span className={'parentheses'}>(500,000 KRW)</span></span>
+            <span>{$type === 'recruitment' ? 'Salary Range' : 'Theme'}</span><span>{$type === 'recruitment' ? '2,400,000 - 2,900,000 KRW' : modalData.theme}</span>
           </div>
+          <div>
+            <span>{$type === 'recruitment' ? 'Student Level' : 'Location'}</span><span>{$type === 'recruitment' ? 'Elementary' : modalData.location}</span>
+          </div>
+          <div>
+            <span>{$type === 'recruitment' ? 'Working Hours' : 'Date'}</span><span>{$type === 'recruitment' ? '9:00 am - 18:00 pm' : formatDateString(modalData.date)}</span>
+          </div>
+          <div>
+            <span>{$type === 'recruitment' ? 'Paid Vacation' : 'Price'}</span><span>{$type === 'recruitment' ? '3 Days' : `${numberWithCommas(modalData.price)} KRW`}</span>
+          </div>
+          <div>
+            <span>{$type === 'recruitment' ? 'Annual Leave' : 'Itinerary'}</span><span>{$type === 'recruitment' ? '11 Days' : modalData.itinerary}</span>
+          </div>
+          {$type === 'recruitment' && <>
+            <div><span>Severance</span><span>Provided</span></div>
+            <div><span>Insurance</span><span>Provided</span></div>
+            <div>
+              <span>Housing</span>
+              <span>Provided, <span className={'parentheses'}>(within 10min walking distance)</span></span>
+            </div>
+            <div>
+              <span>Housing Allowance</span>
+              <span>Provided, <span className={'parentheses'}>(500,000 KRW)</span></span>
+            </div>
+          </>}
         </div>
 
         <div className={'apply-button'}>
@@ -188,114 +282,124 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
 
   return (
     <div>
-      <Modal
-        closeTimeoutMS={200}
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        style={customStyles}
-        ariaHideApp={false}
-      >
-        <ModalContainerComponents />
-      </Modal>
+      <LoadingModal isOpen={loading} />
+      {
+        !loading &&
+        <>
+          <Modal
+            closeTimeoutMS={200}
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}
+            style={customStyles}
+            ariaHideApp={false}
+          >
+            <ModalContainerComponents />
+          </Modal>
 
-      <HeaderWrapper>
-        <Header authorized={authorized} permission={permission} />
-      </HeaderWrapper>
+          <HeaderWrapper ref={scrollToFocus}>
+            <Header authorized={authorized} permission={permission} />
+          </HeaderWrapper>
 
-      <Banner $type={$type} authorized={authorized} permission={permission} />
+          <Banner $type={$type} authorized={authorized} permission={permission} />
 
-      {$type === 'recruitment' &&
-        <PopularEmployers>
-          <div>
-            <div>{$type === 'recruitment' ? 'POPULAR EMPLOYERS' : $type === 'tour' ? 'UPCOMING TOURS' : 'UPCOMING PARTIES & EVENTS'}</div>
-            <div>
-              {$type === 'recruitment' ? 'Empowering Education and Revolutionizing Learning Partnerships for a Brighter Future'
-                : $type === 'tour' ? 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'
-                  : 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'}
+          {$type === 'recruitment' &&
+            <PopularEmployers>
+              <div>
+                <div>{$type === 'recruitment' ? 'POPULAR EMPLOYERS' : $type === 'tour' ? 'UPCOMING TOURS' : 'UPCOMING PARTIES & EVENTS'}</div>
+                <div>
+                  {$type === 'recruitment' ? 'Empowering Education and Revolutionizing Learning Partnerships for a Brighter Future'
+                    : $type === 'tour' ? 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'
+                      : 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'}
+                </div>
+              </div>
+
+              <div className={'image-container'}>
+                <Slider {...settings}>
+                  {[...Array(4)].map((_, index: number) => (
+                    <EmployerBox className={'employer-container'} key={index}
+                                 $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
+                      <div className={'employers-image'} />
+                      <div className={'title'}>
+                        {permission === Permission.ADMIN && <img src={grade3} alt={'grade'} />}
+                        <div>RISE Gangdong</div>
+                      </div>
+                      <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
+                      <div className={'bottom-container'}>
+                        <div>2,500,000 - 2,000,000 KRW</div>
+                        <div>Sep 1st, 2023</div>
+                      </div>
+                    </EmployerBox>
+                  ))}
+
+                </Slider>
+              </div>
+            </PopularEmployers>
+          }
+
+          <ListContainer $type={$type}>
+            <div className={'title'}>
+              {$type === 'recruitment' ? 'MEET ALL EMPLOYERS' : $type === 'tour' ? 'UPCOMING TOURS' : 'UPCOMING PARTIES & EVENTS'}
             </div>
-          </div>
 
-          <div className={'image-container'}>
-            <Slider {...settings}>
-              {[...Array(4)].map((_, index: number) => (
-                <EmployerBox className={'employer-container'} key={index}
-                             $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
-                  <div className={'employers-image'} />
-                  <div className={'title'}>
-                    {permission === Permission.ADMIN && <img src={grade3} alt={'grade'} />}
-                    <div>RISE Gangdong</div>
-                  </div>
-                  <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
-                  <div className={'bottom-container'}>
-                    <div>2,500,000 - 2,000,000 KRW</div>
-                    <div>Sep 1st, 2023</div>
-                  </div>
-                </EmployerBox>
+            {$type !== 'recruitment' &&
+              <div className={'sub-title'}>
+                {$type === 'tour' ? 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'
+                  : 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'}
+              </div>
+            }
+
+            <div className={'button-container'}>
+              <SortButton $isActive={sortType === 'priceDesc'} onClick={() => setSortType('priceDesc')}>Low Price</SortButton>
+              <SortButton $isActive={sortType === 'priceAsc'} onClick={() => setSortType('priceAsc')}>High Price</SortButton>
+              <SortButton $isActive={sortType === 'dateDesc'} onClick={() => setSortType('dateDesc')}>Latest date</SortButton>
+              <SortButton $isActive={sortType === 'dateAsc'} onClick={() => setSortType('dateAsc')}>Oldest date</SortButton>
+            </div>
+
+            <div className={'main-container'}>
+              {data.length > 0 ?
+                Object.values(data[currentPage - 1]).map((value: any, index) => (
+                  $type === 'recruitment' ?
+                    <EmployerBox key={index} onClick={() => openModal(value)}
+                                 $url={value.images ? import.meta.env.VITE_API_URL + value.images.split(',')[0] : LemonaidLogo}>
+                      <div className={'employers-image'} />
+                      <div className={'title'}>
+                        {permission === Permission.ADMIN && <img src={grade3} alt={'grade'} />}
+                        <div>RISE Gangdong</div>
+                      </div>
+                      <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
+                      <div className={'bottom-container'}>
+                        <div>2,500,000 - 2,000,000 KRW</div>
+                        <div>Sep 1st, 2023</div>
+                      </div>
+                    </EmployerBox> :
+                    <TourAndPartiesBox key={index} onClick={() => openModal(value)}
+                                       $url={value.images ? import.meta.env.VITE_API_URL + value.images.split(',')[0] : LemonaidLogo}>
+                      <div className={'container'}>
+                        <div className={'employers-image'} />
+                        <div className={'title'}>{value.tour_name}</div>
+                        <div className={'subtitle'}>{value.description}</div>
+                        <div className={'date'}>Date: {formatDateString(value.date)}</div>
+                        <div className={'bottom-container'}>
+                          <div>{numberWithCommas(value.price)} KRW</div>
+                          <button>Learn More</button>
+                        </div>
+                      </div>
+                    </TourAndPartiesBox>
+                ))
+                : <NoneData>There is no post.</NoneData>
+              }
+            </div>
+
+            <div className={'pagination-container'}>
+              <FiChevronLeft onClick={() => handlePagination(false)} />
+              {Array.from({ length: pageLength }, (_, index) => (
+                <Dot $isActive={index + 1 === currentPage} onClick={() => handleDotPagination(index + 1)} key={index} />
               ))}
-
-            </Slider>
-          </div>
-        </PopularEmployers>
+              <FiChevronRight onClick={() => handlePagination(true)} />
+            </div>
+          </ListContainer>
+        </>
       }
-
-      <ListContainer $type={$type}>
-        <div className={'title'}>
-          {$type === 'recruitment' ? 'MEET ALL EMPLOYERS' : $type === 'tour' ? 'UPCOMING TOURS' : 'UPCOMING PARTIES & EVENTS'}
-        </div>
-
-        {$type !== 'recruitment' &&
-          <div className={'sub-title'}>
-            {$type === 'tour' ? 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'
-              : 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'}
-          </div>
-        }
-
-        <div className={'button-container'}>
-          <SortButton $isActive={sortType === 'low'} onClick={() => setSortType('low')}>Low Price</SortButton>
-          <SortButton $isActive={sortType === 'high'} onClick={() => setSortType('high')}>High Price</SortButton>
-          <SortButton $isActive={sortType === 'asc'} onClick={() => setSortType('asc')}>Ascending Order</SortButton>
-          <SortButton $isActive={sortType === 'desc'} onClick={() => setSortType('desc')}>Descending Order</SortButton>
-        </div>
-
-        <div className={'main-container'}>
-          {employers.map((_, index) => (
-            $type === 'recruitment' ?
-              <EmployerBox key={index} $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'} onClick={openModal}>
-                <div className={'employers-image'} />
-                <div className={'title'}>
-                  {permission === Permission.ADMIN && <img src={grade3} alt={'grade'} />}
-                  <div>RISE Gangdong</div>
-                </div>
-                <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
-                <div className={'bottom-container'}>
-                  <div>2,500,000 - 2,000,000 KRW</div>
-                  <div>Sep 1st, 2023</div>
-                </div>
-              </EmployerBox> :
-              <TourAndPartiesBox key={index} $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}
-                                 onClick={openModal}>
-                <div className={'container'}>
-                  <div className={'employers-image'} />
-                  <div className={'title'}>Cool Off for the Summer</div>
-                  <div className={'subtitle'}>Adventure caving and river rafting experience</div>
-                  <div className={'date'}>Date: Sat, Aug 26th, 2023</div>
-                  <div className={'bottom-container'}>
-                    <div>85,000 KRW</div>
-                    <button>Learn More</button>
-                  </div>
-                </div>
-              </TourAndPartiesBox>
-          ))}
-        </div>
-
-        <div className={'pagination-container'}>
-          <FiChevronLeft onClick={() => handlePagination(false)} />
-          {dotsLength.map((_, index) => (
-            <Dot $isActive={index === currentPage} onClick={() => handleDotPagination(index)} key={index} />
-          ))}
-          <FiChevronRight onClick={() => handlePagination(true)} />
-        </div>
-      </ListContainer>
     </div>
   );
 };
@@ -371,7 +475,7 @@ export const ModalContainer = styled.div<ImageProps>`
 
         &:first-child {
           font-size: 1.8rem;
-          
+
           @media (max-width: 500px) {
             font-size: 1rem;
           }
@@ -379,7 +483,7 @@ export const ModalContainer = styled.div<ImageProps>`
 
         &:last-child {
           font-size: .85rem;
-          
+
           @media (max-width: 500px) {
             font-size: .6rem;
           }
@@ -402,11 +506,11 @@ export const ModalContainer = styled.div<ImageProps>`
           align-items: center;
           width: 98%;
           height: 50px;
-          box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+          box-shadow: rgba(50, 50, 93, 0.25) 0 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
           padding-left: 1.5rem;
           padding-right: 1.5rem;
           box-sizing: border-box;
-          
+
           @media (max-width: 500px) {
             height: 40px;
             font-size: 12px;
@@ -425,7 +529,7 @@ export const ModalContainer = styled.div<ImageProps>`
             background: none;
             font-size: 24px;
             color: #ef4444;
-            
+
             @media (max-width: 500px) {
               font-size: 17px;
             }
@@ -450,10 +554,10 @@ export const ModalContainer = styled.div<ImageProps>`
             text-align: center;
             color: #fff;
             font-size: 16px;
-            
+
             @media (max-width: 500px) {
               font-size: 12px;
-              
+
               & > svg {
                 font-size: 14.5px !important;
               }
@@ -592,7 +696,7 @@ export const ModalContainer = styled.div<ImageProps>`
 
   & .submit-table {
     height: 510px;
-    
+
     & > div {
       display: flex;
       align-items: center;
@@ -609,7 +713,7 @@ export const ModalContainer = styled.div<ImageProps>`
         box-sizing: border-box;
         font-size: 11px;
         transition: all .1s;
-        
+
         @media (max-width: 500px) {
           width: 7.5rem;
         }
@@ -619,7 +723,7 @@ export const ModalContainer = styled.div<ImageProps>`
           outline: 2px solid #F7C324;
         }
       }
-      
+
       select {
         color: #000;
       }
@@ -647,7 +751,7 @@ export const ModalContainer = styled.div<ImageProps>`
         & > .react-datepicker-wrapper {
           height: 100%;
           width: 7rem;
-          
+
           @media (max-width: 500px) {
             width: 4.5rem;
           }
@@ -661,7 +765,7 @@ export const ModalContainer = styled.div<ImageProps>`
           width: 8rem;
           margin: 0;
           height: 100%;
-          
+
           @media (max-width: 500px) {
             width: 4.5rem;
           }
@@ -929,8 +1033,12 @@ const TourAndPartiesBox = styled.div<ImageProps>`
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0, rgba(27, 31, 35, 0.15) 0 0 0 1px;
   transition: all .25s;
+
+  @media (max-width: 750px) {
+    width: 50% !important;
+  }
 
   @media (max-width: 500px) {
     width: 100% !important;
@@ -1104,8 +1212,11 @@ const ListContainer = styled.div<Pick<PageType, '$type'>>`
 
   & > .main-container {
     width: 100%;
+    margin: auto;
     display: flex;
     flex-wrap: wrap;
+    justify-content: flex-start;
+    //justify-content: space-between;
 
     @media (max-width: 750px) {
       width: 95%;
@@ -1114,28 +1225,26 @@ const ListContainer = styled.div<Pick<PageType, '$type'>>`
 
     & > div {
       margin-top: 50px;
-      flex: 1 0 calc(33.3333% - 20px);
-      margin-right: 5px;
-      margin-left: 5px;
+      margin-left: 7px;
+      margin-right: 7px;
+      //width: calc(33.33333% - 20px);
 
       @media (max-width: 750px) {
-        flex: 1 0 calc(50% - 20px);
-        width: 45% !important;
-
-        & > .employers-image {
-          width: 100%;
-        }
+        max-width: calc(50% - 10px); /* 750px 미만에서는 한 줄에 2개만 표시 */
+        margin-left: 5px;
+        margin-right: 5px;
       }
 
-      @media (max-width: 600px) {
-        flex: 1 0 calc(100% - 20px);
+      @media (max-width: 500px) {
+        max-width: calc(100% - 10px); /* 500px 미만에서는 한 줄에 1개만 표시 */
+      }
 
-        & > .employers-image {
-          width: 100%;
-        }
+      & > .employers-image {
+        width: 100%;
       }
     }
   }
+
 
   & > .pagination-container {
     margin: 70px auto;
@@ -1223,6 +1332,16 @@ export const Image = styled.div<ImageProps>`
       margin-top: 170px;
       font-size: 12px;
     }
+  }
+`;
+
+const NoneData = styled.h1`
+  text-align: center;
+  margin: 15vh auto 10vh;
+  font-size: 3rem;
+
+  @media (max-width: 750px) {
+    font-size: 1.8rem;
   }
 `;
 
