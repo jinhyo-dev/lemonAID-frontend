@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AuthProps, Permission } from '../../interface/AuthProps.ts';
 import NotFound from '../../components/NotFound.tsx';
 import { Container, HeaderWrapper } from '../../style/global.ts';
@@ -10,11 +10,15 @@ import Modal from 'react-modal';
 import Slider from 'react-slick';
 import { ModalPrevArrow } from '../../components/Modal/ModalPrevArrow.tsx';
 import { ModalNextArrow } from '../../components/Modal/ModalNextArrow.tsx';
+import axiosInstance from '../../utils/AxiosInstance.ts';
+import LoadingModal from '../../components/LoadingModal.tsx';
+import { numberWithCommas } from '../../utils/numberFormat.ts';
 
 const NoticeManage: React.FC<AuthProps> = ({ authorized, permission }) => {
-  // const [loading, setLoading] = useState<boolean>(false);
-  // const [data, setData] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [data, setData] = useState<any>([]);
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  const [modalData, setModalData] = useState<any>([]);
 
   const settings = {
     infinite: true,
@@ -62,6 +66,14 @@ const NoticeManage: React.FC<AuthProps> = ({ authorized, permission }) => {
     setIsOpen(false);
   };
 
+  const fetchData = () => {
+    setLoading(true);
+    axiosInstance.get('/post/pending_job_post')
+      .then(res => setData(res.data.data))
+      .catch(err => alert(err.response.data.message))
+      .finally(() => setLoading(false));
+  };
+
   const ModalContainerComponents = () => {
     return (
       <ModalContainer $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
@@ -70,34 +82,37 @@ const NoticeManage: React.FC<AuthProps> = ({ authorized, permission }) => {
         </div>
         <div className={'image-container'}>
           <Slider {...settings}>
-            <Image $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
-              <div>1/2</div>
-            </Image>
-            <Image $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
-              <div>2/2</div>
-            </Image>
+            {
+              modalData.images.split(',').map((imageSrc: string, index: number) => {
+                console.log(imageSrc);
+                return (
+                  <Image $url={import.meta.env.VITE_API_URL + imageSrc} key={index}>
+                    <div>{index + 1} / {modalData.images.split(',').length}</div>
+                  </Image>
+                );
+              })
+            }
           </Slider>
         </div>
         <div className={'institute-name'}>
-          <div>RISE</div>
-          <div>Gangdong Campus</div>
+          <div>{modalData.academy}</div>
+          <div>{modalData.campus}</div>
         </div>
         <div className={'table'}>
-          <div><span>Position</span><span>Teacher</span></div>
-          <div><span>Salary Range</span><span>2,400,000 - 2,900,000 KRW</span></div>
-          <div><span>Student Level</span><span>Kindy/Elemetary/Middle/High</span></div>
-          <div><span>Working Hours</span><span>9:00 am - 18:00 pm</span></div>
-          <div><span>Paid Vacation</span><span>3 Days</span></div>
-          <div><span>Annual Leave</span><span>11 Days</span></div>
-          <div><span>Severance</span><span>Provided</span></div>
-          <div><span>Insurance</span><span>Provided</span></div>
+          <div><span>Position</span><span>{modalData.position}</span></div>
+          <div><span>Salary Range</span><span>{numberWithCommas(modalData.start_salary)} KRW - {numberWithCommas(modalData.end_salary)} KRW</span></div>
+          <div><span>Student Level</span><span>{modalData.student_level}</span></div>
+          <div><span>Working Hours</span><span>{modalData.working_hours_start}</span></div>
+          <div><span>Paid Vacation</span><span>{modalData.paid_vacation} Days</span></div>
+          <div><span>Annual Leave</span><span>{modalData.annual_leave} Days</span></div>
+          <div><span>Severance</span><span>{modalData.severance}</span></div>
+          <div><span>Insurance</span><span>{modalData.insurance}</span></div>
           <div>
-            <span>Housing</span>
-            <span>Provided, <span className={'parentheses'}>(within 10min walking distance)</span></span>
+            <span>Housing</span><span>{modalData.housing}</span>
           </div>
           <div>
             <span>Housing Allowance</span>
-            <span>Provided, <span className={'parentheses'}>(500,000 KRW)</span></span>
+            <span>Provided, <span className={'parentheses'}>({numberWithCommas(modalData.housing_allowance)} KRW)</span></span>
           </div>
         </div>
 
@@ -109,50 +124,61 @@ const NoticeManage: React.FC<AuthProps> = ({ authorized, permission }) => {
     );
   };
 
+  const openModal = (value: any) => {
+    setModalData(value);
+    setIsOpen(true);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <>
       {permission !== Permission.ADMIN ? <NotFound permission={permission} authorized={authorized} /> :
-        <Container style={{ overflowX: 'auto' }}>
-          <Modal
-            closeTimeoutMS={200}
-            isOpen={modalIsOpen}
-            onRequestClose={closeModal}
-            style={customStyles}
-            ariaHideApp={false}
-          >
-            <ModalContainerComponents />
-          </Modal>
-          {/*<LoadingModal isOpen={loading} />*/}
-          <HeaderWrapper>
-            <Header authorized={authorized} permission={permission} />
-          </HeaderWrapper>
+        <>
+          <LoadingModal isOpen={loading} />
+          <Container style={{ overflowX: 'auto' }}>
+            <Modal
+              closeTimeoutMS={200}
+              isOpen={modalIsOpen}
+              onRequestClose={closeModal}
+              style={customStyles}
+              ariaHideApp={false}
+            >
+              <ModalContainerComponents />
+            </Modal>
+            {/*<LoadingModal isOpen={loading} />*/}
+            <HeaderWrapper>
+              <Header authorized={authorized} permission={permission} />
+            </HeaderWrapper>
 
-          <TableContainer>
+            <TableContainer>
 
-            {/*{loading ? <></> : data.length === 0 ? <div className={'non-value'}>신규 회원이 존재하지 않습니다.</div> :*/}
-            <>
-              <div className={'table'}>
-                <div className={'table-header'}>
-                  <div style={{ width: '70%' }}>학원명</div>
-                  <div style={{ width: '30%' }}>공고</div>
-                </div>
-
-                {[...Array(10)].map((_, index: number) => (
-                  <div key={index} className={'table-tr'}>
-                    <div style={{ width: '70%' }}>
-                      gangdong campus
-                    </div>
-                    <div style={{ width: '30%' }}>
-                      <button onClick={() => setIsOpen(true)}>공고 보기</button>
-                    </div>
+              {/*{loading ? <></> : data.length === 0 ? <div className={'non-value'}>신규 회원이 존재하지 않습니다.</div> :*/}
+              <>
+                <div className={'table'}>
+                  <div className={'table-header'}>
+                    <div style={{ width: '70%' }}>학원명</div>
+                    <div style={{ width: '30%' }}>공고</div>
                   </div>
-                ))}
-              </div>
-            </>
-            {/*}*/}
-          </TableContainer>
 
-        </Container>
+                  {Object.values(data).map((value: any, index: number) => (
+                    <div key={index} className={'table-tr'}>
+                      <div style={{ width: '70%' }}>
+                        {value.academy}
+                      </div>
+                      <div style={{ width: '30%' }}>
+                        <button onClick={() => openModal(value)}>공고 보기</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+              {/*}*/}
+            </TableContainer>
+          </Container>
+        </>
       }
     </>
   );

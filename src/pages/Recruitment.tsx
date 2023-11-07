@@ -12,6 +12,7 @@ import { AiOutlineDelete, AiOutlineFileAdd } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../utils/AxiosInstance.ts';
 import { camelToFuckingSnake } from '../utils/CamelToSnake.ts';
+import LoadingModal from '../components/LoadingModal.tsx';
 
 const Recruitment: React.FC<AuthProps> = ({ authorized, permission }) => {
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
@@ -23,8 +24,8 @@ const Recruitment: React.FC<AuthProps> = ({ authorized, permission }) => {
     startSalary: NaN,
     endSalary: NaN,
     studentLevel: 'Kindy',
-    workingStartHour: undefined,
-    workingEndHour: undefined,
+    workingHoursStart: undefined,
+    workingHoursEnd: undefined,
     paidVacation: NaN,
     annualLeave: NaN,
     severance: 'Provided',
@@ -38,6 +39,7 @@ const Recruitment: React.FC<AuthProps> = ({ authorized, permission }) => {
     image3: { value: null, show: false },
     image4: { value: null, show: false },
   });
+  const [loading, setLoading] = useState<boolean>(false)
 
   const navigate = useNavigate();
 
@@ -107,7 +109,7 @@ const Recruitment: React.FC<AuthProps> = ({ authorized, permission }) => {
       alert('At least one image is required.');
     } else {
       const payload: any = {};
-
+      setLoading(true)
       for (const key in postTypeData) {
         if (Object.prototype.hasOwnProperty.call(postTypeData, key)) {
           let newValue = postTypeData[key];
@@ -128,6 +130,7 @@ const Recruitment: React.FC<AuthProps> = ({ authorized, permission }) => {
           if (res.status === 200) {
             const form = new FormData();
 
+            console.log(res.data.id)
             form.append('id', res.data.id);
 
             Object.keys(imageList).map((key) => {
@@ -137,14 +140,14 @@ const Recruitment: React.FC<AuthProps> = ({ authorized, permission }) => {
               }
             });
 
-            axiosInstance.post('/post/job_images_upload', form, {
+            axiosInstance.post('/post/pending_job_images_upload', form, {
               headers: {
                 'Content-Type': 'multipart/form-data',
               },
             })
               .then(res => alert(res.data.message))
-              .catch(err => alert(err.response.data.message));
-            // .finally(() => )
+              .catch(err => alert(err.response.data.message))
+              .finally(() => setLoading(false))
           } else {
             alert(res.data.message);
           }
@@ -181,6 +184,7 @@ const Recruitment: React.FC<AuthProps> = ({ authorized, permission }) => {
 
   return (
     <>
+      <LoadingModal isOpen={loading}/>
       <Modal
         closeTimeoutMS={200}
         isOpen={modalIsOpen}
@@ -288,21 +292,21 @@ const Recruitment: React.FC<AuthProps> = ({ authorized, permission }) => {
                 <div className={'double-input-container'}>
                   <DatePicker showTimeSelectOnly={true} showTimeSelect={true} timeCaption='Time' timeIntervals={30}
                               placeholderText={'Start hour'} className={'time-picker'}
-                              value={postTypeData.workingStartHour ? postTypeData.workingStartHour.toLocaleTimeString([], {
+                              value={postTypeData.workingHoursStart ? postTypeData.workingHoursStart.toLocaleTimeString([], {
                                 hour: '2-digit',
                                 minute: '2-digit',
                               }) : undefined}
                               dateFormat='h:mm aa'
-                              onChange={e => handlePostData(e, 'workingStartHour')} />
+                              onChange={e => handlePostData(e, 'workingHoursStart')} />
                   <span>-</span>
                   <DatePicker showTimeSelectOnly={true} showTimeSelect={true} timeCaption='Time' timeIntervals={30}
                               placeholderText={'End hour'} className={'time-picker'}
-                              value={postTypeData.workingEndHour ? postTypeData.workingEndHour.toLocaleTimeString([], {
+                              value={postTypeData.workingHoursEnd ? postTypeData.workingHoursEnd.toLocaleTimeString([], {
                                 hour: '2-digit',
                                 minute: '2-digit',
                               }) : undefined}
                               dateFormat='h:mm aa'
-                              onChange={e => handlePostData(e, 'workingEndHour')} />
+                              onChange={e => handlePostData(e, 'workingHoursEnd')} />
                 </div>
               </div>
 

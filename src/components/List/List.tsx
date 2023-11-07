@@ -10,10 +10,10 @@ import { PrevArrow } from '../PrevArrow.tsx';
 import grade3 from '../../assets/images/grade/grade3.png';
 import { HeaderWrapper } from '../../style/global.ts';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import Modal from 'react-modal';
 import { IoClose } from 'react-icons/io5';
-import * as React from 'react';
 import { AuthProps, Permission } from '../../interface/AuthProps.ts';
 import { debounce } from 'lodash';
 import Banner from './Banner.tsx';
@@ -68,22 +68,10 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
 
   const fetchData = () => {
     setLoading(true);
-    axiosInstance.get($type === 'tour' ? '/post/tour' : '')
+    axiosInstance.get($type === 'tour' ? '/post/tour' : $type === 'parties' ? '/post/party_and_events': '/post/job_post')
       .then(res => {
         if (res.data.status === 200) {
-          const chunkedData = res.data.data.reduce((resultArray: any, item: any, index: number) => {
-            const chunkIndex = Math.floor(index / 9);
-
-            if (!resultArray[chunkIndex]) {
-              resultArray[chunkIndex] = []; // start a new chunk
-            }
-
-            resultArray[chunkIndex].push(item);
-
-            return resultArray;
-          }, []);
-
-          setData(chunkedData);
+          setData(chunkedData(res.data.data));
           setPageLength(Math.ceil(res.data.data.length / 9));
         } else {
           alert(res.data.message);
@@ -168,26 +156,44 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
     setIsOpen(false);
   };
 
+  const chunkedData = (rawData: any): any => {
+    return rawData.reduce((resultArray: any, item: any, index: number) => {
+      const chunkIndex = Math.floor(index / 9);
+
+      if (!resultArray[chunkIndex]) {
+        resultArray[chunkIndex] = [];
+      }
+
+      resultArray[chunkIndex].push(item);
+      return resultArray;
+    }, []);
+  };
+
+  const flattenData = (chunkedData: any[]): any[] => {
+    return chunkedData.flat();
+  };
+
   const sortData = () => {
-    const sortedData: any = [...data];
+    const flatData: any = flattenData(data);
+
     switch (sortType) {
-      case 'dateAsc':
-        sortedData.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
-        break;
       case 'dateDesc':
-        sortedData.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        flatData.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
         break;
-      case 'priceAsc':
-        sortedData.sort((a: any, b: any) => a.price - b.price);
+      case 'dateAsc':
+        flatData.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
         break;
       case 'priceDesc':
-        sortedData.sort((a: any, b: any) => b.price - a.price);
+        flatData.sort((a: any, b: any) => a.price - b.price);
+        break;
+      case 'priceAsc':
+        flatData.sort((a: any, b: any) => b.price - a.price);
         break;
       default:
         break;
     }
 
-    setData(sortedData);
+    setData(chunkedData(flatData));
   };
 
   useEffect(() => {
@@ -203,7 +209,7 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
   }, [currentPage]);
 
   useEffect(() => {
-    sortData()
+    sortData();
   }, [sortType]);
 
   useEffect(() => {
@@ -349,10 +355,14 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
             }
 
             <div className={'button-container'}>
-              <SortButton $isActive={sortType === 'priceDesc'} onClick={() => setSortType('priceDesc')}>Low Price</SortButton>
-              <SortButton $isActive={sortType === 'priceAsc'} onClick={() => setSortType('priceAsc')}>High Price</SortButton>
-              <SortButton $isActive={sortType === 'dateDesc'} onClick={() => setSortType('dateDesc')}>Latest date</SortButton>
-              <SortButton $isActive={sortType === 'dateAsc'} onClick={() => setSortType('dateAsc')}>Oldest date</SortButton>
+              <SortButton $isActive={sortType === 'priceDesc'} onClick={() => setSortType('priceDesc')}>
+                Low Price</SortButton>
+              <SortButton $isActive={sortType === 'priceAsc'} onClick={() => setSortType('priceAsc')}>
+                High Price</SortButton>
+              <SortButton $isActive={sortType === 'dateDesc'} onClick={() => setSortType('dateDesc')}>
+                Date Asc</SortButton>
+              <SortButton $isActive={sortType === 'dateAsc'} onClick={() => setSortType('dateAsc')}>
+                Date Desc</SortButton>
             </div>
 
             <div className={'main-container'}>
@@ -376,7 +386,7 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
                                        $url={value.images ? import.meta.env.VITE_API_URL + value.images.split(',')[0] : LemonaidLogo}>
                       <div className={'container'}>
                         <div className={'employers-image'} />
-                        <div className={'title'}>{value.tour_name}</div>
+                        <div className={'title'}>{value.tour_name ?? value.party_name}</div>
                         <div className={'subtitle'}>{value.description}</div>
                         <div className={'date'}>Date: {formatDateString(value.date)}</div>
                         <div className={'bottom-container'}>

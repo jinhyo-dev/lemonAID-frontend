@@ -7,8 +7,8 @@ export interface JobPostTypeProps {
   startSalary: number;
   endSalary: number;
   studentLevel: string;
-  workingStartHour: Date | undefined;
-  workingEndHour: Date | undefined;
+  workingHoursStart: Date | undefined;
+  workingHoursEnd: Date | undefined;
   paidVacation: number;
   annualLeave: number;
   severance: string;
