@@ -1,32 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { AuthProps, Permission } from '../../interface/AuthProps.ts';
+import React, {useEffect, useState} from 'react';
+import {AuthProps, Permission} from '../../interface/AuthProps.ts';
 import NotFound from '../../components/NotFound.tsx';
-import { Container, HeaderWrapper } from '../../style/global.ts';
+import {Container, HeaderWrapper} from '../../style/global.ts';
 import Header from '../../components/Header.tsx';
 import styled from 'styled-components';
-import { IoClose } from 'react-icons/io5';
-import { Image, ModalContainer } from '../../components/List/List.tsx';
+import {IoClose} from 'react-icons/io5';
+import {Image, ModalContainer} from '../../components/List/List.tsx';
 import Modal from 'react-modal';
 import Slider from 'react-slick';
-import { ModalPrevArrow } from '../../components/Modal/ModalPrevArrow.tsx';
-import { ModalNextArrow } from '../../components/Modal/ModalNextArrow.tsx';
+import {ModalPrevArrow} from '../../components/Modal/ModalPrevArrow.tsx';
+import {ModalNextArrow} from '../../components/Modal/ModalNextArrow.tsx';
 import axiosInstance from '../../utils/AxiosInstance.ts';
 import LoadingModal from '../../components/LoadingModal.tsx';
-import { numberWithCommas } from '../../utils/numberFormat.ts';
+import {numberWithCommas} from '../../utils/numberFormat.ts';
 
-const NoticeManage: React.FC<AuthProps> = ({ authorized, permission }) => {
+const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<any>([]);
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [modalData, setModalData] = useState<any>([]);
+  const [rank, setRank] = useState<number>(1)
 
   const settings = {
     infinite: true,
     speed: 700,
     slidesToShow: 1,
     slidesToScroll: 1,
-    nextArrow: <ModalNextArrow />,
-    prevArrow: <ModalPrevArrow />,
+    nextArrow: <ModalNextArrow/>,
+    prevArrow: <ModalPrevArrow/>,
   };
 
   const getCustomStyles = () => {
@@ -76,26 +77,32 @@ const NoticeManage: React.FC<AuthProps> = ({ authorized, permission }) => {
 
   const handleJobPost = (id: number, acceptation: boolean) => {
     setLoading(true);
-    const payload = { id: [id] };
+    const payload = {id: [id]};
+
+    const handleLoading = () => {
+      setLoading(false)
+      setIsOpen(false)
+      fetchData()
+    }
 
     if (acceptation) {
       axiosInstance.put('/post/pending_job_post', payload)
         .then(res => alert(res.data.message))
         .catch(err => alert(err.response.data.message))
-        .finally(() => setLoading(false));
+        .finally(() => handleLoading());
     } else {
-      axiosInstance.delete('/post/pending_job_post', { data: payload })
+      axiosInstance.delete('/post/pending_job_post', {data: payload})
         .then(res => alert(res.data.message))
         .catch(err => alert(err.response.data.message))
-        .finally(() => setLoading(false));
+        .finally(() => handleLoading());
     }
   };
 
   const ModalContainerComponents = () => {
     return (
-      <ModalContainer $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
+      <ModalContainer>
         <div className={'close-button'}>
-          <button onClick={closeModal}><IoClose /></button>
+          <button onClick={closeModal}><IoClose/></button>
         </div>
         <div className={'image-container'}>
           <Slider {...settings}>
@@ -127,18 +134,21 @@ const NoticeManage: React.FC<AuthProps> = ({ authorized, permission }) => {
           <div><span>Annual Leave</span><span>{modalData.annual_leave} Days</span></div>
           <div><span>Severance</span><span>{modalData.severance}</span></div>
           <div><span>Insurance</span><span>{modalData.insurance}</span></div>
+          <div><span>Housing</span><span>{modalData.housing}</span></div>
+          <div><span>Housing Allowance</span><span>{numberWithCommas(modalData.housing_allowance)} KRW</span></div>
           <div>
-            <span>Housing</span><span>{modalData.housing}</span>
-          </div>
-          <div>
-            <span>Housing Allowance</span>
-            <span>Provided, <span className={'parentheses'}>({numberWithCommas(modalData.housing_allowance)} KRW)</span></span>
+            <span>Rank</span>
+            <select onChange={e => setRank(Number(e.target.value))} value={rank}>
+              <option value={1}>Rank 1</option>
+              <option value={2}>Rank 2</option>
+              <option value={3}>Rank 3</option>
+            </select>
           </div>
         </div>
 
         <div className={'accept-button'}>
-          <button onClick={() => handleJobPost(modalData.id, true)}>승인</button>
-          <button onClick={() => handleJobPost(modalData.id, false)}>비승인</button>
+          <button onClick={() => handleJobPost(modalData.ID, true)}>승인</button>
+          <button onClick={() => handleJobPost(modalData.ID, false)}>비승인</button>
         </div>
       </ModalContainer>
     );
@@ -155,10 +165,10 @@ const NoticeManage: React.FC<AuthProps> = ({ authorized, permission }) => {
 
   return (
     <>
-      {permission !== Permission.ADMIN ? <NotFound permission={permission} authorized={authorized} /> :
+      {permission !== Permission.ADMIN ? <NotFound permission={permission} authorized={authorized}/> :
         <>
-          <LoadingModal isOpen={loading} />
-          <Container style={{ overflowX: 'auto' }}>
+          <LoadingModal isOpen={loading}/>
+          <Container style={{overflowX: 'auto'}}>
             <Modal
               closeTimeoutMS={200}
               isOpen={modalIsOpen}
@@ -166,36 +176,35 @@ const NoticeManage: React.FC<AuthProps> = ({ authorized, permission }) => {
               style={customStyles}
               ariaHideApp={false}
             >
-              <ModalContainerComponents />
+              <ModalContainerComponents/>
             </Modal>
-            {/*<LoadingModal isOpen={loading} />*/}
             <HeaderWrapper>
-              <Header authorized={authorized} permission={permission} />
+              <Header authorized={authorized} permission={permission}/>
             </HeaderWrapper>
 
             <TableContainer>
 
-              {/*{loading ? <></> : data.length === 0 ? <div className={'non-value'}>신규 회원이 존재하지 않습니다.</div> :*/}
-              <>
-                <div className={'table'}>
-                  <div className={'table-header'}>
-                    <div style={{ width: '70%' }}>학원명</div>
-                    <div style={{ width: '30%' }}>공고</div>
-                  </div>
-
-                  {Object.values(data).map((value: any, index: number) => (
-                    <div key={index} className={'table-tr'}>
-                      <div style={{ width: '70%' }}>
-                        {value.academy}
-                      </div>
-                      <div style={{ width: '30%' }}>
-                        <button onClick={() => openModal(value)}>공고 보기</button>
-                      </div>
+              {loading ? <></> : data.length === 0 ? <div className={'non-value'}>신규 공고가 존재하지 않습니다.</div> :
+                <>
+                  <div className={'table'}>
+                    <div className={'table-header'}>
+                      <div style={{width: '70%'}}>학원명</div>
+                      <div style={{width: '30%'}}>공고</div>
                     </div>
-                  ))}
-                </div>
-              </>
-              {/*}*/}
+
+                    {Object.values(data).map((value: any, index: number) => (
+                      <div key={index} className={'table-tr'}>
+                        <div style={{width: '70%'}}>
+                          {value.academy}
+                        </div>
+                        <div style={{width: '30%'}}>
+                          <button onClick={() => openModal(value)}>공고 보기</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              }
             </TableContainer>
           </Container>
         </>

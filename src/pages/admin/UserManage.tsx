@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { AuthProps, Permission } from '../../interface/AuthProps.ts';
-import { Container, HeaderWrapper } from '../../style/global.ts';
+import React, {useEffect, useState} from 'react';
+import {AuthProps, Permission} from '../../interface/AuthProps.ts';
+import {Container, HeaderWrapper} from '../../style/global.ts';
 import Header from '../../components/Header.tsx';
 import styled from 'styled-components';
 import axiosInstance from '../../utils/AxiosInstance.ts';
 import NotFound from '../../components/NotFound.tsx';
 import LoadingModal from '../../components/LoadingModal.tsx';
-import { phoneNumberFormatter } from '../../utils/phoneNumberFormatter.ts';
+import {phoneNumberFormatter} from '../../utils/phoneNumberFormatter.ts';
 
-const UserManage: React.FC<AuthProps> = ({ authorized, permission }) => {
+const UserManage: React.FC<AuthProps> = ({authorized, permission}) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<any>([]);
   const [isAllCheck, setIsAllCheck] = useState<boolean>(false);
@@ -32,7 +32,7 @@ const UserManage: React.FC<AuthProps> = ({ authorized, permission }) => {
 
   const acceptUser = () => {
     if (window.confirm('회원가입을 승인하시겠습니까 ?')) {
-      const payload: { email: string[] } = { email: [] };
+      const payload: { email: string[] } = {email: []};
 
       data.forEach((item: any) => {
         if (item.isChecked) {
@@ -53,7 +53,7 @@ const UserManage: React.FC<AuthProps> = ({ authorized, permission }) => {
 
   const denyUser = () => {
     if (window.confirm('회원가입을 비승인하시겠습니까 ?')) {
-      const payload: { email: string[] } = { email: [] };
+      const payload: { email: string[] } = {email: []};
 
       data.forEach((item: any) => {
         if (item.isChecked) {
@@ -61,7 +61,7 @@ const UserManage: React.FC<AuthProps> = ({ authorized, permission }) => {
         }
       });
 
-      axiosInstance.delete('/auth/approval_user', { data: payload })
+      axiosInstance.delete('/auth/approval_user', {data: payload})
         .then(res => {
           if (res.data.status === 200) {
             alert('회원가입 비승인이 정상적으로 완료되었습니다.');
@@ -74,7 +74,7 @@ const UserManage: React.FC<AuthProps> = ({ authorized, permission }) => {
 
   const toggleAllCheckboxes = (click: boolean) => {
     const updatedData = data.map((item: any) => {
-      return { ...item, isChecked: click };
+      return {...item, isChecked: click};
     });
 
     setIsAllCheck(!isAllCheck);
@@ -83,7 +83,7 @@ const UserManage: React.FC<AuthProps> = ({ authorized, permission }) => {
 
   const handelCheckButton = (email: string) => {
     setData(data.map((v: any) =>
-      v.email === email ? { ...v, isChecked: !v.isChecked } : v,
+      v.email === email ? {...v, isChecked: !v.isChecked} : v,
     ));
   };
 
@@ -97,11 +97,11 @@ const UserManage: React.FC<AuthProps> = ({ authorized, permission }) => {
 
   return (
     <>
-      {permission !== Permission.ADMIN ? <NotFound permission={permission} authorized={authorized} /> :
-        <Container style={{ overflowX: 'auto' }}>
-          <LoadingModal isOpen={loading} />
+      {permission !== Permission.ADMIN ? <NotFound permission={permission} authorized={authorized}/> :
+        <Container style={{overflowX: 'auto'}}>
+          <LoadingModal isOpen={loading}/>
           <HeaderWrapper>
-            <Header authorized={authorized} permission={permission} />
+            <Header authorized={authorized} permission={permission}/>
           </HeaderWrapper>
 
           <TableContainer>
@@ -115,32 +115,34 @@ const UserManage: React.FC<AuthProps> = ({ authorized, permission }) => {
 
                 <div className={'table'}>
                   <div className={'table-header'}>
-                    <div style={{ width: '5%' }}>
+                    <div style={{width: '5%'}}>
                       <input type={'checkbox'} onChange={e => toggleAllCheckboxes(e.currentTarget.checked)}
-                             checked={isAllCheck} />
+                             checked={isAllCheck}/>
                     </div>
-                    <div style={{ width: '15%' }}>회원명</div>
-                    <div style={{ width: '10%' }}>국적</div>
-                    <div style={{ width: '8%' }}>성별</div>
-                    <div style={{ width: '10%' }}>생년월일</div>
-                    <div style={{ width: '17%' }}>비자 코드</div>
-                    <div style={{ width: '20%' }}>전화번호</div>
-                    <div style={{ width: '15%' }}>이메일</div>
+                    <div style={{width: '15%'}}>회원명</div>
+                    <div style={{width: '10%'}}>국적</div>
+                    <div style={{width: '8%'}}>성별</div>
+                    <div style={{width: '10%'}}>생년월일</div>
+                    <div style={{width: '12%'}}>비자 코드</div>
+                    <div style={{width: '10%'}}>유저 타입</div>
+                    <div style={{width: '15%'}}>전화번호</div>
+                    <div style={{width: '15%'}}>이메일</div>
                   </div>
 
                   {Object.values(data).map((value: any, index: number) => (
                     <TableTR key={index} onClick={() => handelCheckButton(value.email)} $isClicked={value.isChecked}>
-                      <div style={{ width: '5%' }}>
+                      <div style={{width: '5%'}}>
                         <input type={'checkbox'} checked={value.isChecked}
-                               onChange={() => handelCheckButton(value.email)} />
+                               onChange={() => handelCheckButton(value.email)}/>
                       </div>
-                      <div style={{ width: '15%' }}>{value.first_name + ' ' + value.last_name}</div>
-                      <div style={{ width: '10%' }}>{value.nationality}</div>
-                      <div style={{ width: '8%' }}>{value.gender ?? '정보 없음'}</div>
-                      <div style={{ width: '10%' }}>{value.birthday.substring(0, 10)}</div>
-                      <div style={{ width: '17%' }}>{value.visa_code}</div>
-                      <div style={{ width: '20%' }}>{phoneNumberFormatter(value.phone_number)}</div>
-                      <div style={{ width: '15%' }}>{value.email}</div>
+                      <div style={{width: '15%'}}>{value.first_name + ' ' + value.last_name}</div>
+                      <div style={{width: '10%'}}>{value.nationality}</div>
+                      <div style={{width: '8%'}}>{value.gender ?? '정보 없음'}</div>
+                      <div style={{width: '10%'}}>{value.birthday.substring(0, 10)}</div>
+                      <div style={{width: '12%'}}>{value.visa_code}</div>
+                      <div style={{width: '10%'}}>{value.user_type === 1 && '학원'}{value.user_type === 2 && '강사'}</div>
+                      <div style={{width: '15%'}}>{phoneNumberFormatter(value.phone_number)}</div>
+                      <div style={{width: '15%'}}>{value.email}</div>
                     </TableTR>
                   ))}
                 </div>
@@ -158,8 +160,8 @@ const ButtonContainer = styled.div<{ $show: boolean }>`
   width: 1400px;
   margin-bottom: 1rem;
 
-  visibility: ${({ $show }) => $show ? 'visible' : 'hidden'};
-  opacity: ${({ $show }) => $show ? '1' : '0'};
+  visibility: ${({$show}) => $show ? 'visible' : 'hidden'};
+  opacity: ${({$show}) => $show ? '1' : '0'};
   transition: .2s all;
 
   & > button {
@@ -236,7 +238,7 @@ const TableContainer = styled.div`
 const TableTR = styled.div<{ $isClicked: boolean }>`
   height: 3.5em;
   cursor: pointer;
-  background-color: ${({ $isClicked }) => $isClicked ? '#e3eef8' : '#fff'};
+  background-color: ${({$isClicked}) => $isClicked ? '#e3eef8' : '#fff'};
   border-bottom: 1px solid #ccc;
   transition: background-color .2s;
 

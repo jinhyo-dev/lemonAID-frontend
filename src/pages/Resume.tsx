@@ -1,22 +1,25 @@
 import Header from '../components/Header.tsx';
-import { Container, HeaderWrapper } from '../style/global.ts';
+import {Container, HeaderWrapper} from '../style/global.ts';
 import styled from 'styled-components';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import { Dot } from '../components/List/List.tsx';
-import React, { useState } from 'react';
-import { AuthProps } from '../interface/AuthProps.ts';
+import {FiChevronLeft, FiChevronRight} from 'react-icons/fi';
+import {Dot} from '../components/List/List.tsx';
+import React, {useEffect, useState} from 'react';
+import {AuthProps} from '../interface/AuthProps.ts';
 import Banner from '../components/List/Banner.tsx';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
+import axiosInstance from "../utils/AxiosInstance.ts";
+import LoadingModal from "../components/LoadingModal.tsx";
 
 interface ImageProps {
   $url: string;
 }
 
-const Resume: React.FC<AuthProps> = ({ authorized, permission }) => {
+const Resume: React.FC<AuthProps> = ({authorized, permission}) => {
   const navigate = useNavigate()
-  const employees = Array(4).fill({});
   const dotsLength = Array(3).fill({});
   const [currentPage, setCurrentPage] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true)
+  const [data, setData] = useState<any>([])
 
   const handlePagination = (increase: boolean) => {
     const MAX_PAGE = 2;
@@ -31,46 +34,91 @@ const Resume: React.FC<AuthProps> = ({ authorized, permission }) => {
     setCurrentPage(index);
   };
 
-  const handleHireButton = () => {
+  const handleHireButton = (id: number) => {
     if (!authorized) {
       alert('Available after sign in');
       navigate('/sign-in')
+    } else {
+      setLoading(true)
+      axiosInstance.get(`/user/resume?user_id=${id}`, {responseType: 'blob'})
+        .then(res => {
+          const blob = new Blob([res.data]);
+          const contentDisposition = res.headers['content-disposition'].split('=')[1];
+
+          const fileObjectUrl = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = fileObjectUrl;
+          link.style.display = 'none';
+
+          // 추출된 파일 이름과 확장자를 사용하여 다운로드 파일명을 설정합니다.
+          link.download = `lemonaid-${contentDisposition}`;
+
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+        .catch(err => alert(err.response.data.message))
+        .finally(() => setLoading(false))
     }
   }
+
+  const fetchData = () => {
+    setLoading(true)
+    axiosInstance.get('/user/teachers')
+      .then(res => {
+        if (res.data.status === 200) {
+          setData(res.data.data)
+        } else {
+          alert(res.data.message)
+        }
+      })
+      .catch(err => alert(err.response.data.message))
+      .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, []);
 
   return (
     <Container>
       <HeaderWrapper>
-        <Header authorized={authorized} permission={permission} />
+        <Header authorized={authorized} permission={permission}/>
       </HeaderWrapper>
 
-      <Banner $type={'recruitment'} authorized={authorized} permission={permission} />
+      <LoadingModal isOpen={loading}/>
+      <>
+        <Banner $type={'recruitment'} authorized={authorized} permission={permission}/>
 
-      <Employees>
-        <div className={'title'}>MEET ALL EMPLOYEES</div>
-        {employees.map((_, i) => (
-          <EmployeesBox key={i}
-                        $url={'https://pictures.tribuna.com/image/2122cea9-ce71-43ee-a2be-909e5e7602e3?width=1920&quality=100'}>
-            <div className={'img-container'} />
-            <div className={'text-container'}>
-              <div className={'name-container'}>GilDong Hong <span>South Korea</span></div>
-              <div className={'hire-button-container'}>
-                <button onClick={handleHireButton}>
-                  Hire Now
-                </button>
-              </div>
-            </div>
-          </EmployeesBox>
-        ))}
+        <Employees>
+          <div className={'title'}>MEET ALL EMPLOYEES</div>
+          {
+            (!loading || data) &&
+            Object.values(data).map((value: any, index: number) => (
+              <EmployeesBox key={index} $url={import.meta.env.VITE_API_URL + value.image_path}>
+                <div className={'img-container'}/>
+                <div className={'text-container'}>
+                  <div className={'name-container'}>
+                    {value.first_name} {value.last_name}<span>{value.nationality}</span>
+                  </div>
+                  <div className={'hire-button-container'}>
+                    <button onClick={() => handleHireButton(value.id)}>
+                      Hire Now
+                    </button>
+                  </div>
+                </div>
+              </EmployeesBox>
+            ))}
 
-        <div className={'pagination-container'}>
-          <FiChevronLeft onClick={() => handlePagination(false)} />
-          {dotsLength.map((_, index) => (
-            <Dot $isActive={index === currentPage} onClick={() => handleDotPagination(index)} key={index} />
-          ))}
-          <FiChevronRight onClick={() => handlePagination(true)} />
-        </div>
-      </Employees>
+          <div className={'pagination-container'}>
+            <FiChevronLeft onClick={() => handlePagination(false)}/>
+            {dotsLength.map((_, index) => (
+              <Dot $isActive={index === currentPage} onClick={() => handleDotPagination(index)} key={index}/>
+            ))}
+            <FiChevronRight onClick={() => handlePagination(true)}/>
+          </div>
+        </Employees>
+      </>
     </Container>
   );
 };
@@ -143,7 +191,7 @@ const EmployeesBox = styled.div<ImageProps>`
     background-size: cover;
     overflow: hidden;
     background-position: center;
-    background-image: url(${({ $url }) => $url});
+    background-image: url(${({$url}) => $url});
 
     @media (max-width: 750px) {
       width: 312px;
@@ -176,7 +224,7 @@ const EmployeesBox = styled.div<ImageProps>`
     & > .name-container {
       font-size: 20px;
       font-weight: 600;
-      
+
       & > span {
         font-family: 'KoPubWorldDotumLight', sans-serif;
         margin-left: 5px;
