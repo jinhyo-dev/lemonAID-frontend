@@ -57,7 +57,7 @@ const Resume: React.FC<AuthProps> = ({authorized, permission}) => {
           link.click();
           document.body.removeChild(link);
         })
-        .catch(err => alert(err.response.data.message))
+        .catch(() => alert('Permission denied. Plan did not exist.'))
         .finally(() => setLoading(false))
     }
   }
