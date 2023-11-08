@@ -34,7 +34,6 @@ const SignIn: React.FC<AuthProps> = ({ authorized, permission }) => {
     e.preventDefault();
     axiosInstance.post('/auth/login', JSON.stringify(loginData))
       .then(res => {
-        console.log(res);
         if (res.data.status === 200) {
           setCookies(import.meta.env.VITE_COOKIE_NAME, res.data.session, {
             sameSite: 'none',
@@ -75,6 +74,10 @@ const SignIn: React.FC<AuthProps> = ({ authorized, permission }) => {
           },
         });
       });
+  };
+
+  const oauthHandler = (name: string) => {
+    window.location.href = `${import.meta.env.VITE_API_URL}/api/v1/oauth/${name}/login`;
   };
 
   return (
@@ -126,7 +129,7 @@ const SignIn: React.FC<AuthProps> = ({ authorized, permission }) => {
               <div className={'facebook'}>
                 <BiLogoFacebook />
               </div>
-              <div className={'google'}>
+              <div className={'google'} onClick={() => oauthHandler('google')}>
                 <FcGoogle />
               </div>
             </div>

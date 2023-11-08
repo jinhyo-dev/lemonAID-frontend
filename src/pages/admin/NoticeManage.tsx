@@ -74,6 +74,23 @@ const NoticeManage: React.FC<AuthProps> = ({ authorized, permission }) => {
       .finally(() => setLoading(false));
   };
 
+  const handleJobPost = (id: number, acceptation: boolean) => {
+    setLoading(true);
+    const payload = { id: [id] };
+
+    if (acceptation) {
+      axiosInstance.put('/post/pending_job_post', payload)
+        .then(res => alert(res.data.message))
+        .catch(err => alert(err.response.data.message))
+        .finally(() => setLoading(false));
+    } else {
+      axiosInstance.delete('/post/pending_job_post', { data: payload })
+        .then(res => alert(res.data.message))
+        .catch(err => alert(err.response.data.message))
+        .finally(() => setLoading(false));
+    }
+  };
+
   const ModalContainerComponents = () => {
     return (
       <ModalContainer $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
@@ -100,9 +117,12 @@ const NoticeManage: React.FC<AuthProps> = ({ authorized, permission }) => {
         </div>
         <div className={'table'}>
           <div><span>Position</span><span>{modalData.position}</span></div>
-          <div><span>Salary Range</span><span>{numberWithCommas(modalData.start_salary)} KRW - {numberWithCommas(modalData.end_salary)} KRW</span></div>
+          <div>
+            <span>Salary Range</span><span>{numberWithCommas(modalData.start_salary)} KRW - {numberWithCommas(modalData.end_salary)} KRW</span>
+          </div>
           <div><span>Student Level</span><span>{modalData.student_level}</span></div>
-          <div><span>Working Hours</span><span>{modalData.working_hours_start}</span></div>
+          <div><span>Working Hours</span><span>{modalData.working_hours_start} - {modalData.working_hours_end}</span>
+          </div>
           <div><span>Paid Vacation</span><span>{modalData.paid_vacation} Days</span></div>
           <div><span>Annual Leave</span><span>{modalData.annual_leave} Days</span></div>
           <div><span>Severance</span><span>{modalData.severance}</span></div>
@@ -117,8 +137,8 @@ const NoticeManage: React.FC<AuthProps> = ({ authorized, permission }) => {
         </div>
 
         <div className={'accept-button'}>
-          <button>승인</button>
-          <button>비승인</button>
+          <button onClick={() => handleJobPost(modalData.id, true)}>승인</button>
+          <button onClick={() => handleJobPost(modalData.id, false)}>비승인</button>
         </div>
       </ModalContainer>
     );

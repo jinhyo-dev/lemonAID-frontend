@@ -114,7 +114,7 @@ const Recruitment: React.FC<AuthProps> = ({ authorized, permission }) => {
         if (Object.prototype.hasOwnProperty.call(postTypeData, key)) {
           let newValue = postTypeData[key];
 
-          if (['workingStartHour', 'workingEndHour'].includes(key)) {
+          if (['workingHoursStart', 'workingHoursEnd'].includes(key)) {
             const value = postTypeData[key];
             const formattedTime = `${String(value.getHours()).padStart(2, '0')}:${String(value.getMinutes()).padStart(2, '0')}`;
             newValue = formattedTime;

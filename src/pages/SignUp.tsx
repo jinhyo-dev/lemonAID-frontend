@@ -45,6 +45,7 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
   });
   const [resume, setResume] = useState<File | null>(null);
   const [profileImage, setProfileImage] = useState<File | null>(null);
+  const isOauth: boolean = window.location.href.split('?')[1] === 'oauth=true';
 
   const nationality = [
     'Australia',
@@ -89,6 +90,9 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
       form.append('birthday', formatDateString(birthday));
       resume && form.append('resume', resume);
       profileImage && form.append(camelToFuckingSnake('profileImage'), profileImage);
+      isOauth && form.append('email', ' ');
+      isOauth && form.append('password', ' ');
+
 
       axiosInstance.post('/auth/register', form, {
         headers: {
@@ -103,7 +107,7 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
             alert(res.data.message);
           }
         })
-        .catch(() => alert('The file size is large, or there is a problem with the network.'))
+        .catch(err => alert(err.response.data.message))
         .finally(() => setLoading(false));
     }
   };
@@ -179,27 +183,33 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
                   </div>
                 </div>
 
-                <div className={'input-container'}>
-                  <div className={'single-input-container'}>
-                    <p>Email Address <span>*</span></p>
-                    <input type={'email'} onChange={handleSignUpData} name={'email'} required={true}
-                           value={signUpData.email} />
+                {
+                  !isOauth &&
+                  <div className={'input-container'}>
+                    <div className={'single-input-container'}>
+                      <p>Email Address <span>*</span></p>
+                      <input type={'email'} onChange={handleSignUpData} name={'email'} required={true}
+                             value={signUpData.email} />
+                    </div>
                   </div>
-                </div>
+                }
 
-                <div className={'input-container'}>
-                  <div className={'double-input-container'}>
-                    <p>Password <span>*</span></p>
-                    <input type={'password'} onChange={handleSignUpData} name={'password'} required={true}
-                           value={signUpData.password} />
-                  </div>
+                {
+                  !isOauth &&
+                  <div className={'input-container'}>
+                    <div className={'double-input-container'}>
+                      <p>Password <span>*</span></p>
+                      <input type={'password'} onChange={handleSignUpData} name={'password'} required={true}
+                             value={signUpData.password} />
+                    </div>
 
-                  <div className={'double-input-container'}>
-                    <p>Confirm Password <span>*</span></p>
-                    <input type={'password'} onChange={handleSignUpData} name={'confirmPassword'} required={true}
-                           value={signUpData.confirmPassword} />
+                    <div className={'double-input-container'}>
+                      <p>Confirm Password <span>*</span></p>
+                      <input type={'password'} onChange={handleSignUpData} name={'confirmPassword'} required={true}
+                             value={signUpData.confirmPassword} />
+                    </div>
                   </div>
-                </div>
+                }
 
                 <div className={'input-container'}>
                   <div className={'single-input-container'}>
