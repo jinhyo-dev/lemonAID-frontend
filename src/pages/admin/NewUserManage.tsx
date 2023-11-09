@@ -8,7 +8,7 @@ import NotFound from '../../components/NotFound.tsx';
 import LoadingModal from '../../components/LoadingModal.tsx';
 import {phoneNumberFormatter} from '../../utils/phoneNumberFormatter.ts';
 
-const UserManage: React.FC<AuthProps> = ({authorized, permission}) => {
+const NewUserManage: React.FC<AuthProps> = ({authorized, permission}) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<any>([]);
   const [isAllCheck, setIsAllCheck] = useState<boolean>(false);
@@ -247,4 +247,4 @@ const TableTR = styled.div<{ $isClicked: boolean }>`
   }
 `;
 
-export default UserManage;
+export default NewUserManage;

@@ -195,7 +195,7 @@ const ToursAndPartiesManage: React.FC<AuthProps> = ({ authorized, permission }) 
             style={customStyles}
             ariaHideApp={false}
           >
-            <ModalContainer $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
+            <ModalContainer>
               <div className={'close-button'}>
                 <button onClick={closeModal}><IoClose /></button>
               </div>
@@ -210,6 +210,7 @@ const ToursAndPartiesManage: React.FC<AuthProps> = ({ authorized, permission }) 
                   Object.values(imageList).every(item => item.value === null && !item.show) ? (
                       <label htmlFor={'image1'} className={'file-label-full'}>
                         <div>Upload Pictures</div>
+                        <div>(Only jpg, jpeg, gif, png, tiff, ai, psd extensions are allowed)</div>
                       </label>) :
                     <div className={'label-container'}>
                       {

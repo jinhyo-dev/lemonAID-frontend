@@ -15,10 +15,11 @@ import LoadingModal from './components/LoadingModal.tsx';
 import ScrollToTop from './components/ScrollToTop.tsx';
 import AdminButton from './components/AdminButton.tsx';
 import { Permission } from './interface/AuthProps.ts';
-import UserManage from './pages/admin/UserManage.tsx';
+import NewUserManage from './pages/admin/NewUserManage.tsx';
 import NotFound from './components/NotFound.tsx';
-import NoticeManage from './pages/admin/NoticeManage.tsx';
+import PendingNoticeManage from './pages/admin/PendingNoticeManage.tsx';
 import ToursAndPartiesManage from './pages/admin/ToursAndPartiesManage.tsx';
+import NoticeManage from './pages/admin/NoticeManage.tsx';
 
 interface AuthProps {
   loading: boolean;
@@ -126,35 +127,37 @@ const ConfigAuth = () => {
 
   const getComponents = (path: string): React.ReactElement => {
     if (location.pathname.startsWith('/search')) {
-      return <Search authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
+      return <Search authorized={isAuthorized.authorized} permission={isAuthorized.permission} value={location.search} />;
     } else {
       switch (path) {
         case '/':
-          return <Main authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
+          return <Main authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
         case '/sign-in':
-          return <SignIn authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
+          return <SignIn authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
         case '/sign-up':
-          return <SignUp authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
+          return <SignUp authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
         case '/recruitment':
-          return <Recruitment authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
+          return <Recruitment authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
         case '/service':
-          return <Service authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
+          return <Service authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
         case '/resume':
-          return <Resume authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
+          return <Resume authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
         case '/tours':
-          return <Tours authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
+          return <Tours authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
         case '/parties-and-events':
-          return <Parties authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
+          return <Parties authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
         case '/my-page':
-          return <MyPage authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
+          return <MyPage authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
         case '/admin/new-user':
-          return <UserManage authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
-        case '/admin/new-notice':
-          return <NoticeManage authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
+          return <NewUserManage authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
+        case '/admin/pending-notice':
+          return <PendingNoticeManage authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
+        case '/admin/notice-manage':
+          return <NoticeManage authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
         case '/admin/tour-and-party-manage':
-          return <ToursAndPartiesManage authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
+          return <ToursAndPartiesManage authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
         default:
-          return <NotFound authorized={isAuthorized.authorized} permission={isAuthorized.permission}/>;
+          return <NotFound authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
       }
     }
   };

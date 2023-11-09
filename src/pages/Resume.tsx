@@ -16,16 +16,15 @@ interface ImageProps {
 
 const Resume: React.FC<AuthProps> = ({authorized, permission}) => {
   const navigate = useNavigate()
-  const dotsLength = Array(3).fill({});
-  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true)
   const [data, setData] = useState<any>([])
+  const [pageLength, setPageLength] = useState<number>(NaN)
 
   const handlePagination = (increase: boolean) => {
-    const MAX_PAGE = 2;
-    if (!increase && currentPage > 0) {
+    if (!increase && currentPage > 1) {
       setCurrentPage(currentPage - 1);
-    } else if (increase && currentPage !== MAX_PAGE) {
+    } else if (increase && (currentPage !== pageLength)) {
       setCurrentPage(currentPage + 1);
     }
   };
@@ -67,7 +66,8 @@ const Resume: React.FC<AuthProps> = ({authorized, permission}) => {
     axiosInstance.get('/user/teachers')
       .then(res => {
         if (res.data.status === 200) {
-          setData(res.data.data)
+          setData(chunkedData(res.data.data))
+          setPageLength(Math.ceil(res.data.data.length / 5));
         } else {
           alert(res.data.message)
         }
@@ -75,6 +75,21 @@ const Resume: React.FC<AuthProps> = ({authorized, permission}) => {
       .catch(err => alert(err.response.data.message))
       .finally(() => setLoading(false))
   }
+
+  const chunkedData = (rawData: any): any => {
+    return rawData.reduce((resultArray: any, item: any, index: number) => {
+      const chunkIndex = Math.floor(index / 5);
+
+      if (!resultArray[chunkIndex]) {
+        resultArray[chunkIndex] = [];
+      }
+
+      resultArray[chunkIndex].push(item);
+
+      console.log(resultArray)
+      return resultArray;
+    }, []);
+  };
 
   useEffect(() => {
     fetchData()
@@ -93,8 +108,8 @@ const Resume: React.FC<AuthProps> = ({authorized, permission}) => {
         <Employees>
           <div className={'title'}>MEET ALL EMPLOYEES</div>
           {
-            (!loading || data) &&
-            Object.values(data).map((value: any, index: number) => (
+            data.length > 0 &&
+            Object.values(data[currentPage - 1]).map((value: any, index: number) => (
               <EmployeesBox key={index} $url={import.meta.env.VITE_API_URL + value.image_path}>
                 <div className={'img-container'}/>
                 <div className={'text-container'}>
@@ -112,8 +127,9 @@ const Resume: React.FC<AuthProps> = ({authorized, permission}) => {
 
           <div className={'pagination-container'}>
             <FiChevronLeft onClick={() => handlePagination(false)}/>
-            {dotsLength.map((_, index) => (
-              <Dot $isActive={index === currentPage} onClick={() => handleDotPagination(index)} key={index}/>
+            {Array.from({length: pageLength}, (_, index) => (
+              <Dot $isActive={index + 1 === currentPage} onClick={() => handleDotPagination(index + 1)}
+                   key={index}/>
             ))}
             <FiChevronRight onClick={() => handlePagination(true)}/>
           </div>
@@ -123,7 +139,7 @@ const Resume: React.FC<AuthProps> = ({authorized, permission}) => {
   );
 };
 
-const Employees = styled.div`
+export const Employees = styled.div`
   margin: 65px auto 80px;
   width: 1200px;
   height: auto;
@@ -148,6 +164,22 @@ const Employees = styled.div`
       width: 90%;
     }
   }
+  
+  & > .search-name {
+    font-size: 45px;
+    margin: 100px auto 80px;
+    font-family: 'KoPubWorldDotumBold', 'sans-serif';
+    text-align: center;
+    color: #FAE13E;
+
+    @media (max-width: 750px) {
+      font-size: 35px;
+    }
+
+    @media (max-width: 500px) {
+      font-size: 25px;
+    }
+  }
 
   & > .pagination-container {
     margin: 70px auto;
@@ -167,7 +199,7 @@ const Employees = styled.div`
   }
 `;
 
-const EmployeesBox = styled.div<ImageProps>`
+export const EmployeesBox = styled.div<ImageProps>`
   width: 100%;
   height: 361px;
   margin-top: 1rem;

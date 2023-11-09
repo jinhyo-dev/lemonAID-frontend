@@ -10,7 +10,8 @@ const SearchBar = () => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    navigate(`/search/${searchValue}`);
+    navigate(`/search?value=${searchValue}`);
+    setIsOpen(false)
   };
 
   return (

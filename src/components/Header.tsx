@@ -49,11 +49,11 @@ const Header: React.FC<AuthProps> = ({ authorized, permission }) => {
             <span onClick={() => navigate('/tours')} className={'tours'}>Tours</span>
             <span onClick={() => navigate('/parties-and-events')}
                   className={'parties-and-events'}>Parties & Events</span>
-            <span>Community</span>
+            <span onClick={() => alert('This service is not yet enabled.')}>Community</span>
           </div>
 
           <div className={'icon-container'}>
-            <button>
+            <button onClick={() => alert('This service is not yet enabled.')}>
               <BsCalendarEvent className={'calendar'} />
             </button>
             <SearchBar />
