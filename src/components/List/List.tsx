@@ -1289,7 +1289,7 @@ export const ListContainer = styled.div<Pick<PageType, '$type'>>`
   }
 `;
 
-const SortButton = styled.button<ActiveSort>`
+export const SortButton = styled.button<ActiveSort>`
   padding-left: 1.5rem;
   padding-right: 1.5rem;
   transition: all .3s;

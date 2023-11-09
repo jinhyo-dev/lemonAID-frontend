@@ -49,7 +49,6 @@ const Resume: React.FC<AuthProps> = ({authorized, permission}) => {
           link.href = fileObjectUrl;
           link.style.display = 'none';
 
-          // 추출된 파일 이름과 확장자를 사용하여 다운로드 파일명을 설정합니다.
           link.download = `lemonaid-${contentDisposition}`;
 
           document.body.appendChild(link);
@@ -85,8 +84,6 @@ const Resume: React.FC<AuthProps> = ({authorized, permission}) => {
       }
 
       resultArray[chunkIndex].push(item);
-
-      console.log(resultArray)
       return resultArray;
     }, []);
   };
@@ -164,7 +161,7 @@ export const Employees = styled.div`
       width: 90%;
     }
   }
-  
+
   & > .search-name {
     font-size: 45px;
     margin: 100px auto 80px;

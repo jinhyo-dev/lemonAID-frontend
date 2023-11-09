@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { AuthProps, Permission } from '../../interface/AuthProps.ts';
+import React, {useEffect, useState} from 'react';
+import {AuthProps, Permission} from '../../interface/AuthProps.ts';
 import NotFound from '../../components/NotFound.tsx';
-import { Container, HeaderWrapper } from '../../style/global.ts';
+import {Container, HeaderWrapper} from '../../style/global.ts';
 import Header from '../../components/Header.tsx';
 import styled from 'styled-components';
-import { IoClose } from 'react-icons/io5';
-import { Image, ModalContainer } from '../../components/List/List.tsx';
+import {IoClose} from 'react-icons/io5';
+import {Image, ModalContainer} from '../../components/List/List.tsx';
 import Modal from 'react-modal';
 import Slider from 'react-slick';
-import { ModalPrevArrow } from '../../components/Modal/ModalPrevArrow.tsx';
-import { ModalNextArrow } from '../../components/Modal/ModalNextArrow.tsx';
+import {ModalPrevArrow} from '../../components/Modal/ModalPrevArrow.tsx';
+import {ModalNextArrow} from '../../components/Modal/ModalNextArrow.tsx';
 import axiosInstance from '../../utils/AxiosInstance.ts';
 import LoadingModal from '../../components/LoadingModal.tsx';
-import { numberWithCommas } from '../../utils/numberFormat.ts';
+import {numberWithCommas} from '../../utils/numberFormat.ts';
 
-const PendingNoticeManage: React.FC<AuthProps> = ({ authorized, permission }) => {
+const PendingNoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<any>([]);
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
@@ -26,8 +26,8 @@ const PendingNoticeManage: React.FC<AuthProps> = ({ authorized, permission }) =>
     speed: 700,
     slidesToShow: 1,
     slidesToScroll: 1,
-    nextArrow: <ModalNextArrow />,
-    prevArrow: <ModalPrevArrow />,
+    nextArrow: <ModalNextArrow/>,
+    prevArrow: <ModalPrevArrow/>,
   };
 
   const getCustomStyles = () => {
@@ -77,8 +77,8 @@ const PendingNoticeManage: React.FC<AuthProps> = ({ authorized, permission }) =>
 
   const handleJobPost = (id: number, acceptation: boolean) => {
     setLoading(true);
-    const acceptPayload = [{ id: id, rank: rank }];
-    const denyPayload = { id: [id] }
+    const acceptPayload = [{id: id, rank: rank}];
+    const denyPayload = {id: [id]}
 
     const handleLoading = () => {
       setLoading(false);
@@ -93,7 +93,7 @@ const PendingNoticeManage: React.FC<AuthProps> = ({ authorized, permission }) =>
         .catch(err => alert(err.response.data.message))
         .finally(() => handleLoading());
     } else {
-      axiosInstance.delete('/post/pending_job_post', { data: denyPayload })
+      axiosInstance.delete('/post/pending_job_post', {data: denyPayload})
         .then(res => alert(res.data.message))
         .catch(err => alert(err.response.data.message))
         .finally(() => handleLoading());
@@ -104,21 +104,19 @@ const PendingNoticeManage: React.FC<AuthProps> = ({ authorized, permission }) =>
     return (
       <ModalContainer>
         <div className={'close-button'}>
-          <button onClick={closeModal}><IoClose /></button>
+          <button onClick={closeModal}><IoClose/></button>
         </div>
         <div className={'image-container'}>
-          <Slider {...settings}>
-            {
-              modalData.images.split(',').map((imageSrc: string, index: number) => {
-                console.log(imageSrc);
-                return (
+          {
+            modalData.images.length > 0 &&
+              <Slider {...settings}>
+                {modalData.images.split(',').map((imageSrc: string, index: number) => (
                   <Image $url={import.meta.env.VITE_API_URL + imageSrc} key={index}>
                     <div>{index + 1} / {modalData.images.split(',').length}</div>
                   </Image>
-                );
-              })
-            }
-          </Slider>
+                ))}
+              </Slider>
+          }
         </div>
         <div className={'institute-name'}>
           <div>{modalData.academy}</div>
@@ -167,39 +165,39 @@ const PendingNoticeManage: React.FC<AuthProps> = ({ authorized, permission }) =>
 
   return (
     <>
-      {permission !== Permission.ADMIN ? <NotFound permission={permission} authorized={authorized} /> :
+      {permission !== Permission.ADMIN ? <NotFound permission={permission} authorized={authorized}/> :
         <>
-          <LoadingModal isOpen={loading} />
-          <Container style={{ overflowX: 'auto' }}>
-            <Modal
-              closeTimeoutMS={200}
-              isOpen={modalIsOpen}
-              onRequestClose={closeModal}
-              style={customStyles}
-              ariaHideApp={false}
-            >
-              <ModalContainerComponents />
-            </Modal>
+          <LoadingModal isOpen={loading}/>
+          <Container style={{overflowX: 'auto'}}>
             <HeaderWrapper>
-              <Header authorized={authorized} permission={permission} />
+              <Header authorized={authorized} permission={permission}/>
             </HeaderWrapper>
 
             <TableContainer>
-
               {loading ? <></> : data.length === 0 ? <div className={'non-value'}>신규 공고가 존재하지 않습니다.</div> :
                 <>
+                  <Modal
+                    closeTimeoutMS={200}
+                    isOpen={modalIsOpen}
+                    onRequestClose={closeModal}
+                    style={customStyles}
+                    ariaHideApp={false}
+                  >
+                    <ModalContainerComponents/>
+                  </Modal>
+
                   <div className={'table'}>
                     <div className={'table-header'}>
-                      <div style={{ width: '70%' }}>학원명</div>
-                      <div style={{ width: '30%' }}>공고</div>
+                      <div style={{width: '70%'}}>학원명</div>
+                      <div style={{width: '30%'}}>공고</div>
                     </div>
 
                     {Object.values(data).map((value: any, index: number) => (
                       <div key={index} className={'table-tr'}>
-                        <div style={{ width: '70%' }}>
+                        <div style={{width: '70%'}}>
                           {value.academy}
                         </div>
-                        <div style={{ width: '30%' }}>
+                        <div style={{width: '30%'}}>
                           <button onClick={() => openModal(value)}>공고 보기</button>
                         </div>
                       </div>
