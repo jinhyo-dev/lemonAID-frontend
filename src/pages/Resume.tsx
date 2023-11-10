@@ -1,25 +1,25 @@
 import Header from '../components/Header.tsx';
-import {Container, HeaderWrapper} from '../style/global.ts';
+import { Container, HeaderWrapper } from '../style/global.ts';
 import styled from 'styled-components';
-import {FiChevronLeft, FiChevronRight} from 'react-icons/fi';
-import {Dot} from '../components/List/List.tsx';
-import React, {useEffect, useState} from 'react';
-import {AuthProps} from '../interface/AuthProps.ts';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { Dot, NoneData } from '../components/List/List.tsx';
+import React, { useEffect, useState } from 'react';
+import { AuthProps } from '../interface/AuthProps.ts';
 import Banner from '../components/List/Banner.tsx';
-import {useNavigate} from 'react-router-dom';
-import axiosInstance from "../utils/AxiosInstance.ts";
-import LoadingModal from "../components/LoadingModal.tsx";
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../utils/AxiosInstance.ts';
+import LoadingModal from '../components/LoadingModal.tsx';
 
 interface ImageProps {
   $url: string;
 }
 
-const Resume: React.FC<AuthProps> = ({authorized, permission}) => {
-  const navigate = useNavigate()
+const Resume: React.FC<AuthProps> = ({ authorized, permission }) => {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [loading, setLoading] = useState<boolean>(true)
-  const [data, setData] = useState<any>([])
-  const [pageLength, setPageLength] = useState<number>(NaN)
+  const [loading, setLoading] = useState<boolean>(true);
+  const [data, setData] = useState<any>([]);
+  const [pageLength, setPageLength] = useState<number>(NaN);
 
   const handlePagination = (increase: boolean) => {
     if (!increase && currentPage > 1) {
@@ -36,10 +36,10 @@ const Resume: React.FC<AuthProps> = ({authorized, permission}) => {
   const handleHireButton = (id: number) => {
     if (!authorized) {
       alert('Available after sign in');
-      navigate('/sign-in')
+      navigate('/sign-in');
     } else {
-      setLoading(true)
-      axiosInstance.get(`/user/resume?user_id=${id}`, {responseType: 'blob'})
+      setLoading(true);
+      axiosInstance.get(`/user/resume?user_id=${id}`, { responseType: 'blob' })
         .then(res => {
           const blob = new Blob([res.data]);
           const contentDisposition = res.headers['content-disposition'].split('=')[1];
@@ -56,24 +56,24 @@ const Resume: React.FC<AuthProps> = ({authorized, permission}) => {
           document.body.removeChild(link);
         })
         .catch(() => alert('Permission denied. Plan did not exist.'))
-        .finally(() => setLoading(false))
+        .finally(() => setLoading(false));
     }
-  }
+  };
 
   const fetchData = () => {
-    setLoading(true)
+    setLoading(true);
     axiosInstance.get('/user/teachers')
       .then(res => {
         if (res.data.status === 200) {
-          setData(chunkedData(res.data.data))
+          setData(chunkedData(res.data.data));
           setPageLength(Math.ceil(res.data.data.length / 5));
         } else {
-          alert(res.data.message)
+          alert(res.data.message);
         }
       })
       .catch(err => alert(err.response.data.message))
-      .finally(() => setLoading(false))
-  }
+      .finally(() => setLoading(false));
+  };
 
   const chunkedData = (rawData: any): any => {
     return rawData.reduce((resultArray: any, item: any, index: number) => {
@@ -89,46 +89,47 @@ const Resume: React.FC<AuthProps> = ({authorized, permission}) => {
   };
 
   useEffect(() => {
-    fetchData()
+    fetchData();
   }, []);
 
   return (
     <Container>
       <HeaderWrapper>
-        <Header authorized={authorized} permission={permission}/>
+        <Header authorized={authorized} permission={permission} />
       </HeaderWrapper>
 
-      <LoadingModal isOpen={loading}/>
+      <LoadingModal isOpen={loading} />
       <>
-        <Banner $type={'recruitment'} authorized={authorized} permission={permission}/>
+        <Banner $type={'recruitment'} authorized={authorized} permission={permission} />
 
         <Employees>
           <div className={'title'}>MEET ALL EMPLOYEES</div>
           {
-            data.length > 0 &&
-            Object.values(data[currentPage - 1]).map((value: any, index: number) => (
-              <EmployeesBox key={index} $url={import.meta.env.VITE_API_URL + value.image_path}>
-                <div className={'img-container'}/>
-                <div className={'text-container'}>
-                  <div className={'name-container'}>
-                    {value.first_name} {value.last_name}<span>{value.nationality}</span>
+            data.length > 0 ?
+              Object.values(data[currentPage - 1]).map((value: any, index: number) => (
+                <EmployeesBox key={index} $url={import.meta.env.VITE_API_URL + value.image_path}>
+                  <div className={'img-container'} />
+                  <div className={'text-container'}>
+                    <div className={'name-container'}>
+                      {value.first_name} {value.last_name}<span>{value.nationality}</span>
+                    </div>
+                    <div className={'hire-button-container'}>
+                      <button onClick={() => handleHireButton(value.id)}>
+                        Hire Now
+                      </button>
+                    </div>
                   </div>
-                  <div className={'hire-button-container'}>
-                    <button onClick={() => handleHireButton(value.id)}>
-                      Hire Now
-                    </button>
-                  </div>
-                </div>
-              </EmployeesBox>
-            ))}
+                </EmployeesBox>)) :
+              <NoneData>There is no teachers.</NoneData>
+          }
 
           <div className={'pagination-container'}>
-            <FiChevronLeft onClick={() => handlePagination(false)}/>
-            {Array.from({length: pageLength}, (_, index) => (
+            <FiChevronLeft onClick={() => handlePagination(false)} />
+            {Array.from({ length: pageLength }, (_, index) => (
               <Dot $isActive={index + 1 === currentPage} onClick={() => handleDotPagination(index + 1)}
-                   key={index}/>
+                   key={index} />
             ))}
-            <FiChevronRight onClick={() => handlePagination(true)}/>
+            <FiChevronRight onClick={() => handlePagination(true)} />
           </div>
         </Employees>
       </>
@@ -220,7 +221,7 @@ export const EmployeesBox = styled.div<ImageProps>`
     background-size: cover;
     overflow: hidden;
     background-position: center;
-    background-image: url(${({$url}) => $url});
+    background-image: url(${({ $url }) => $url});
 
     @media (max-width: 750px) {
       width: 312px;

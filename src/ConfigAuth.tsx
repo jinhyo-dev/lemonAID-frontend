@@ -20,6 +20,7 @@ import NotFound from './components/NotFound.tsx';
 import PendingNoticeManage from './pages/admin/PendingNoticeManage.tsx';
 import ToursAndPartiesManage from './pages/admin/ToursAndPartiesManage.tsx';
 import NoticeManage from './pages/admin/NoticeManage.tsx';
+import UserManage from './pages/admin/UserManage.tsx';
 
 interface AuthProps {
   loading: boolean;
@@ -150,6 +151,8 @@ const ConfigAuth = () => {
           return <MyPage authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
         case '/admin/new-user':
           return <NewUserManage authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
+        case '/admin/user-manage':
+          return <UserManage authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
         case '/admin/pending-notice':
           return <PendingNoticeManage authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
         case '/admin/notice-manage':

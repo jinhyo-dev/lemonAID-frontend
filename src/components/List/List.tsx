@@ -814,6 +814,42 @@ export const ModalContainer = styled.div`
     }
   }
 
+  & .control-button {
+    width: 100%;
+    height: 45px;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+
+    & > button {
+      border-radius: 10px;
+      width: 48%;
+      height: 100%;
+      border: none;
+      cursor: pointer;
+      transition: background-color .25s;
+      margin-bottom: 1rem;
+
+      &:first-child {
+        background: #ef4444;
+        color: #fff;
+
+        &:hover {
+          background: #c93b3b;
+        }
+      }
+
+      &:last-child {
+        background: #FAE13E;
+        color: #000;
+
+        &:hover {
+          background: #dcc532;
+        }
+      }
+    }
+  }
+
   & .accept-button {
     width: 100%;
     height: 45px;
@@ -1364,7 +1400,8 @@ export const NoneData = styled.h1`
   text-align: center;
   margin: 15vh auto 10vh;
   font-size: 3rem;
-
+  font-family: 'KoPubWorldDotumBold', sans-serif;
+  
   @media (max-width: 750px) {
     font-size: 1.8rem;
   }

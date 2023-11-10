@@ -6,14 +6,14 @@ import { useEffect, useState } from 'react';
 const AdminButton = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isClick, setIsClick] = useState<boolean>(false)
+  const [isClick, setIsClick] = useState<boolean>(false);
 
   const handlePage = (path: string) => {
-    navigate(path)
-  }
+    navigate(path);
+  };
 
   useEffect(() => {
-    setIsClick(false)
+    setIsClick(false);
   }, [location]);
 
   return (
@@ -23,7 +23,7 @@ const AdminButton = () => {
         <button onClick={() => handlePage('/admin/new-user')}>신규회원 관리</button>
         <button onClick={() => handlePage('/admin/notice-manage')}>공고 관리</button>
         <button onClick={() => handlePage('/admin/tour-and-party-manage')}>투어 및 파티 관리</button>
-        <button>프로필 관리</button>
+        <button onClick={() => handlePage('/admin/user-manage')}>프로필 관리</button>
         <button onClick={() => handlePage('/admin/pending-notice')}>공고 신청서 관리</button>
       </AdminNav>
     </Button>
@@ -60,7 +60,7 @@ const Button = styled.button<{ $currentPath: string }>`
   }
 `;
 
-const AdminNav = styled.nav<{$isClick: boolean}>`
+const AdminNav = styled.nav<{ $isClick: boolean }>`
   transition: all .3s;
   visibility: ${({ $isClick }) => $isClick ? 'visible' : 'hidden'};
   opacity: ${({ $isClick }) => $isClick ? 1 : 0};
@@ -78,7 +78,7 @@ const AdminNav = styled.nav<{$isClick: boolean}>`
   justify-content: space-between;
   flex-direction: column;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
-  
+
   & > button {
     background: none;
     border: none;
@@ -88,11 +88,11 @@ const AdminNav = styled.nav<{$isClick: boolean}>`
     color: #000;
     font-family: 'KoPubWorldDotumLight', 'sans-serif';
     transition: background-color .25s;
-    
+
     &:hover {
       background: #FAE13E;
     }
   }
-`
+`;
 
 export default AdminButton;

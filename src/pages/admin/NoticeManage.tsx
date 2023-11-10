@@ -1,14 +1,14 @@
-import React, {FormEvent, useEffect, useRef, useState} from 'react';
-import {AuthProps, Permission} from '../../interface/AuthProps.ts';
+import React, { FormEvent, useEffect, useRef, useState } from 'react';
+import { AuthProps, Permission } from '../../interface/AuthProps.ts';
 import NotFound from '../../components/NotFound.tsx';
 import LoadingModal from '../../components/LoadingModal.tsx';
-import {Container, HeaderWrapper} from '../../style/global.ts';
+import { Container, HeaderWrapper } from '../../style/global.ts';
 import Header from '../../components/Header.tsx';
-import axiosInstance from "../../utils/AxiosInstance.ts";
-import {ModalNextArrow} from "../../components/Modal/ModalNextArrow.tsx";
-import {ModalPrevArrow} from "../../components/Modal/ModalPrevArrow.tsx";
-import {IoClose} from "react-icons/io5";
-import Slider from "react-slick";
+import axiosInstance from '../../utils/AxiosInstance.ts';
+import { ModalNextArrow } from '../../components/Modal/ModalNextArrow.tsx';
+import { ModalPrevArrow } from '../../components/Modal/ModalPrevArrow.tsx';
+import { IoClose } from 'react-icons/io5';
+import Slider from 'react-slick';
 import {
   Dot,
   EmployerBox,
@@ -16,19 +16,19 @@ import {
   ListContainer,
   ModalContainer,
   NoneData,
-  SortButton
-} from "../../components/List/List.tsx";
-import Modal from "react-modal";
-import DatePicker from "react-datepicker";
-import LemonaidLogo from "../../assets/images/logo/Lemonaid-1.png";
-import grade1 from "../../assets/images/grade/grade1.png";
-import grade2 from "../../assets/images/grade/grade2.png";
-import grade3 from "../../assets/images/grade/grade3.png";
-import {numberWithCommas} from "../../utils/numberFormat.ts";
-import {formatDateString} from "../../utils/FormatDate.ts";
-import {FiChevronLeft, FiChevronRight} from "react-icons/fi";
+  SortButton,
+} from '../../components/List/List.tsx';
+import Modal from 'react-modal';
+import DatePicker from 'react-datepicker';
+import LemonaidLogo from '../../assets/images/logo/Lemonaid-1.png';
+import grade1 from '../../assets/images/grade/grade1.png';
+import grade2 from '../../assets/images/grade/grade2.png';
+import grade3 from '../../assets/images/grade/grade3.png';
+import { numberWithCommas } from '../../utils/numberFormat.ts';
+import { formatDateString } from '../../utils/FormatDate.ts';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
-const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
+const NoticeManage: React.FC<AuthProps> = ({ authorized, permission }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [sortType, setSortType] = useState<'none' | 'dateAsc' | 'dateDesc' | 'priceAsc' | 'priceDesc'>('none');
@@ -79,8 +79,8 @@ const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
     speed: 700,
     slidesToShow: 1,
     slidesToScroll: 1,
-    nextArrow: <ModalNextArrow/>,
-    prevArrow: <ModalPrevArrow/>,
+    nextArrow: <ModalNextArrow />,
+    prevArrow: <ModalPrevArrow />,
   };
 
   const fetchData = () => {
@@ -149,18 +149,18 @@ const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
   const openModal = (value: any) => {
     const newWorkingHoursStart = new Date(new Date().setHours(
       Number(value.working_hours_start.split(':')[0]),
-      Number(value.working_hours_start.split(':')[1])
+      Number(value.working_hours_start.split(':')[1]),
     ));
 
     const newWorkingHoursEnd = new Date(new Date().setHours(
       Number(value.working_hours_end.split(':')[0]),
-      Number(value.working_hours_end.split(':')[1])
+      Number(value.working_hours_end.split(':')[1]),
     ));
 
     setModalData({
       ...value,
       working_hours_start: newWorkingHoursStart,
-      working_hours_end: newWorkingHoursEnd
+      working_hours_end: newWorkingHoursEnd,
     });
     authorized ? setIsOpen(true) : alert('Available after sign in');
   };
@@ -181,7 +181,7 @@ const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
     e.preventDefault();
 
     const payload: any = {};
-    setLoading(true)
+    setLoading(true);
 
     for (const key in modalData) {
       if (Object.prototype.hasOwnProperty.call(modalData, key)) {
@@ -209,7 +209,25 @@ const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
         }
       })
       .catch(err => alert(err.response.data.message))
-      .finally(() => setLoading(false))
+      .finally(() => setLoading(false));
+  };
+
+  const removeJobPost = () => {
+    if (window.confirm(`${modalData.academy} 학원의 공고를 삭제하시겠습니까 ?`)) {
+      setLoading(true);
+      axiosInstance.delete('/post/job_post', { data: { id: modalData.ID } })
+        .then(res => {
+          if (res.status === 200) {
+            alert(res.data.message);
+            closeModal();
+            fetchData();
+          } else {
+            alert(res.data.message);
+          }
+        })
+        .catch(err => alert(err.response.data.message))
+        .finally(() => setLoading(false));
+    }
   };
 
   const handlePostData = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | Date | null, dateDivision?: string) => {
@@ -220,7 +238,7 @@ const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
         [dateDivision]: event,
       }));
     } else {
-      const {name, value} = event!.target;
+      const { name, value } = event!.target;
 
       setModalData((prevState: any) => ({
         ...prevState,
@@ -234,7 +252,7 @@ const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
   };
 
   useEffect(() => {
-    scrollToFocus.current?.scrollIntoView({behavior: 'smooth'});
+    scrollToFocus.current?.scrollIntoView({ behavior: 'smooth' });
   }, [currentPage]);
 
   useEffect(() => {
@@ -247,9 +265,9 @@ const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
 
   return (
     <>
-      {permission !== Permission.ADMIN ? <NotFound permission={permission} authorized={authorized}/> :
+      {permission !== Permission.ADMIN ? <NotFound permission={permission} authorized={authorized} /> :
         <>
-          <LoadingModal isOpen={loading}/>
+          <LoadingModal isOpen={loading} />
 
           <Modal
             closeTimeoutMS={200}
@@ -260,19 +278,19 @@ const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
           >
             <ModalContainer>
               <div className={'close-button'}>
-                <button onClick={closeModal}><IoClose/></button>
+                <button onClick={closeModal}><IoClose /></button>
               </div>
 
               <div className={'image-container'}>
                 {
                   modalData.images &&
-                    <Slider {...modalSetting}>
-                      {modalData.images.split(',').map((imageSrc: string, index: number) => (
-                        <Image $url={import.meta.env.VITE_API_URL + imageSrc} key={index}>
-                          <div>{index + 1} / {modalData.images.split(',').length}</div>
-                        </Image>
-                      ))}
-                    </Slider>
+                  <Slider {...modalSetting}>
+                    {modalData.images.split(',').map((imageSrc: string, index: number) => (
+                      <Image $url={import.meta.env.VITE_API_URL + imageSrc} key={index}>
+                        <div>{index + 1} / {modalData.images.split(',').length}</div>
+                      </Image>
+                    ))}
+                  </Slider>
                 }
               </div>
 
@@ -281,13 +299,13 @@ const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
                   <div>
                     <span>Academy name</span>
                     <input type={'text'} placeholder={'e.g. RISE'} name={'academy'}
-                           value={modalData.academy} required={true} onChange={handlePostData}/>
+                           value={modalData.academy} required={true} onChange={handlePostData} />
                   </div>
 
                   <div>
                     <span>Campus name</span>
                     <input type={'text'} placeholder={'e.g. Gangdong Campus'} name={'Campus'}
-                           value={modalData.Campus} required={true} onChange={handlePostData}/>
+                           value={modalData.Campus} required={true} onChange={handlePostData} />
                   </div>
                   <div>
                     <span>Category</span>
@@ -311,11 +329,11 @@ const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
                     <div className={'double-input-container'}>
                       <input type={'text'} placeholder={'Amount (Unit: KRW)'} name={'start_salary'}
                              value={isNaN(modalData.start_salary) ? '' : modalData.start_salary}
-                             required={true} onChange={handlePostData}/>
+                             required={true} onChange={handlePostData} />
                       <span>-</span>
                       <input type={'text'} placeholder={'Amount (Unit: KRW)'} name={'end_salary'}
                              value={isNaN(modalData.end_salary) ? '' : modalData.end_salary}
-                             required={true} onChange={handlePostData}/>
+                             required={true} onChange={handlePostData} />
                     </div>
                   </div>
 
@@ -339,7 +357,7 @@ const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
                                     hour: '2-digit',
                                     minute: '2-digit',
                                   }) : undefined}
-                                  onChange={e => handlePostData(e, 'working_hours_start')}/>
+                                  onChange={e => handlePostData(e, 'working_hours_start')} />
                       <span>-</span>
                       <DatePicker showTimeSelectOnly={true} showTimeSelect={true} timeCaption='Time' timeIntervals={30}
                                   placeholderText={'End hour'} className={'time-picker'} dateFormat='h:mm aa'
@@ -347,7 +365,7 @@ const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
                                     hour: '2-digit',
                                     minute: '2-digit',
                                   }) : undefined}
-                                  onChange={e => handlePostData(e, 'working_hours_end')}/>
+                                  onChange={e => handlePostData(e, 'working_hours_end')} />
                     </div>
                   </div>
 
@@ -355,14 +373,14 @@ const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
                     <span>Paid Vacation</span>
                     <input type={'text'} placeholder={'Unit: day'} name={'paid_vacation'}
                            value={isNaN(modalData.paid_vacation) ? '' : modalData.paid_vacation}
-                           required={true} onChange={handlePostData}/>
+                           required={true} onChange={handlePostData} />
                   </div>
 
                   <div>
                     <span>Annual Leave</span>
                     <input type={'text'} placeholder={'Unit: day'} name={'annual_leave'}
                            value={isNaN(modalData.annual_leave) ? '' : modalData.annual_leave}
-                           required={true} onChange={handlePostData}/>
+                           required={true} onChange={handlePostData} />
                   </div>
 
                   <div>
@@ -393,7 +411,7 @@ const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
                     <span>Housing Allowance</span>
                     <input type={'text'} placeholder={'Amount (Unit: KRW)'} name={'housing_allowance'}
                            value={isNaN(modalData.housing_allowance) ? '' : modalData.housing_allowance}
-                           required={true} onChange={handlePostData}/>
+                           required={true} onChange={handlePostData} />
                   </div>
 
                   <div>
@@ -406,17 +424,18 @@ const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
                   </div>
                 </div>
 
-                <div className={'apply-button'}>
-                  <button type={'submit'}>Submit</button>
+                <div className={'control-button'}>
+                  <button type={'button'} onClick={removeJobPost}>Remove</button>
+                  <button type={'submit'}>Edit</button>
                 </div>
               </form>
             </ModalContainer>
           </Modal>
 
-          <Container style={{overflowX: 'auto'}}>
+          <Container style={{ overflowX: 'auto' }}>
 
             <HeaderWrapper>
-              <Header authorized={authorized} permission={permission}/>
+              <Header authorized={authorized} permission={permission} />
             </HeaderWrapper>
 
             <ListContainer $type={'recruitment'}>
@@ -436,10 +455,10 @@ const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
                   Object.values(data[currentPage - 1]).map((value: any, index) => (
                     <EmployerBox key={index} onClick={() => openModal(value)}
                                  $url={value.images ? import.meta.env.VITE_API_URL + value.images.split(',')[0] : LemonaidLogo}>
-                      <div className={'employers-image'}/>
+                      <div className={'employers-image'} />
                       <div className={'title'}>
                         {permission === Permission.ADMIN &&
-                            <img src={value.rank === 1 ? grade1 : value.rank === 2 ? grade2 : grade3} alt={'grade'}/>}
+                          <img src={value.rank === 1 ? grade1 : value.rank === 2 ? grade2 : grade3} alt={'grade'} />}
                         <div>{value.academy}</div>
                       </div>
                       <div className={'subtitle'}>{value.Campus}</div>
@@ -454,12 +473,12 @@ const NoticeManage: React.FC<AuthProps> = ({authorized, permission}) => {
               </div>
 
               <div className={'pagination-container'}>
-                <FiChevronLeft onClick={() => handlePagination(false)}/>
-                {Array.from({length: pageLength}, (_, index) => (
+                <FiChevronLeft onClick={() => handlePagination(false)} />
+                {Array.from({ length: pageLength }, (_, index) => (
                   <Dot $isActive={index + 1 === currentPage} onClick={() => handleDotPagination(index + 1)}
-                       key={index}/>
+                       key={index} />
                 ))}
-                <FiChevronRight onClick={() => handlePagination(true)}/>
+                <FiChevronRight onClick={() => handlePagination(true)} />
               </div>
             </ListContainer>
           </Container>

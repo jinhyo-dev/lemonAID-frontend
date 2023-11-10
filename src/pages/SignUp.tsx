@@ -45,7 +45,10 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
   });
   const [resume, setResume] = useState<File | null>(null);
   const [profileImage, setProfileImage] = useState<File | null>(null);
-  const isOauth: boolean = window.location.href.split('?')[1] === 'oauth=true';
+  const url = new URL(window.location.href)
+  const params = new URLSearchParams(url.search)
+  const isOauth = params.get('oauth')
+  const session = params.get('session')
 
   const nationality = [
     'Australia',
@@ -97,7 +100,9 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
       axiosInstance.post('/auth/register', form, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Cookie': `lsession=${session};`
         },
+        withCredentials: true,
       })
         .then(res => {
           if (res.status === 201) {
