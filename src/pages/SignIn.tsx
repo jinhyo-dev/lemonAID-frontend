@@ -1,19 +1,19 @@
 import Header from '../components/Header.tsx';
-import { SiNaver } from 'react-icons/si';
-import { RiKakaoTalkFill } from 'react-icons/ri';
-import { BiLogoFacebook } from 'react-icons/bi';
-import { FcGoogle } from 'react-icons/fc';
-import { Container, HeaderWrapper } from '../style/global.ts';
-import { useNavigate } from 'react-router-dom';
-import { FormContainer, ImageContainer, MainTag } from '../style/SignIn.ts';
-import React, { FormEvent, useState } from 'react';
-import { SignInProps } from '../interface/SignInProps.ts';
+import {SiNaver} from 'react-icons/si';
+import {RiKakaoTalkFill} from 'react-icons/ri';
+import {BiLogoFacebook} from 'react-icons/bi';
+import {FcGoogle} from 'react-icons/fc';
+import {Container, HeaderWrapper} from '../style/global.ts';
+import {useNavigate} from 'react-router-dom';
+import {FormContainer, ImageContainer, MainTag} from '../style/SignIn.ts';
+import React, {FormEvent, useState} from 'react';
+import {SignInProps} from '../interface/SignInProps.ts';
 import axiosInstance from '../utils/AxiosInstance.ts';
-import { useCookies } from 'react-cookie';
+import {useCookies} from 'react-cookie';
 import toast from 'react-hot-toast';
-import { AuthProps } from '../interface/AuthProps.ts';
+import {AuthProps} from '../interface/AuthProps.ts';
 
-const SignIn: React.FC<AuthProps> = ({ authorized, permission }) => {
+const SignIn: React.FC<AuthProps> = ({authorized, permission}) => {
   const navigate = useNavigate();
   const [, setCookies] = useCookies();
   const [loginData, setLoginData] = useState<SignInProps>({
@@ -22,7 +22,7 @@ const SignIn: React.FC<AuthProps> = ({ authorized, permission }) => {
 
 
   const handleLoginData = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = event.target;
+    const {name, value} = event.target;
 
     setLoginData(prevState => ({
       ...prevState,
@@ -83,11 +83,11 @@ const SignIn: React.FC<AuthProps> = ({ authorized, permission }) => {
   return (
     <Container>
       <HeaderWrapper>
-        <Header authorized={authorized} permission={permission} />
+        <Header authorized={authorized} permission={permission}/>
       </HeaderWrapper>
 
       <MainTag>
-        <ImageContainer />
+        <ImageContainer/>
 
         <FormContainer onSubmit={login}>
           <form>
@@ -100,13 +100,13 @@ const SignIn: React.FC<AuthProps> = ({ authorized, permission }) => {
             <div className={'input-container'}>
               <div>Username or Email</div>
               <input placeholder={'e.g. lemonade123@gmail.com'} type={'text'} required={true} value={loginData.email}
-                     onChange={handleLoginData} name={'email'} />
+                     onChange={handleLoginData} name={'email'}/>
             </div>
 
-            <div className={'input-container'} style={{ marginTop: '1rem' }}>
+            <div className={'input-container'} style={{marginTop: '1rem'}}>
               <div>Password</div>
               <input placeholder={'e.g. lemonade1234!'} type={'password'} required={true} value={loginData.password}
-                     onChange={handleLoginData} name={'password'} />
+                     onChange={handleLoginData} name={'password'}/>
             </div>
 
             <div className={'input-container'}>
@@ -114,23 +114,23 @@ const SignIn: React.FC<AuthProps> = ({ authorized, permission }) => {
             </div>
 
             <div className={'divider'}>
-              <div />
+              <div/>
               or Social Media Log In
-              <div />
+              <div/>
             </div>
 
             <div className={'social-media-container'}>
-              <div className={'naver'}>
-                <SiNaver />
+              <div className={'naver'} onClick={() => oauthHandler('naver')}>
+                <SiNaver/>
               </div>
-              <div className={'kakao'}>
-                <RiKakaoTalkFill />
+              <div className={'kakao'} onClick={() => oauthHandler('kakao')}>
+                <RiKakaoTalkFill/>
               </div>
-              <div className={'facebook'}>
-                <BiLogoFacebook />
+              <div className={'facebook'} onClick={() => oauthHandler('facebook')}>
+                <BiLogoFacebook/>
               </div>
               <div className={'google'} onClick={() => oauthHandler('google')}>
-                <FcGoogle />
+                <FcGoogle/>
               </div>
             </div>
           </form>

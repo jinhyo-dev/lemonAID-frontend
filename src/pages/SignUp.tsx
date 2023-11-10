@@ -100,9 +100,8 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
       axiosInstance.post('/auth/register', form, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Cookie': `lsession=${session};`
+          'Authorization': session
         },
-        withCredentials: true,
       })
         .then(res => {
           if (res.status === 201) {

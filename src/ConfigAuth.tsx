@@ -2,7 +2,9 @@ import { useLocation } from 'react-router-dom';
 import Main from './pages/Main.tsx';
 import SignIn from './pages/SignIn.tsx';
 import MyPage from './pages/MyPage.tsx';
-import Service from './pages/Service.tsx';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import Service from './pages/Service.jsx';
 import Recruitment from './pages/Recruitment.tsx';
 import Tours from './pages/Tours.tsx';
 import Parties from './pages/Parties.tsx';
@@ -21,6 +23,7 @@ import PendingNoticeManage from './pages/admin/PendingNoticeManage.tsx';
 import ToursAndPartiesManage from './pages/admin/ToursAndPartiesManage.tsx';
 import NoticeManage from './pages/admin/NoticeManage.tsx';
 import UserManage from './pages/admin/UserManage.tsx';
+import OauthLogin from "./pages/OauthLogin.tsx";
 
 interface AuthProps {
   loading: boolean;
@@ -32,6 +35,7 @@ const ConfigAuth = () => {
   const [isAuthorized, setIsAuthorized] = useState<AuthProps>({
     authorized: false, loading: true, permission: Permission.Undefined,
   });
+  const [phoneNumber, setPhoneNumber] = useState<string>('')
 
   const location = useLocation();
 
@@ -42,6 +46,7 @@ const ConfigAuth = () => {
           const permission = res.data.data.user_type === 1 ? Permission.ACADEMY :
             res.data.data.user_type === 2 ? Permission.TEACHER : res.data.data.user_type === 3 ? Permission.ADMIN : Permission.Undefined;
           setIsAuthorized({ authorized: res.data.status === 200, loading: false, permission: permission });
+          setPhoneNumber(res.data.data.phone_number)
         } else {
           setIsAuthorized({ authorized: false, loading: false, permission: Permission.Undefined });
         }
@@ -140,7 +145,7 @@ const ConfigAuth = () => {
         case '/recruitment':
           return <Recruitment authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
         case '/service':
-          return <Service authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
+          return <Service authorized={isAuthorized.authorized} permission={isAuthorized.permission} phoneNumber={phoneNumber}/>;
         case '/resume':
           return <Resume authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
         case '/tours':
@@ -159,6 +164,8 @@ const ConfigAuth = () => {
           return <NoticeManage authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
         case '/admin/tour-and-party-manage':
           return <ToursAndPartiesManage authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
+        case '/oauth/login':
+          return <OauthLogin/>
         default:
           return <NotFound authorized={isAuthorized.authorized} permission={isAuthorized.permission} />;
       }
