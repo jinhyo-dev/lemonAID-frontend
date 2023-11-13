@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { AiOutlineClose, AiOutlineMenu, AiOutlineSearch } from 'react-icons/ai';
 import { BsCalendarEvent } from 'react-icons/bs';
 import { FaUser } from 'react-icons/fa';
@@ -18,6 +18,7 @@ interface Props {
 const Sidebar: React.FC<AuthProps> = ({ authorized }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<boolean>(false);
+  const [searchValue, setSearchValue] = useState<string>('');
   const [, , removeCookie] = useCookies();
   const navigate = useNavigate();
   const location = useLocation();
@@ -42,6 +43,12 @@ const Sidebar: React.FC<AuthProps> = ({ authorized }) => {
     }
   }, [isOpen]);
 
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    navigate(`/search?value=${searchValue}`);
+    setIsOpen(false);
+  };
+
   return (
     <StyledSidebar>
       {isOpen ? <AiOutlineClose onClick={() => setIsOpen(!isOpen)} /> :
@@ -51,8 +58,8 @@ const Sidebar: React.FC<AuthProps> = ({ authorized }) => {
         {
           isOpen &&
           <>
-            <form className={'search-bar'}>
-              <input type={'text'} />
+            <form className={'search-bar'} onSubmit={handleSubmit}>
+              <input type={'text'} value={searchValue} onChange={e => setSearchValue(e.target.value)} />
               <AiOutlineSearch />
             </form>
 
@@ -161,7 +168,7 @@ const SidebarContainer = styled.div<Props>`
 
   & > .icon-container {
     margin: 3.5rem auto 0;
-    width: ${({$authorized}) => $authorized ? '160px' : '90px'};
+    width: ${({ $authorized }) => $authorized ? '160px' : '90px'};
     height: 33px;
     display: flex;
     justify-content: space-between;
@@ -178,11 +185,11 @@ const SidebarContainer = styled.div<Props>`
     & > .profile {
       color: ${({ $currentPath }) => ['/my-page', '/sign-in', '/sign-up'].includes($currentPath) ? '#FAE13E' : ''};
     }
-    
+
     & > .logout {
       font-size: 42px;
       margin-top: -.3rem;
-      
+
       @media (max-width: 500px) {
         font-size: 33px;
         margin-top: -.28rem;
