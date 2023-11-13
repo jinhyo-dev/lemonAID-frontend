@@ -168,5 +168,6 @@ export const AdminPageTitle = styled.div`
   color: #000;
   font-family: 'KoPubWorldDotumBold', sans-serif;
   margin-top: 5vh;
+  display: flex;
   margin-left: 10%;
 `

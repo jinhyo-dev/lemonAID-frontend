@@ -3,26 +3,26 @@ import styled from 'styled-components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { NextArrow } from '../NextArrow.tsx';
-import { PrevArrow } from '../PrevArrow.tsx';
+import {NextArrow} from '../NextArrow.tsx';
+import {PrevArrow} from '../PrevArrow.tsx';
 import grade1 from '../../assets/images/grade/grade1.png';
 import grade2 from '../../assets/images/grade/grade2.png';
 import grade3 from '../../assets/images/grade/grade3.png';
-import { HeaderWrapper } from '../../style/global.ts';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import {HeaderWrapper} from '../../style/global.ts';
+import {FiChevronLeft, FiChevronRight} from 'react-icons/fi';
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 import Modal from 'react-modal';
-import { IoClose } from 'react-icons/io5';
-import { AuthProps, Permission } from '../../interface/AuthProps.ts';
-import { debounce } from 'lodash';
+import {IoClose} from 'react-icons/io5';
+import {AuthProps, Permission} from '../../interface/AuthProps.ts';
+import {debounce} from 'lodash';
 import Banner from './Banner.tsx';
-import { ModalNextArrow } from '../Modal/ModalNextArrow.tsx';
-import { ModalPrevArrow } from '../Modal/ModalPrevArrow.tsx';
+import {ModalNextArrow} from '../Modal/ModalNextArrow.tsx';
+import {ModalPrevArrow} from '../Modal/ModalPrevArrow.tsx';
 import axiosInstance from '../../utils/AxiosInstance.ts';
 import LoadingModal from '../LoadingModal.tsx';
-import { numberWithCommas } from '../../utils/numberFormat.ts';
-import { formatDateString } from '../../utils/FormatDate.ts';
+import {numberWithCommas} from '../../utils/numberFormat.ts';
+import {formatDateString} from '../../utils/FormatDate.ts';
 import LemonaidLogo from '../../assets/images/logo/Lemonaid-1.png';
 
 interface ImageProps {
@@ -41,7 +41,7 @@ interface ActiveSort {
   $isActive: boolean;
 }
 
-const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
+const List: React.FC<PageType> = ({$type, authorized, permission}) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [sortType, setSortType] = useState<'none' | 'dateAsc' | 'dateDesc' | 'priceAsc' | 'priceDesc'>('none');
@@ -50,6 +50,7 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
   const [pageLength, setPageLength] = useState<number>(NaN);
 
   const [data, setData] = useState<any>([]);
+  const [popularData, setPopularData] = useState<any>([])
   const [modalData, setModalData] = useState<any>([]);
   const scrollToFocus = useRef<HTMLDivElement | null>(null);
 
@@ -78,8 +79,20 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
         }
       })
       .catch(err => console.log(err))
-      .finally(() => setLoading(false));
+      .finally(() => fetchPopularEmployers());
   };
+
+  const fetchPopularEmployers = () => {
+    if ($type === 'recruitment') {
+      setLoading(true)
+      axiosInstance.get('/post/popular_job_post?count=5')
+        .then(res => setPopularData(res.data.data))
+        .catch(err => console.error(err))
+        .finally(() => setLoading(false))
+    } else {
+      setLoading(false)
+    }
+  }
 
   const getCustomStyles = () => {
     const isSmallScreen = window.innerWidth <= 770;
@@ -122,8 +135,8 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
     speed: 500,
     slidesToShow: screenWidth >= 750 ? 3 : 1,
     slidesToScroll: 1,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow/>,
+    prevArrow: <PrevArrow/>,
   };
 
   const modalSetting = {
@@ -131,8 +144,8 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
     speed: 700,
     slidesToShow: 1,
     slidesToScroll: 1,
-    nextArrow: <ModalNextArrow />,
-    prevArrow: <ModalPrevArrow />,
+    nextArrow: <ModalNextArrow/>,
+    prevArrow: <ModalPrevArrow/>,
   };
 
   const handlePagination = (increase: boolean) => {
@@ -196,6 +209,22 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
     setData(chunkedData(flatData));
   };
 
+  const handleApply = () => {
+    setLoading(true)
+    axiosInstance.post('/post/apply_job_post', {post_id: modalData.ID})
+      .then(res => {
+        if (res.data.status === 200) {
+          alert(res.data.message)
+          closeModal()
+          fetchData()
+        } else {
+          alert(res.data.message)
+        }
+      })
+      .catch(err => console.error(err))
+      .finally(() => setLoading(false))
+  }
+
   useEffect(() => {
     if (modalIsOpen) {
       document.body.style.overflow = 'hidden';
@@ -205,7 +234,7 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
   }, [modalIsOpen]);
 
   useEffect(() => {
-    scrollToFocus.current?.scrollIntoView({ behavior: 'smooth' });
+    scrollToFocus.current?.scrollIntoView({behavior: 'smooth'});
   }, [currentPage]);
 
   useEffect(() => {
@@ -220,7 +249,7 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
     return (
       <ModalContainer>
         <div className={'close-button'}>
-          <button onClick={closeModal}><IoClose /></button>
+          <button onClick={closeModal}><IoClose/></button>
         </div>
         <div className={'image-container'}>
           <Slider {...modalSetting}>
@@ -265,7 +294,7 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
         </div>
 
         <div className={'apply-button'}>
-          <button>Apply</button>
+          <button onClick={handleApply}>Apply</button>
         </div>
       </ModalContainer>
     );
@@ -273,7 +302,7 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
 
   return (
     <div>
-      <LoadingModal isOpen={loading} />
+      <LoadingModal isOpen={loading}/>
       {
         !loading &&
         <>
@@ -284,48 +313,51 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
             style={customStyles}
             ariaHideApp={false}
           >
-            <ModalContainerComponents />
+            <ModalContainerComponents/>
           </Modal>
 
           <HeaderWrapper ref={scrollToFocus}>
-            <Header authorized={authorized} permission={permission} />
+            <Header authorized={authorized} permission={permission}/>
           </HeaderWrapper>
 
-          <Banner $type={$type} authorized={authorized} permission={permission} />
+          <Banner $type={$type} authorized={authorized} permission={permission}/>
 
-          {$type === 'recruitment' &&
-            <PopularEmployers>
-              <div>
-                <div>{$type === 'recruitment' ? 'POPULAR EMPLOYERS' : $type === 'tour' ? 'UPCOMING TOURS' : 'UPCOMING PARTIES & EVENTS'}</div>
-                <div>
-                  {$type === 'recruitment' ? 'Empowering Education and Revolutionizing Learning Partnerships for a Brighter Future'
-                    : $type === 'tour' ? 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'
-                      : 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'}
-                </div>
-              </div>
+          {
+            $type === 'recruitment' && (
+              popularData.length > 2 ?
+                <PopularEmployers>
+                  <div>
+                    <div>{$type === 'recruitment' ? 'POPULAR EMPLOYERS' : $type === 'tour' ? 'UPCOMING TOURS' : 'UPCOMING PARTIES & EVENTS'}</div>
+                    <div>
+                      {$type === 'recruitment' ? 'Empowering Education and Revolutionizing Learning Partnerships for a Brighter Future'
+                        : $type === 'tour' ? 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'
+                          : 'Korea’s Leading Local Tour Company Guides You Through Experiences Beyond Campare'}
+                    </div>
+                  </div>
 
-              <div className={'image-container'}>
-                <Slider {...settings}>
-                  {[...Array(4)].map((_, index: number) => (
-                    <EmployerBox className={'employer-container'} key={index}
-                                 $url={'https://thumbs.dreamstime.com/b/teacher-9707054.jpg'}>
-                      <div className={'employers-image'} />
-                      <div className={'title'}>
-                        {permission === Permission.ADMIN && <img src={grade3} alt={'grade'} />}
-                        <div>RISE Gangdong</div>
-                      </div>
-                      <div className={'subtitle'}>서울시 강동구 성내로 25 (성내동)</div>
-                      <div className={'bottom-container'}>
-                        <div>2,500,000 - 2,000,000 KRW</div>
-                        <div>Sep 1st, 2023</div>
-                      </div>
-                    </EmployerBox>
-                  ))}
+                  <div className={'image-container'}>
+                    <Slider {...settings}>
+                      {Object.values(popularData).map((value: any, index: number) => (
+                        <EmployerBox className={'employer-container'} onClick={() => openModal(value)} key={index}
+                                     $url={value.images ? import.meta.env.VITE_API_URL + value.images.split(',')[0] : LemonaidLogo}>
+                          <div className={'employers-image'}/>
+                          <div className={'title'}>
+                            {permission === Permission.ADMIN &&
+                              <img src={value.rank === 1 ? grade1 : value.rank === 2 ? grade2 : grade3} alt={'grade'}/>}
+                            <div>{value.academy}</div>
+                          </div>
+                          <div className={'subtitle'}>{value.Campus}</div>
+                          <div className={'bottom-container'}>
+                            <div>{numberWithCommas(value.start_salary)} - {numberWithCommas(value.end_salary)} KRW</div>
+                            <div>{formatDateString(value.CreatedAt)}</div>
+                          </div>
+                        </EmployerBox>
+                      ))}
 
-                </Slider>
-              </div>
-            </PopularEmployers>
-          }
+                    </Slider>
+                  </div>
+                </PopularEmployers> : <NoneData>There is no popular employers.</NoneData>
+            )}
 
           <ListContainer $type={$type}>
             <div className={'title'}>
@@ -356,10 +388,10 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
                   $type === 'recruitment' ?
                     <EmployerBox key={index} onClick={() => openModal(value)}
                                  $url={value.images ? import.meta.env.VITE_API_URL + value.images.split(',')[0] : LemonaidLogo}>
-                      <div className={'employers-image'} />
+                      <div className={'employers-image'}/>
                       <div className={'title'}>
                         {permission === Permission.ADMIN &&
-                          <img src={value.rank === 1 ? grade1 : value.rank === 2 ? grade2 : grade3} alt={'grade'} />}
+                          <img src={value.rank === 1 ? grade1 : value.rank === 2 ? grade2 : grade3} alt={'grade'}/>}
                         <div>{value.academy}</div>
                       </div>
                       <div className={'subtitle'}>{value.Campus}</div>
@@ -371,7 +403,7 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
                     <TourAndPartiesBox key={index} onClick={() => openModal(value)}
                                        $url={value.images ? import.meta.env.VITE_API_URL + value.images.split(',')[0] : LemonaidLogo}>
                       <div className={'container'}>
-                        <div className={'employers-image'} />
+                        <div className={'employers-image'}/>
                         <div className={'title'}>{value.tour_name ?? value.party_name}</div>
                         <div className={'subtitle'}>{value.description}</div>
                         <div className={'date'}>Date: {formatDateString(value.date)}</div>
@@ -387,12 +419,12 @@ const List: React.FC<PageType> = ({ $type, authorized, permission }) => {
             </div>
 
             <div className={'pagination-container'}>
-              <FiChevronLeft onClick={() => handlePagination(false)} />
-              {Array.from({ length: pageLength }, (_, index) => (
+              <FiChevronLeft onClick={() => handlePagination(false)}/>
+              {Array.from({length: pageLength}, (_, index) => (
                 <Dot $isActive={index + 1 === currentPage} onClick={() => handleDotPagination(index + 1)}
-                     key={index} />
+                     key={index}/>
               ))}
-              <FiChevronRight onClick={() => handlePagination(true)} />
+              <FiChevronRight onClick={() => handlePagination(true)}/>
             </div>
           </ListContainer>
         </>
@@ -977,7 +1009,7 @@ export const EmployerBox = styled.div<ImageProps>`
     overflow: hidden;
     background-position: center;
     border-radius: 10px;
-    background-image: url(${({ $url }) => $url});
+    background-image: url(${({$url}) => $url});
     margin: auto;
 
     @media (max-width: 500px) {
@@ -1069,7 +1101,7 @@ export const EmployerBox = styled.div<ImageProps>`
   }
 `;
 
-const TourAndPartiesBox = styled.div<ImageProps>`
+export const TourAndPartiesBox = styled.div<ImageProps>`
   width: 386px;
   height: 510px;
   cursor: pointer;
@@ -1114,7 +1146,7 @@ const TourAndPartiesBox = styled.div<ImageProps>`
       overflow: hidden;
       background-position: center;
       border-radius: 10px;
-      background-image: url(${({ $url }) => $url});
+      background-image: url(${({$url}) => $url});
 
       @media (max-width: 750px) {
         width: 100% !important;
@@ -1224,7 +1256,7 @@ export const ListContainer = styled.div<Pick<PageType, '$type'>>`
 
   & > .button-container {
     width: 600px;
-    margin: ${({ $type }) => $type === 'recruitment' ? '20px auto' : '30px auto 0'};
+    margin: ${({$type}) => $type === 'recruitment' ? '20px auto' : '30px auto 0'};
     height: 35px;
     display: flex;
     align-items: center;
@@ -1330,10 +1362,10 @@ export const SortButton = styled.button<ActiveSort>`
   padding-right: 1.5rem;
   transition: all .3s;
   height: 100%;
-  background: ${({ $isActive }) => $isActive ? '#FAE13E' : '#F8FAFB'};
+  background: ${({$isActive}) => $isActive ? '#FAE13E' : '#F8FAFB'};
   color: #000;
   border-radius: 5px;
-  border: 1px solid ${({ $isActive }) => $isActive ? '#FAE13E' : '#EDEDED'};
+  border: 1px solid ${({$isActive}) => $isActive ? '#FAE13E' : '#EDEDED'};
 
   @media (max-width: 750px) {
     padding-left: 1.2rem;
@@ -1351,9 +1383,9 @@ export const Dot = styled.div<ActivePagination>`
   height: 8px;
   margin-left: 6px;
   cursor: pointer;
-  width: ${({ $isActive }) => $isActive ? '36px' : '8px'};
+  width: ${({$isActive}) => $isActive ? '36px' : '8px'};
   border-radius: 100px;
-  background: ${({ $isActive }) => $isActive ? '#F4B723' : '#D9D9D9'};
+  background: ${({$isActive}) => $isActive ? '#F4B723' : '#D9D9D9'};
   transition: all .3s;
 
   &:first-child {
@@ -1368,7 +1400,7 @@ export const Image = styled.div<ImageProps>`
   background-size: cover;
   overflow: hidden;
   background-position: center;
-  background-image: url(${({ $url }) => $url});
+  background-image: url(${({$url}) => $url});
 
   & > div {
     float: right;
@@ -1401,7 +1433,7 @@ export const NoneData = styled.h1`
   margin: 15vh auto 10vh;
   font-size: 3rem;
   font-family: 'KoPubWorldDotumBold', sans-serif;
-  
+
   @media (max-width: 750px) {
     font-size: 1.8rem;
   }
