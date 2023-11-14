@@ -25,7 +25,7 @@ const Search: React.FC<SearchProps> = ({ authorized, permission, value }) => {
     setLoading(true);
     axiosInstance.get(`/search/search_posts_and_teachers${value}`)
       .then(res => setData(res.data))
-      .catch(err => console.log(err))
+      .catch(err => console.error(err))
       .finally(() => setLoading(false));
   };
 

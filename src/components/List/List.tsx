@@ -78,7 +78,7 @@ const List: React.FC<PageType> = ({$type, authorized, permission}) => {
           alert(res.data.message);
         }
       })
-      .catch(err => console.log(err))
+      .catch(err => console.error(err))
       .finally(() => fetchPopularEmployers());
   };
 

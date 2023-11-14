@@ -26,7 +26,7 @@ const NewUserManage: React.FC<AuthProps> = ({authorized, permission}) => {
           setData(updatedData);
         }
       })
-      .catch(err => console.log(err))
+      .catch(err => console.error(err))
       .finally(() => setLoading(false));
   };
 
@@ -47,7 +47,7 @@ const NewUserManage: React.FC<AuthProps> = ({authorized, permission}) => {
             getNewUser();
           }
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
     }
   };
 
@@ -68,7 +68,7 @@ const NewUserManage: React.FC<AuthProps> = ({authorized, permission}) => {
             getNewUser();
           }
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
     }
   };
 

@@ -21,7 +21,7 @@ const UserManage: React.FC<AuthProps> = ({ authorized, permission }) => {
           setData(res.data.data);
         }
       })
-      .catch(err => console.log(err))
+      .catch(err => console.error(err))
       .finally(() => setLoading(false));
   };
 

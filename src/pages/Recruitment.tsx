@@ -126,7 +126,7 @@ const Recruitment: React.FC<AuthProps> = ({authorized, permission}) => {
 
       axiosInstance.post('/post/job_post', payload)
         .then(res => {
-          if (res.status === 200) {
+          if (res.data.status === 200) {
             const form = new FormData();
             form.append('id', res.data.id);
 

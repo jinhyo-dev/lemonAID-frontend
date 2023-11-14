@@ -51,7 +51,7 @@ const ConfigAuth = () => {
           setIsAuthorized({ authorized: false, loading: false, permission: Permission.Undefined });
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => console.error(err));
   }, [location]);
 
   const getComponents = (path: string): React.ReactElement => {

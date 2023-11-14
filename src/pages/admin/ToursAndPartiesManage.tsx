@@ -264,7 +264,7 @@ const ToursAndPartiesManage: React.FC<AuthProps> = ({authorized, permission}) =>
           alert(res.data.message);
         }
       })
-      .catch(err => console.log(err))
+      .catch(err => console.error(err))
       .finally(() => {
         axiosInstance.get('/post/party_and_events')
           .then(res => {

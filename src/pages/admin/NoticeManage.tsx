@@ -94,7 +94,7 @@ const NoticeManage: React.FC<AuthProps> = ({ authorized, permission }) => {
           alert(res.data.message);
         }
       })
-      .catch(err => console.log(err))
+      .catch(err => console.error(err))
       .finally(() => setLoading(false));
   };
 
