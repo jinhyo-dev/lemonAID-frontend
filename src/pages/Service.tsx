@@ -1,16 +1,29 @@
-// This file is jsx because payapp.kr is not support npm library
-
-import {Container, HeaderWrapper} from '../style/global.ts';
+import { Container, HeaderWrapper } from '../style/global.ts';
 import Header from '../components/Header.tsx';
 import styled from 'styled-components';
 import React from 'react';
+import { AuthProps } from '../interface/AuthProps.ts';
 
-const Service = ({authorized, permission, phoneNumber}) => {
+interface ServiceProps extends AuthProps {
+  phoneNumber: string;
+}
+
+declare global {
+  interface Window {
+    PayApp: {
+      setDefault: (key: string, value: string) => void;
+      setParam: (key: string, value: string | number) => void;
+      call: () => void;
+    };
+  }
+}
+
+const Service: React.FC<ServiceProps> = ({ authorized, permission, phoneNumber }) => {
 
   window.PayApp.setDefault('userid', 'lemonaid');
   window.PayApp.setDefault('shopname', 'LEMONAID');
 
-  const payAppPay = (name, value, plan) => {
+  const payAppPay = (name: string, value: number, plan: number): void => {
     window.PayApp.setParam('goodname', 'Lemon Aid - ' + name + ' package');
     window.PayApp.setParam('price', value);
     window.PayApp.setParam('recvphone', phoneNumber);
@@ -20,11 +33,11 @@ const Service = ({authorized, permission, phoneNumber}) => {
     window.PayApp.setParam('skip_cstpage', 'y');
     window.PayApp.setParam('var1', plan);
     window.PayApp.call();
-  }
+  };
 
-  return (<Container style={{overflowX: 'auto'}}>
+  return (<Container style={{ overflowX: 'auto' }}>
     <HeaderWrapper>
-      <Header authorized={authorized} permission={permission}/>
+      <Header authorized={authorized} permission={permission} />
     </HeaderWrapper>
 
     <MainTag>

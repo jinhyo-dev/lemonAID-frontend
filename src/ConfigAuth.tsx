@@ -4,7 +4,7 @@ import SignIn from './pages/SignIn.tsx';
 import MyPage from './pages/MyPage.tsx';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import Service from './pages/Service.jsx';
+import Service from './pages/Service.tsx';
 import Recruitment from './pages/Recruitment.tsx';
 import Tours from './pages/Tours.tsx';
 import Parties from './pages/Parties.tsx';
