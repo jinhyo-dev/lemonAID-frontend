@@ -128,8 +128,6 @@ const Recruitment: React.FC<AuthProps> = ({authorized, permission}) => {
         .then(res => {
           if (res.status === 200) {
             const form = new FormData();
-
-            console.log(res.data.id)
             form.append('id', res.data.id);
 
             Object.keys(imageList).map((key) => {
