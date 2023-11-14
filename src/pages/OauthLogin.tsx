@@ -9,9 +9,11 @@ const OauthLogin = () => {
   const params = new URLSearchParams(url.search)
   const session = params.get('session')
   const navigate = useNavigate()
-  const [, setCookies] = useCookies()
+  const [, setCookies, removeCookies] = useCookies()
 
   useEffect(() => {
+    removeCookies(import.meta.env.VITE_COOKIE_NAME)
+
     setCookies(import.meta.env.VITE_COOKIE_NAME, session, {
       sameSite: 'none',
       secure: true,
