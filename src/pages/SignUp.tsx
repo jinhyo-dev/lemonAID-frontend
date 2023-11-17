@@ -23,7 +23,7 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
     exited: { opacity: 0, transform: 'translateX(-10px)', display: 'none' },
   };
   const currentYear = new Date().getFullYear();
-  const [pageNumber, setPageNumber] = useState<0 | 1>(0);
+  const [pageNumber, setPageNumber] = useState<0 | 1 | 2>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [signUpData, setSignUpData] = useState<SignUpTypingProps>({
     confirmPassword: '',
@@ -45,10 +45,10 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
   });
   const [resume, setResume] = useState<File | null>(null);
   const [profileImage, setProfileImage] = useState<File | null>(null);
-  const url = new URL(window.location.href)
-  const params = new URLSearchParams(url.search)
-  const isOauth = params.get('oauth')
-  const session = params.get('session')
+  const url = new URL(window.location.href);
+  const params = new URLSearchParams(url.search);
+  const isOauth = params.get('oauth');
+  const session = params.get('session');
 
   const nationality = [
     'Australia',
@@ -69,17 +69,19 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
     }));
   };
 
-  const handleSubmitPage = (e: FormEvent, page: 0 | 1) => {
+  const handleSignUpUserType = (type: 1 | 2) => {
+    setSignUpData(prevState => ({
+      ...prevState,
+      userType: type,
+    }));
+
+    setPageNumber(1);
+  };
+
+  const handleSubmitPage = (e: FormEvent, page: 0 | 1 | 2) => {
     e.preventDefault();
 
-    if (page === 1) {
-      if (signUpData.password !== signUpData.confirmPassword) {
-        alert('Those passwords didn’t match. Try again.');
-      } else {
-        const formElement = document.getElementById('form-1') as HTMLFormElement;
-        formElement.checkValidity() && setPageNumber(page);
-      }
-    } else {
+    const createAccount = () => {
       setLoading(true);
       const form = new FormData();
       const birthday = `${signUpData.yearOfBirth}-${signUpData.monthOfBirth}-${signUpData.dateOfBirth}`;
@@ -100,7 +102,7 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
       axiosInstance.post('/auth/register', form, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': session
+          'Authorization': session,
         },
       })
         .then(res => {
@@ -113,6 +115,19 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
         })
         .catch(err => alert(err.response.data.message))
         .finally(() => setLoading(false));
+    };
+
+    if (page === 2) {
+      if (signUpData.password !== signUpData.confirmPassword) {
+        alert('Those passwords didn’t match. Try again.');
+      } else if (signUpData.userType === 1) {
+        createAccount();
+      } else {
+        const formElement = document.getElementById('form-1') as HTMLFormElement;
+        formElement.checkValidity() && setPageNumber(page);
+      }
+    } else {
+      createAccount();
     }
   };
 
@@ -165,8 +180,28 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
         <FormContainer>
           <Transition in={pageNumber === 0} timeout={transitionDuration}>
             {(state) => (
+              <form style={{ ...transitionStyles[state], transitionDuration: `${transitionDuration}ms` }}>
+                <div className={'title'}>Sign Up</div>
+                <div className={'sub-title'}>
+                  Already Have an Account?
+                  <span onClick={() => navigate('/sign-in')}>Sign In</span>
+                </div>
+
+                <div className={'user-type-container'}>
+                  <div>Select user type</div>
+                  <div>
+                    <button type={'button'} onClick={() => handleSignUpUserType(1)}>Academy</button>
+                    <button type={'button'} onClick={() => handleSignUpUserType(2)}>Teacher</button>
+                  </div>
+                </div>
+              </form>
+            )}
+          </Transition>
+
+          <Transition in={pageNumber === 1} timeout={transitionDuration}>
+            {(state) => (
               <form style={{ ...transitionStyles[state], transitionDuration: `${transitionDuration}ms` }}
-                    id={'form-1'} onSubmit={e => handleSubmitPage(e, 1)}>
+                    id={'form-1'} onSubmit={e => handleSubmitPage(e, 2)}>
                 <div className={'title'}>Sign Up</div>
                 <div className={'sub-title'}>
                   Already Have an Account?
@@ -284,18 +319,18 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
                 </div>
 
                 <div className={'input-container'}>
-                  <button type={'submit'}>Next Step</button>
+                  <button type={'submit'}>{signUpData.userType === 1 ? 'Create Account' : 'Next Step'}</button>
                 </div>
               </form>
             )}
           </Transition>
 
-          <Transition in={pageNumber === 1} timeout={transitionDuration}>
+          <Transition in={pageNumber === 2} timeout={transitionDuration}>
             {(state) => (
               <form style={{ ...transitionStyles[state], transitionDuration: `${transitionDuration}ms` }}
-                    id={'form-2'} onSubmit={e => handleSubmitPage(e, 0)}>
+                    id={'form-2'} onSubmit={e => handleSubmitPage(e, 1)}>
                 <div className={'title'}>Sign Up</div>
-                <div className={'back-button'} onClick={() => setPageNumber(0)}>
+                <div className={'back-button'} onClick={() => setPageNumber(1)}>
                   <AiOutlineLeft /> Back
                 </div>
 
@@ -376,7 +411,7 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
                   </div>
                 </div>
 
-                <div className={'radio-container'}>
+                {/*<div className={'radio-container'}>
                   <p>Type <span>*</span></p>
                   <div className='radio-buttons-container'>
                     <div className='radio-button'>
@@ -397,7 +432,7 @@ const SignUp: React.FC<AuthProps> = ({ authorized, permission }) => {
                       </label>
                     </div>
                   </div>
-                </div>
+                </div>*/}
 
                 <div className={'input-container'}>
                   <button type={'submit'}>Create Account</button>

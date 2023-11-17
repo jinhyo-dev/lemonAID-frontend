@@ -51,7 +51,7 @@ export const FormContainer = styled.div`
       border: none;
       outline: 2px solid #F7C324;
     }
-    
+
     @media (max-width: 500px) {
       font-size: 13px;
     }
@@ -61,11 +61,11 @@ export const FormContainer = styled.div`
     font-weight: 500;
     font-size: 16px;
     margin-bottom: 12px;
-    
+
     @media (max-width: 500px) {
       font-size: 13px;
     }
-    
+
     & > span {
       color: #e73b3b;
     }
@@ -76,7 +76,7 @@ export const FormContainer = styled.div`
     max-height: 55rem;
     width: 416px;
     padding: 0 5px;
-    
+
     @media (max-width: 750px) {
       height: 830px;
       max-height: none;
@@ -100,6 +100,53 @@ export const FormContainer = styled.div`
         cursor: pointer;
         margin-left: .2rem;
         color: #5BCFCF;
+      }
+    }
+
+    & > .user-type-container {
+      margin-top: 55%;
+      text-align: center;
+      width: 100%;
+
+      @media (max-width: 500px) {
+        margin-top: 65%;
+      }
+
+      & > div {
+        &:first-child {
+          font-size: 40px;
+
+          @media (max-width: 500px) {
+            font-size: 25px;
+          }
+        }
+
+        &:last-child {
+          margin: 25px auto;
+          width: 320px;
+          height: 50px;
+          display: flex;
+          justify-content: space-between;
+
+          @media (max-width: 500px) {
+            margin: 15px auto;
+            width: 220px;
+            height: 40px;
+          }
+
+          & > button {
+            width: 46%;
+            height: 100%;
+            border-radius: 6px;
+            background-color: #FAE13E;
+            border: none;
+            font-size: 15px;
+            
+            @media (max-width: 500px) {
+              font-size: 12px;
+            }
+          }
+        }
       }
     }
 
@@ -218,7 +265,7 @@ export const FormContainer = styled.div`
         & > input {
           width: 100%;
         }
-        
+
         & > input[type='file'] {
           display: none;
         }
